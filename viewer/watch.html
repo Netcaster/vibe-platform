@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitPro Academy — Watch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+/* ═══════════════════════════════════════════════════════════
+   VIBE Platform — Shared Styles
+   CEO Dashboard Color Scheme
+═══════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --deep:    #050e1f;
+  --navy:    #071428;
+  --card:    #0a1c35;
+  --card2:   #0d2040;
+  --ocean:   #D35400;
+  --light:   #ff7043;
+  --glow:    #ff9500;
+  --coral:   #ff6b6b;
+  --gold:    #f5c842;
+  --green:   #16a34a;
+  --red:     #dc2626;
+  --text:    #d6eeff;
+  --muted:   #5a8aaa;
+  --border:  rgba(211,84,0,0.25);
+  --border2: rgba(255,112,67,0.15);
+  --radius:  12px;
+  --radius-lg: 20px;
+  --shadow:  0 0 40px rgba(211,84,0,0.15);
+  --shadow-lg: 0 0 60px rgba(255,112,67,0.18);
+}
+
+body {
+  font-family: 'Outfit', 'Segoe UI', sans-serif;
+  background: var(--deep);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── ANIMATED BACKGROUND ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(211,84,0,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 90%, rgba(255,112,67,0.05) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── NAVIGATION ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(5,14,31,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--light), var(--ocean));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.nav-brand .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--glow);
+  box-shadow: 0 0 10px var(--glow);
+  -webkit-text-fill-color: initial;
+  flex-shrink: 0;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a[aria-current="page"] {
+  color: var(--text);
+  background: var(--card);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--ocean), var(--light));
+  color: var(--deep);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(255,112,67,0.4);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover {
+  background: var(--card);
+  border-color: var(--border2);
+}
+
+.btn-large {
+  padding: 16px 36px;
+  font-size: 16px;
+  border-radius: 14px;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 12px;
+  border-radius: 8px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  transition: all 0.3s;
+}
+
+.card:hover {
+  border-color: var(--border2);
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+
+.card-glow {
+  box-shadow: var(--shadow);
+  border-color: var(--border2);
+}
+
+/* ── SECTION LAYOUT ── */
+.section {
+  padding: 100px 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* ── TYPOGRAPHY ── */
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ocean);
+}
+
+.heading-xl {
+  font-size: clamp(42px, 5vw, 72px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.heading-lg {
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.heading-md {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--light), var(--ocean));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-muted {
+  color: var(--muted);
+}
+
+.text-sm {
+  font-size: 14px;
+}
+
+.text-xs {
+  font-size: 12px;
+}
+
+/* ── BADGES ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-ocean {
+  background: rgba(211,84,0,0.15);
+  color: var(--light);
+  border: 1px solid var(--border);
+}
+
+.badge-green {
+  background: rgba(22,163,74,0.15);
+  color: #4ade80;
+  border: 1px solid rgba(22,163,74,0.3);
+}
+
+.badge-gold {
+  background: rgba(245,200,66,0.12);
+  color: var(--gold);
+  border: 1px solid rgba(245,200,66,0.25);
+}
+
+.badge-coral {
+  background: rgba(255,107,107,0.12);
+  color: var(--coral);
+  border: 1px solid rgba(255,107,107,0.25);
+}
+
+/* ── STATS ── */
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--light), var(--glow));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+  margin-top: 6px;
+}
+
+/* ── ICON CONTAINERS ── */
+.icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(211,84,0,0.15);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.icon-box-lg {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  font-size: 28px;
+}
+
+/* ── DIVIDER ── */
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 40px 0;
+}
+
+/* ── FORM ELEMENTS ── */
+input, select, textarea {
+  background: var(--navy);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  padding: 12px 16px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--ocean);
+  box-shadow: 0 0 0 3px rgba(211,84,0,0.15);
+}
+
+input::placeholder { color: var(--muted); }
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar {
+  height: 6px;
+  background: var(--navy);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--ocean), var(--light));
+  border-radius: 100px;
+  transition: width 0.6s ease;
+}
+
+/* ── TABLE ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  padding: 14px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(211,84,0,0.08);
+}
+
+tr:hover td { background: rgba(211,84,0,0.05); }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--navy);
+  border-right: 1px solid var(--border);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+}
+
+.sidebar-logo {
+  padding: 0 20px 24px;
+  font-size: 20px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--light), var(--ocean));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.sidebar-section {
+  padding: 8px 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 10px;
+  margin: 2px 8px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.sidebar-item:hover,
+.sidebar-item.active {
+  color: var(--text);
+  background: var(--card);
+}
+
+.sidebar-item.active {
+  color: var(--light);
+  background: rgba(211,84,0,0.15);
+  border: 1px solid var(--border);
+}
+
+.sidebar-item .icon { font-size: 16px; }
+
+/* ── PAGE LAYOUT ── */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 32px;
+  overflow-y: auto;
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.page-sub {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* ── VIDEO THUMBNAIL ── */
+.thumb {
+  aspect-ratio: 16/9;
+  border-radius: var(--radius);
+  background: var(--card2);
+  overflow: hidden;
+  position: relative;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(5,14,31,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.thumb:hover .thumb-overlay { opacity: 1; }
+
+.play-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255,112,67,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--deep);
+  backdrop-filter: blur(4px);
+}
+
+/* ── VIDEO PLAYER ── */
+.player-wrap {
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+}
+
+.player-wrap iframe,
+.player-wrap video {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5,14,31,0.8);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  width: 100%;
+  max-width: 560px;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  z-index: 999;
+  box-shadow: var(--shadow);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+  .section { padding: 60px 20px; }
+  nav { padding: 0 20px; }
+  .main-content { padding: 20px; }
+}
+
+@media (max-width: 600px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .heading-xl { font-size: 36px; }
+  .app-layout { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; position: static; }
+}
+
+/* White logo overrides */
+.nav-brand, .sidebar-logo {
+  color: #ffffff !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+</style>
+  <style>
+    .watch-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 0;
+      min-height: calc(100vh - 64px);
+    }
+
+    .watch-main {
+      padding: 28px 32px;
+      border-right: 1px solid var(--border);
+    }
+
+    .watch-sidebar {
+      padding: 20px;
+      background: var(--navy);
+      overflow-y: auto;
+      max-height: calc(100vh - 64px);
+      position: sticky;
+      top: 64px;
+    }
+
+    .player-wrap {
+      aspect-ratio: 16/9;
+      background: #000;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      position: relative;
+      border: 1px solid var(--border);
+    }
+
+    .player-placeholder {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .player-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--navy), var(--card2));
+    }
+
+    .big-play {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--ocean), var(--light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      color: var(--deep);
+      margin: 0 auto 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 0 40px rgba(255,112,67,0.4);
+    }
+
+    .big-play:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 60px rgba(255,112,67,0.6);
+    }
+
+    .player-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .ctrl-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .ctrl-btn:hover { color: var(--text); background: var(--card); }
+
+    .progress-scrub {
+      flex: 1;
+      height: 4px;
+      background: var(--card2);
+      border-radius: 100px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .progress-scrub-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--ocean), var(--light));
+      border-radius: 100px;
+      width: 38%;
+      transition: width 0.1s;
+    }
+
+    .lesson-item-watch {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 4px;
+    }
+
+    .lesson-item-watch:hover { background: var(--card); }
+    .lesson-item-watch.active { background: rgba(211,84,0,0.15); border: 1px solid var(--border); }
+
+    .lesson-num-watch {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .lesson-num-watch.done {
+      background: rgba(22,163,74,0.15);
+      border: 1px solid rgba(22,163,74,0.3);
+      color: #4ade80;
+    }
+
+    .lesson-num-watch.active {
+      background: rgba(255,112,67,0.15);
+      border: 1px solid rgba(255,112,67,0.3);
+      color: var(--light);
+    }
+
+    .lesson-num-watch.locked {
+      background: rgba(90,138,170,0.1);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .complete-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(5,14,31,0.9);
+      backdrop-filter: blur(12px);
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .complete-modal.show { display: flex; }
+
+    .complete-box {
+      background: var(--card);
+      border: 1px solid var(--border2);
+      border-radius: 24px;
+      padding: 48px;
+      text-align: center;
+      max-width: 480px;
+      box-shadow: var(--shadow-lg);
+      animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @media (max-width: 900px) {
+      .watch-layout { grid-template-columns: 1fr; }
+      .watch-sidebar { position: static; max-height: none; border-top: 1px solid var(--border); }
+      .watch-main { padding: 20px; border-right: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="browse.html" class="nav-brand" style="font-size:18px">
+    FitPro Academy
+  </a>
+  <div style="font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px">
+    <a href="browse.html" style="color:var(--muted);text-decoration:none">My Learning</a>
+    <span>›</span>
+    <span style="color:var(--text)">Advanced Strength Training</span>
+  </div>
+  <div class="nav-actions">
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)">
+      <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--ocean),var(--navy));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--light)">JM</div>
+      <span style="font-size:13px;font-weight:600">James</span>
+    </div>
+  </div>
+</nav>
+
+<div class="watch-layout">
+
+  <!-- ── MAIN VIDEO ── -->
+  <div class="watch-main">
+
+    <!-- Player -->
+    <div class="player-wrap">
+      <div class="player-bg"></div>
+      <div class="player-placeholder">
+        <div class="big-play" onclick="playVideo()">▶</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px">Squat Mechanics Deep Dive</div>
+        <div style="font-size:13px;color:var(--muted)">Lesson 5 of 12 · 28 minutes</div>
+        <div style="font-size:11px;color:var(--ocean);margin-top:10px">🔒 Secure playback via Mux · Token-protected</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="player-controls">
+      <button class="ctrl-btn" title="Previous">⏮</button>
+      <button class="ctrl-btn" onclick="togglePlay(this)" title="Play/Pause">▶</button>
+      <button class="ctrl-btn" title="Next">⏭</button>
+      <div class="progress-scrub" onclick="scrub(event)">
+        <div class="progress-scrub-fill" id="scrubFill"></div>
+      </div>
+      <span style="font-size:12px;color:var(--muted);white-space:nowrap">10:42 / 28:00</span>
+      <button class="ctrl-btn" title="Fullscreen">⛶</button>
+    </div>
+
+    <!-- Lesson Info -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:28px">
+      <div>
+        <h1 style="font-size:24px;font-weight:800;margin-bottom:8px">Squat Mechanics Deep Dive</h1>
+        <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted)">
+          <span>Lesson 5 of 12</span>
+          <span>·</span>
+          <span>28 minutes</span>
+          <span>·</span>
+          <span>Advanced Strength Training</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-ghost btn-sm">⏮ Previous</button>
+        <button class="btn btn-primary btn-sm" onclick="markComplete()">Mark Complete ✓</button>
+        <button class="btn btn-ghost btn-sm">Next ⏭</button>
+      </div>
+    </div>
+
+    <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:24px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:10px">
+      <span style="font-size:18px">🔒</span>
+      <div>
+        <span style="color:var(--text);font-weight:600">Secure Playback Active</span> — This lesson is streamed via a signed token that expires in 4 hours. Your access is protected by VIBE's entitlement engine.
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div>
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:12px">About This Lesson</h3>
+      <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:16px">
+        In this lesson we break down the full mechanics of the barbell squat — hip hinge initiation, knee tracking, depth, bracing, and descent speed. You'll see multiple angles and common form issues corrected in real time.
+      </p>
+      <p style="font-size:14px;color:var(--muted);line-height:1.7">
+        By the end of this lesson you'll understand the difference between high-bar and low-bar positioning and how to apply each based on your anatomy.
+      </p>
+    </div>
+
+    <!-- Progress in course -->
+    <div style="margin-top:28px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:10px">
+        <span style="font-weight:600">Course Progress</span>
+        <span style="color:var(--muted)">4 of 12 lessons complete</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width:33%"></div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px">Complete all 12 required lessons to become eligible for your certificate</div>
+    </div>
+  </div>
+
+  <!-- ── LESSON SIDEBAR ── -->
+  <div class="watch-sidebar">
+    <div style="font-size:13px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:16px">Course Contents</div>
+
+    <div class="lesson-item-watch done">
+      <div class="lesson-num-watch done">✓</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600">Introduction & Safety Principles</div>
+        <div style="font-size:10px;color:var(--muted)">18m · Completed</div>
+      </div>
+    </div>
+
+    <div class="lesson-item-watch done">
+      <div class="lesson-num-watch done">✓</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600">Warm-Up Protocol</div>
+        <div style="font-size:10px;color:var(--muted)">12m · Completed</div>
+      </div>
+    </div>
+
+    <div class="lesson-item-watch done">
+      <div class="lesson-num-watch done">✓</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600">Compound Movement Fundamentals</div>
+        <div style="font-size:10px;color:var(--muted)">32m · Completed</div>
+      </div>
+    </div>
+
+    <div class="lesson-item-watch done">
+      <div class="lesson-num-watch done">✓</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600">Progressive Overload Explained</div>
+        <div style="font-size:10px;color:var(--muted)">24m · Completed</div>
+      </div>
+    </div>
+
+    <div class="lesson-item-watch active">
+      <div class="lesson-num-watch active">▶</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:700;color:var(--light)">Squat Mechanics Deep Dive</div>
+        <div style="font-size:10px;color:var(--ocean)">28m · Now Watching</div>
+      </div>
+    </div>
+
+    <div class="lesson-item-watch">
+      <div class="lesson-num-watch locked">6</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600">Deadlift Form & Variants</div>
+        <div style="font-size:10px;color:var(--muted)">31m</div>
+      </div>
+    </div>
+
+    <div class="lesson-item-watch">
+      <div class="lesson-num-watch locked">7</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600">Bench Press Technique</div>
+        <div style="font-size:10px;color:var(--muted)">26m</div>
+      </div>
+    </div>
+
+    <div class="lesson-item-watch">
+      <div class="lesson-num-watch locked">8</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600">Accessory Exercises</div>
+        <div style="font-size:10px;color:var(--muted)">22m</div>
+      </div>
+    </div>
+
+    <div class="lesson-item-watch">
+      <div class="lesson-num-watch locked">9</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600">Recovery & Nutrition Integration</div>
+        <div style="font-size:10px;color:var(--muted)">19m</div>
+      </div>
+    </div>
+
+    <div class="lesson-item-watch">
+      <div class="lesson-num-watch locked">10</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600">Programming Your Own Cycles</div>
+        <div style="font-size:10px;color:var(--muted)">35m</div>
+      </div>
+    </div>
+
+    <div class="lesson-item-watch">
+      <div class="lesson-num-watch locked">11</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600">Common Mistakes & Fixes</div>
+        <div style="font-size:10px;color:var(--muted)">21m</div>
+      </div>
+    </div>
+
+    <div class="lesson-item-watch">
+      <div class="lesson-num-watch locked">12</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600">Final Assessment & Program</div>
+        <div style="font-size:10px;color:var(--muted)">14m</div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+      <div style="background:rgba(22,163,74,0.08);border:1px solid rgba(22,163,74,0.2);border-radius:10px;padding:12px;text-align:center">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Lessons remaining</div>
+        <div style="font-size:22px;font-weight:800;color:#4ade80">8</div>
+        <div style="font-size:11px;color:var(--muted)">to certificate eligibility</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Completion Modal -->
+<div class="complete-modal" id="completeModal">
+  <div class="complete-box">
+    <div style="font-size:56px;margin-bottom:16px">✅</div>
+    <h2 style="font-size:24px;font-weight:800;margin-bottom:8px">Lesson Complete!</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:24px;line-height:1.6">
+      Your progress has been saved. 7 more lessons to go before you're eligible for your certificate.
+    </p>
+    <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:24px">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Course Progress</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:41%"></div></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px">5 of 12 lessons complete (41%)</div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center">
+      <button class="btn btn-primary" onclick="nextLesson()">Next Lesson →</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('completeModal').classList.remove('show')">Stay Here</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let playing = false;
+
+function playVideo() {
+  playing = true;
+  // In production: load Mux/Vimeo player with provider_video_id from entitlement check
+  document.querySelector('.player-placeholder').innerHTML = `
+    <div style="color:var(--light);font-size:14px">
+      <div style="font-size:48px;margin-bottom:12px">🎬</div>
+      Video player would load here via provider API<br>
+      <span style="font-size:12px;color:var(--muted)">Mux playback · Signed token · Entitlement verified</span>
+    </div>
+  `;
+}
+
+function togglePlay(btn) {
+  playing = !playing;
+  btn.textContent = playing ? '⏸' : '▶';
+}
+
+function scrub(e) {
+  const bar = e.currentTarget;
+  const pct = Math.min(100, Math.max(0, (e.offsetX / bar.offsetWidth) * 100));
+  document.getElementById('scrubFill').style.width = pct + '%';
+}
+
+function markComplete() {
+  document.getElementById('completeModal').classList.add('show');
+}
+
+function nextLesson() {
+  document.getElementById('completeModal').classList.remove('show');
+  alert('Loading next lesson: Deadlift Form & Variants...\n\nIn production, this would update lesson_completions and re-check certificate eligibility.');
+}
+</script>
+
+  <script src="https://naluask.com/widget.js" data-client-key="vibe_k_2026_vibe" data-color="#6366f1" data-icon="neural" defer></script>
+</body>
+</html>

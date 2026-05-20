@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VIBE — Certificates</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+/* ═══════════════════════════════════════════════════════════
+   VIBE Platform — Shared Styles
+   CEO Dashboard Color Scheme
+═══════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --deep:    #050e1f;
+  --navy:    #071428;
+  --card:    #0a1c35;
+  --card2:   #0d2040;
+  --ocean:   #D35400;
+  --light:   #ff7043;
+  --glow:    #ff9500;
+  --coral:   #ff6b6b;
+  --gold:    #f5c842;
+  --green:   #16a34a;
+  --red:     #dc2626;
+  --text:    #d6eeff;
+  --muted:   #5a8aaa;
+  --border:  rgba(211,84,0,0.25);
+  --border2: rgba(255,112,67,0.15);
+  --radius:  12px;
+  --radius-lg: 20px;
+  --shadow:  0 0 40px rgba(211,84,0,0.15);
+  --shadow-lg: 0 0 60px rgba(255,112,67,0.18);
+}
+
+body {
+  font-family: 'Outfit', 'Segoe UI', sans-serif;
+  background: var(--deep);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── ANIMATED BACKGROUND ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(211,84,0,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 90%, rgba(255,112,67,0.05) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── NAVIGATION ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(5,14,31,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--light), var(--ocean));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.nav-brand .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--glow);
+  box-shadow: 0 0 10px var(--glow);
+  -webkit-text-fill-color: initial;
+  flex-shrink: 0;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a[aria-current="page"] {
+  color: var(--text);
+  background: var(--card);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--ocean), var(--light));
+  color: var(--deep);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(255,112,67,0.4);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover {
+  background: var(--card);
+  border-color: var(--border2);
+}
+
+.btn-large {
+  padding: 16px 36px;
+  font-size: 16px;
+  border-radius: 14px;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 12px;
+  border-radius: 8px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  transition: all 0.3s;
+}
+
+.card:hover {
+  border-color: var(--border2);
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+
+.card-glow {
+  box-shadow: var(--shadow);
+  border-color: var(--border2);
+}
+
+/* ── SECTION LAYOUT ── */
+.section {
+  padding: 100px 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* ── TYPOGRAPHY ── */
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ocean);
+}
+
+.heading-xl {
+  font-size: clamp(42px, 5vw, 72px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.heading-lg {
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.heading-md {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--light), var(--ocean));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-muted {
+  color: var(--muted);
+}
+
+.text-sm {
+  font-size: 14px;
+}
+
+.text-xs {
+  font-size: 12px;
+}
+
+/* ── BADGES ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-ocean {
+  background: rgba(211,84,0,0.15);
+  color: var(--light);
+  border: 1px solid var(--border);
+}
+
+.badge-green {
+  background: rgba(22,163,74,0.15);
+  color: #4ade80;
+  border: 1px solid rgba(22,163,74,0.3);
+}
+
+.badge-gold {
+  background: rgba(245,200,66,0.12);
+  color: var(--gold);
+  border: 1px solid rgba(245,200,66,0.25);
+}
+
+.badge-coral {
+  background: rgba(255,107,107,0.12);
+  color: var(--coral);
+  border: 1px solid rgba(255,107,107,0.25);
+}
+
+/* ── STATS ── */
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--light), var(--glow));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+  margin-top: 6px;
+}
+
+/* ── ICON CONTAINERS ── */
+.icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(211,84,0,0.15);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.icon-box-lg {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  font-size: 28px;
+}
+
+/* ── DIVIDER ── */
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 40px 0;
+}
+
+/* ── FORM ELEMENTS ── */
+input, select, textarea {
+  background: var(--navy);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  padding: 12px 16px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--ocean);
+  box-shadow: 0 0 0 3px rgba(211,84,0,0.15);
+}
+
+input::placeholder { color: var(--muted); }
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar {
+  height: 6px;
+  background: var(--navy);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--ocean), var(--light));
+  border-radius: 100px;
+  transition: width 0.6s ease;
+}
+
+/* ── TABLE ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  padding: 14px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(211,84,0,0.08);
+}
+
+tr:hover td { background: rgba(211,84,0,0.05); }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--navy);
+  border-right: 1px solid var(--border);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+}
+
+.sidebar-logo {
+  padding: 0 20px 24px;
+  font-size: 20px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--light), var(--ocean));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.sidebar-section {
+  padding: 8px 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 10px;
+  margin: 2px 8px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.sidebar-item:hover,
+.sidebar-item.active {
+  color: var(--text);
+  background: var(--card);
+}
+
+.sidebar-item.active {
+  color: var(--light);
+  background: rgba(211,84,0,0.15);
+  border: 1px solid var(--border);
+}
+
+.sidebar-item .icon { font-size: 16px; }
+
+/* ── PAGE LAYOUT ── */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 32px;
+  overflow-y: auto;
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.page-sub {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* ── VIDEO THUMBNAIL ── */
+.thumb {
+  aspect-ratio: 16/9;
+  border-radius: var(--radius);
+  background: var(--card2);
+  overflow: hidden;
+  position: relative;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(5,14,31,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.thumb:hover .thumb-overlay { opacity: 1; }
+
+.play-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255,112,67,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--deep);
+  backdrop-filter: blur(4px);
+}
+
+/* ── VIDEO PLAYER ── */
+.player-wrap {
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+}
+
+.player-wrap iframe,
+.player-wrap video {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5,14,31,0.8);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  width: 100%;
+  max-width: 560px;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  z-index: 999;
+  box-shadow: var(--shadow);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+  .section { padding: 60px 20px; }
+  nav { padding: 0 20px; }
+  .main-content { padding: 20px; }
+}
+
+@media (max-width: 600px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .heading-xl { font-size: 36px; }
+  .app-layout { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; position: static; }
+}
+
+/* White logo overrides */
+.nav-brand, .sidebar-logo {
+  color: #ffffff !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+</style>
+  <style>
+    .cert-pipeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .pipeline-col {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+
+    .pipeline-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .pipeline-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .pipeline-count {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .cert-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+
+    .cert-card-name { font-size: 13px; font-weight: 600; }
+    .cert-card-course { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .cert-card-date { font-size: 10px; color: var(--muted); margin-top: 6px; }
+
+    .cert-preview {
+      background: linear-gradient(135deg, var(--navy), var(--card2));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cert-preview::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid transparent;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(var(--navy), var(--card2)) padding-box,
+                  linear-gradient(135deg, var(--ocean), var(--light)) border-box;
+    }
+
+    .cert-preview-logo {
+      font-size: 36px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--light), var(--ocean));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .cert-preview-title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .cert-preview-recipient {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .cert-preview-course {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .cert-preview-seal {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--ocean), var(--light));
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    .cert-preview-id {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      font-family: monospace;
+    }
+
+    @media (max-width: 900px) {
+      .cert-pipeline { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .cert-pipeline { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo">⬡ VIBE</div>
+    <div class="sidebar-section">Workspace</div>
+    <a class="sidebar-item" href="dashboard.html"><span class="icon">⊞</span> Dashboard</a>
+    <a class="sidebar-item" href="courses.html"><span class="icon">▶</span> Courses</a>
+    <a class="sidebar-item" href="#"><span class="icon">☰</span> Lessons</a>
+    <a class="sidebar-item" href="#"><span class="icon">◈</span> Plans & Pricing</a>
+    <div class="sidebar-section">Audience</div>
+    <a class="sidebar-item" href="#"><span class="icon">◎</span> Subscribers</a>
+    <a class="sidebar-item active" href="certificates.html"><span class="icon">◉</span> Certificates</a>
+    <a class="sidebar-item" href="#"><span class="icon">⬡</span> Transactions</a>
+    <div class="sidebar-section">Analytics</div>
+    <a class="sidebar-item" href="#"><span class="icon">⟁</span> Revenue</a>
+    <a class="sidebar-item" href="#"><span class="icon">◰</span> Content</a>
+    <div class="sidebar-section">Settings</div>
+    <a class="sidebar-item" href="#"><span class="icon">◇</span> Brand</a>
+    <a class="sidebar-item" href="#"><span class="icon">◈</span> Stripe Connect</a>
+    <a class="sidebar-item" href="#"><span class="icon">◑</span> Video Provider</a>
+    <div style="flex:1"></div>
+    <div style="padding:16px 20px;border-top:1px solid var(--border);margin-top:16px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--ocean),var(--navy));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--light)">FP</div>
+        <div>
+          <div style="font-size:13px;font-weight:600">FitPro Academy</div>
+          <div style="font-size:11px;color:var(--muted)">Owner</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Certificates</div>
+        <div class="page-sub">12 pending approval · 184 issued total</div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-ghost btn-sm">Configure Template</button>
+        <button class="btn btn-primary btn-sm" onclick="approveAll()">Approve All Eligible</button>
+      </div>
+    </div>
+
+    <!-- Pipeline view -->
+    <div class="cert-pipeline">
+      <!-- In Progress -->
+      <div class="pipeline-col">
+        <div class="pipeline-header">
+          <span class="pipeline-title" style="color:var(--muted)">In Progress</span>
+          <span class="pipeline-count" style="background:rgba(90,138,170,0.15);color:var(--muted)">211</span>
+        </div>
+        <div class="cert-card">
+          <div class="cert-card-name">Marcus Thompson</div>
+          <div class="cert-card-course">HIIT Certification · 68%</div>
+          <div class="progress-bar" style="margin-top:8px"><div class="progress-fill" style="width:68%"></div></div>
+        </div>
+        <div class="cert-card">
+          <div class="cert-card-name">Priya Nair</div>
+          <div class="cert-card-course">Yoga Flow Mastery · 44%</div>
+          <div class="progress-bar" style="margin-top:8px"><div class="progress-fill" style="width:44%"></div></div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);text-align:center;padding:8px">+209 more in progress</div>
+      </div>
+
+      <!-- Eligible -->
+      <div class="pipeline-col" style="border-color:rgba(245,200,66,0.3)">
+        <div class="pipeline-header">
+          <span class="pipeline-title" style="color:var(--gold)">Eligible</span>
+          <span class="pipeline-count" style="background:rgba(245,200,66,0.15);color:var(--gold)">12</span>
+        </div>
+        <div class="cert-card" style="border-color:rgba(245,200,66,0.2)">
+          <div class="cert-card-name">James Mitchell</div>
+          <div class="cert-card-course">Advanced Strength Training</div>
+          <div class="cert-card-date">Eligible since Mar 22</div>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <button class="btn btn-primary btn-sm" style="flex:1;font-size:11px" onclick="approveSingle(this,'James Mitchell')">Approve</button>
+            <button class="btn btn-ghost btn-sm" style="font-size:11px">View</button>
+          </div>
+        </div>
+        <div class="cert-card" style="border-color:rgba(245,200,66,0.2)">
+          <div class="cert-card-name">Sara Rodriguez</div>
+          <div class="cert-card-course">Nutrition Fundamentals</div>
+          <div class="cert-card-date">Eligible since Mar 23</div>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <button class="btn btn-primary btn-sm" style="flex:1;font-size:11px" onclick="approveSingle(this,'Sara Rodriguez')">Approve</button>
+            <button class="btn btn-ghost btn-sm" style="font-size:11px">View</button>
+          </div>
+        </div>
+        <div class="cert-card" style="border-color:rgba(245,200,66,0.2)">
+          <div class="cert-card-name">David Kim</div>
+          <div class="cert-card-course">HIIT Certification Course</div>
+          <div class="cert-card-date">Eligible since Mar 24</div>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <button class="btn btn-primary btn-sm" style="flex:1;font-size:11px" onclick="approveSingle(this,'David Kim')">Approve</button>
+            <button class="btn btn-ghost btn-sm" style="font-size:11px">View</button>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);text-align:center;padding:8px">+9 more eligible</div>
+      </div>
+
+      <!-- Approved -->
+      <div class="pipeline-col" style="border-color:rgba(211,84,0,0.3)">
+        <div class="pipeline-header">
+          <span class="pipeline-title" style="color:var(--light)">Approved</span>
+          <span class="pipeline-count" style="background:rgba(211,84,0,0.15);color:var(--light)">3</span>
+        </div>
+        <div class="cert-card" style="border-color:rgba(211,84,0,0.2)">
+          <div class="cert-card-name">Amy Liu</div>
+          <div class="cert-card-course">Yoga Flow Mastery</div>
+          <div class="cert-card-date">Approved Mar 24 — generating PDF</div>
+        </div>
+        <div class="cert-card" style="border-color:rgba(211,84,0,0.2)">
+          <div class="cert-card-name">Chris Walker</div>
+          <div class="cert-card-course">HIIT Certification</div>
+          <div class="cert-card-date">Approved Mar 25 — generating PDF</div>
+        </div>
+      </div>
+
+      <!-- Issued -->
+      <div class="pipeline-col" style="border-color:rgba(22,163,74,0.3)">
+        <div class="pipeline-header">
+          <span class="pipeline-title" style="color:#4ade80">Issued</span>
+          <span class="pipeline-count" style="background:rgba(22,163,74,0.15);color:#4ade80">184</span>
+        </div>
+        <div class="cert-card" style="border-color:rgba(22,163,74,0.2)">
+          <div class="cert-card-name">Taylor Brooks</div>
+          <div class="cert-card-course">Advanced Strength Training</div>
+          <div class="cert-card-date">VIBE-2026-00184 · Mar 20</div>
+        </div>
+        <div class="cert-card" style="border-color:rgba(22,163,74,0.2)">
+          <div class="cert-card-name">Jordan Lee</div>
+          <div class="cert-card-course">HIIT Certification</div>
+          <div class="cert-card-date">VIBE-2026-00183 · Mar 19</div>
+        </div>
+        <div class="cert-card" style="border-color:rgba(22,163,74,0.2)">
+          <div class="cert-card-name">Riley Chen</div>
+          <div class="cert-card-course">Nutrition Fundamentals</div>
+          <div class="cert-card-date">VIBE-2026-00182 · Mar 18</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);text-align:center;padding:8px">+181 issued certs</div>
+      </div>
+    </div>
+
+    <!-- Certificate Preview + Full Table -->
+    <div style="display:grid;grid-template-columns:1fr 1.6fr;gap:20px">
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:16px">Certificate Preview</div>
+        <div class="cert-preview">
+          <div class="cert-preview-logo">FitPro Academy</div>
+          <div class="cert-preview-title">Certificate of Completion</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">This certifies that</div>
+          <div class="cert-preview-recipient">James Mitchell</div>
+          <div class="cert-preview-course">has successfully completed<br><strong style="color:var(--text)">Advanced Strength Training</strong></div>
+          <div class="cert-preview-seal">🏆</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Approved by Admin · March 25, 2026</div>
+          <div class="cert-preview-id">VIBE-2026-00185</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:700;font-size:16px;margin-bottom:20px">Issued Certificates</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Learner</th>
+              <th>Course</th>
+              <th>Cert ID</th>
+              <th>Issued</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div style="font-weight:600">Taylor Brooks</div></td>
+              <td style="color:var(--muted);font-size:13px">Advanced Strength Training</td>
+              <td><code style="font-size:11px;color:var(--light)">VIBE-2026-00184</code></td>
+              <td style="color:var(--muted);font-size:12px">Mar 20</td>
+              <td><button class="btn btn-ghost btn-sm">View</button></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:600">Jordan Lee</div></td>
+              <td style="color:var(--muted);font-size:13px">HIIT Certification</td>
+              <td><code style="font-size:11px;color:var(--light)">VIBE-2026-00183</code></td>
+              <td style="color:var(--muted);font-size:12px">Mar 19</td>
+              <td><button class="btn btn-ghost btn-sm">View</button></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:600">Riley Chen</div></td>
+              <td style="color:var(--muted);font-size:13px">Nutrition Fundamentals</td>
+              <td><code style="font-size:11px;color:var(--light)">VIBE-2026-00182</code></td>
+              <td style="color:var(--muted);font-size:12px">Mar 18</td>
+              <td><button class="btn btn-ghost btn-sm">View</button></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:600">Morgan Adams</div></td>
+              <td style="color:var(--muted);font-size:13px">Advanced Strength Training</td>
+              <td><code style="font-size:11px;color:var(--light)">VIBE-2026-00181</code></td>
+              <td style="color:var(--muted);font-size:12px">Mar 17</td>
+              <td><button class="btn btn-ghost btn-sm">View</button></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:600">Alex Turner</div></td>
+              <td style="color:var(--muted);font-size:13px">HIIT Certification</td>
+              <td><code style="font-size:11px;color:var(--light)">VIBE-2026-00180</code></td>
+              <td style="color:var(--muted);font-size:12px">Mar 16</td>
+              <td><button class="btn btn-ghost btn-sm">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="text-align:center;margin-top:16px">
+          <button class="btn btn-ghost btn-sm">Load more (179 remaining)</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div id="toast" class="toast" style="display:none">
+  <span style="font-size:20px">🎓</span>
+  <div>
+    <div style="font-weight:700;font-size:13px" id="toast-msg">Certificate Approved</div>
+    <div style="font-size:12px;color:var(--muted)">PDF generating — will be emailed to learner</div>
+  </div>
+</div>
+
+<script>
+function approveSingle(btn, name) {
+  const card = btn.closest('.cert-card');
+  card.style.opacity = '0.4';
+  card.style.pointerEvents = 'none';
+  document.getElementById('toast-msg').textContent = name + '\'s certificate approved';
+  const toast = document.getElementById('toast');
+  toast.style.display = 'flex';
+  setTimeout(() => toast.style.display = 'none', 3500);
+}
+
+function approveAll() {
+  document.querySelectorAll('.cert-card [onclick*="approveSingle"]').forEach(btn => btn.click());
+}
+</script>
+
+  <script src="https://naluask.com/widget.js" data-client-key="vibe_k_2026_vibe" data-color="#6366f1" data-icon="neural" defer></script>
+</body>
+</html>

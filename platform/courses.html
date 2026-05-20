@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VIBE — Course Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+/* ═══════════════════════════════════════════════════════════
+   VIBE Platform — Shared Styles
+   CEO Dashboard Color Scheme
+═══════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --deep:    #050e1f;
+  --navy:    #071428;
+  --card:    #0a1c35;
+  --card2:   #0d2040;
+  --ocean:   #D35400;
+  --light:   #ff7043;
+  --glow:    #ff9500;
+  --coral:   #ff6b6b;
+  --gold:    #f5c842;
+  --green:   #16a34a;
+  --red:     #dc2626;
+  --text:    #d6eeff;
+  --muted:   #5a8aaa;
+  --border:  rgba(211,84,0,0.25);
+  --border2: rgba(255,112,67,0.15);
+  --radius:  12px;
+  --radius-lg: 20px;
+  --shadow:  0 0 40px rgba(211,84,0,0.15);
+  --shadow-lg: 0 0 60px rgba(255,112,67,0.18);
+}
+
+body {
+  font-family: 'Outfit', 'Segoe UI', sans-serif;
+  background: var(--deep);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── ANIMATED BACKGROUND ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(211,84,0,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 90%, rgba(255,112,67,0.05) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── NAVIGATION ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(5,14,31,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--light), var(--ocean));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.nav-brand .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--glow);
+  box-shadow: 0 0 10px var(--glow);
+  -webkit-text-fill-color: initial;
+  flex-shrink: 0;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a[aria-current="page"] {
+  color: var(--text);
+  background: var(--card);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--ocean), var(--light));
+  color: var(--deep);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(255,112,67,0.4);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover {
+  background: var(--card);
+  border-color: var(--border2);
+}
+
+.btn-large {
+  padding: 16px 36px;
+  font-size: 16px;
+  border-radius: 14px;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 12px;
+  border-radius: 8px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  transition: all 0.3s;
+}
+
+.card:hover {
+  border-color: var(--border2);
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+
+.card-glow {
+  box-shadow: var(--shadow);
+  border-color: var(--border2);
+}
+
+/* ── SECTION LAYOUT ── */
+.section {
+  padding: 100px 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* ── TYPOGRAPHY ── */
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ocean);
+}
+
+.heading-xl {
+  font-size: clamp(42px, 5vw, 72px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.heading-lg {
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.heading-md {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--light), var(--ocean));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-muted {
+  color: var(--muted);
+}
+
+.text-sm {
+  font-size: 14px;
+}
+
+.text-xs {
+  font-size: 12px;
+}
+
+/* ── BADGES ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-ocean {
+  background: rgba(211,84,0,0.15);
+  color: var(--light);
+  border: 1px solid var(--border);
+}
+
+.badge-green {
+  background: rgba(22,163,74,0.15);
+  color: #4ade80;
+  border: 1px solid rgba(22,163,74,0.3);
+}
+
+.badge-gold {
+  background: rgba(245,200,66,0.12);
+  color: var(--gold);
+  border: 1px solid rgba(245,200,66,0.25);
+}
+
+.badge-coral {
+  background: rgba(255,107,107,0.12);
+  color: var(--coral);
+  border: 1px solid rgba(255,107,107,0.25);
+}
+
+/* ── STATS ── */
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--light), var(--glow));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+  margin-top: 6px;
+}
+
+/* ── ICON CONTAINERS ── */
+.icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(211,84,0,0.15);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.icon-box-lg {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  font-size: 28px;
+}
+
+/* ── DIVIDER ── */
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 40px 0;
+}
+
+/* ── FORM ELEMENTS ── */
+input, select, textarea {
+  background: var(--navy);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  padding: 12px 16px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--ocean);
+  box-shadow: 0 0 0 3px rgba(211,84,0,0.15);
+}
+
+input::placeholder { color: var(--muted); }
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar {
+  height: 6px;
+  background: var(--navy);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--ocean), var(--light));
+  border-radius: 100px;
+  transition: width 0.6s ease;
+}
+
+/* ── TABLE ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  padding: 14px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(211,84,0,0.08);
+}
+
+tr:hover td { background: rgba(211,84,0,0.05); }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--navy);
+  border-right: 1px solid var(--border);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+}
+
+.sidebar-logo {
+  padding: 0 20px 24px;
+  font-size: 20px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--light), var(--ocean));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.sidebar-section {
+  padding: 8px 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 10px;
+  margin: 2px 8px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.sidebar-item:hover,
+.sidebar-item.active {
+  color: var(--text);
+  background: var(--card);
+}
+
+.sidebar-item.active {
+  color: var(--light);
+  background: rgba(211,84,0,0.15);
+  border: 1px solid var(--border);
+}
+
+.sidebar-item .icon { font-size: 16px; }
+
+/* ── PAGE LAYOUT ── */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 32px;
+  overflow-y: auto;
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.page-sub {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* ── VIDEO THUMBNAIL ── */
+.thumb {
+  aspect-ratio: 16/9;
+  border-radius: var(--radius);
+  background: var(--card2);
+  overflow: hidden;
+  position: relative;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(5,14,31,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.thumb:hover .thumb-overlay { opacity: 1; }
+
+.play-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255,112,67,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--deep);
+  backdrop-filter: blur(4px);
+}
+
+/* ── VIDEO PLAYER ── */
+.player-wrap {
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+}
+
+.player-wrap iframe,
+.player-wrap video {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5,14,31,0.8);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  width: 100%;
+  max-width: 560px;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  z-index: 999;
+  box-shadow: var(--shadow);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+  .section { padding: 60px 20px; }
+  nav { padding: 0 20px; }
+  .main-content { padding: 20px; }
+}
+
+@media (max-width: 600px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .heading-xl { font-size: 36px; }
+  .app-layout { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; position: static; }
+}
+
+/* ── TAB BUTTONS (shared) ── */
+.tab-btn {
+  padding: 10px 24px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  background: rgba(211,84,0,0.15);
+  border-color: var(--ocean);
+  color: var(--light);
+}
+
+/* White logo overrides */
+.nav-brand, .sidebar-logo {
+  color: #ffffff !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+</style>
+  <style>
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .course-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .course-card:hover {
+      border-color: var(--border2);
+      box-shadow: var(--shadow);
+      transform: translateY(-2px);
+    }
+
+    .course-cover {
+      aspect-ratio: 16/9;
+      background: var(--card2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      position: relative;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .course-cover-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    .course-cover-cert {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(5,14,31,0.8);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .course-body { padding: 18px; }
+
+    .lesson-list { display: flex; flex-direction: column; gap: 0; }
+
+    .lesson-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(211,84,0,0.08);
+    }
+
+    .lesson-item:last-child { border-bottom: none; }
+
+    .lesson-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .lesson-num.complete {
+      background: rgba(22,163,74,0.15);
+      border-color: rgba(22,163,74,0.3);
+      color: #4ade80;
+    }
+
+    .drag-handle {
+      color: var(--muted);
+      cursor: grab;
+      font-size: 14px;
+      opacity: 0.5;
+    }
+
+    .new-course-card {
+      background: var(--card);
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 40px;
+      cursor: pointer;
+      transition: all 0.2s;
+      aspect-ratio: auto;
+      min-height: 200px;
+    }
+
+    .new-course-card:hover {
+      border-color: var(--ocean);
+      background: rgba(211,84,0,0.05);
+    }
+
+    .panel-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5,14,31,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      justify-content: flex-end;
+    }
+
+    .panel-overlay.open { display: flex; }
+
+    .side-panel {
+      width: 520px;
+      background: var(--card);
+      border-left: 1px solid var(--border);
+      height: 100vh;
+      overflow-y: auto;
+      padding: 32px;
+      animation: slideInRight 0.3s ease;
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(40px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .form-row { margin-bottom: 20px; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+    @media (max-width: 1000px) {
+      .course-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .course-grid { grid-template-columns: 1fr; }
+      .side-panel { width: 100vw; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-layout">
+  <!-- Sidebar (same as dashboard) -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">⬡ VIBE</div>
+    <div class="sidebar-section">Workspace</div>
+    <a class="sidebar-item" href="dashboard.html"><span class="icon">⊞</span> Dashboard</a>
+    <a class="sidebar-item active" href="courses.html"><span class="icon">▶</span> Courses</a>
+    <a class="sidebar-item" href="#"><span class="icon">☰</span> Lessons</a>
+    <a class="sidebar-item" href="#"><span class="icon">◈</span> Plans & Pricing</a>
+    <div class="sidebar-section">Audience</div>
+    <a class="sidebar-item" href="#"><span class="icon">◎</span> Subscribers</a>
+    <a class="sidebar-item" href="certificates.html"><span class="icon">◉</span> Certificates</a>
+    <a class="sidebar-item" href="#"><span class="icon">⬡</span> Transactions</a>
+    <div class="sidebar-section">Analytics</div>
+    <a class="sidebar-item" href="#"><span class="icon">⟁</span> Revenue</a>
+    <a class="sidebar-item" href="#"><span class="icon">◰</span> Content</a>
+    <div class="sidebar-section">Settings</div>
+    <a class="sidebar-item" href="#"><span class="icon">◇</span> Brand</a>
+    <a class="sidebar-item" href="#"><span class="icon">◈</span> Stripe Connect</a>
+    <a class="sidebar-item" href="#"><span class="icon">◑</span> Video Provider</a>
+    <div style="flex:1"></div>
+    <div style="padding:16px 20px;border-top:1px solid var(--border);margin-top:16px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--ocean),var(--navy));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--light)">FP</div>
+        <div>
+          <div style="font-size:13px;font-weight:600">FitPro Academy</div>
+          <div style="font-size:11px;color:var(--muted)">Owner</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Courses</div>
+        <div class="page-sub">4 courses · 46 total lessons</div>
+      </div>
+      <button class="btn btn-primary" onclick="openPanel()">+ New Course</button>
+    </div>
+
+    <!-- Filter bar -->
+    <div style="display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap">
+      <button class="tab-btn active" style="font-size:12px">All (4)</button>
+      <button class="tab-btn" style="font-size:12px">Published (3)</button>
+      <button class="tab-btn" style="font-size:12px">Draft (1)</button>
+      <button class="tab-btn" style="font-size:12px">Certificate Enabled (2)</button>
+      <div style="margin-left:auto">
+        <input type="text" placeholder="Search courses..." style="width:220px;padding:8px 14px;font-size:13px" />
+      </div>
+    </div>
+
+    <!-- Course Cards -->
+    <div class="course-grid">
+
+      <!-- Course 1 -->
+      <div class="course-card" onclick="openCourse('strength')">
+        <div class="course-cover">
+          💪
+          <div class="course-cover-badge"><span class="badge badge-green">Published</span></div>
+        </div>
+        <div class="course-body">
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px">Advanced Strength Training</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px">12 lessons · 4h 22m</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+            <span style="color:var(--muted)">284 students</span>
+            <span style="color:#4ade80;font-weight:600">$4,260</span>
+          </div>
+          <div class="progress-bar" style="margin-top:10px">
+            <div class="progress-fill" style="width:91%"></div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px">91% avg completion</div>
+        </div>
+      </div>
+
+      <!-- Course 2 -->
+      <div class="course-card" onclick="openCourse('nutrition')">
+        <div class="course-cover">🥗
+          <div class="course-cover-badge"><span class="badge badge-green">Published</span></div>
+        </div>
+        <div class="course-body">
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px">Nutrition Fundamentals</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px">8 lessons · 2h 48m</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+            <span style="color:var(--muted)">196 students</span>
+            <span style="color:#4ade80;font-weight:600">$2,940</span>
+          </div>
+          <div class="progress-bar" style="margin-top:10px">
+            <div class="progress-fill" style="width:87%"></div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px">87% avg completion</div>
+        </div>
+      </div>
+
+      <!-- Course 3 — with cert -->
+      <div class="course-card" onclick="openCourse('hiit')">
+        <div class="course-cover">🔥
+          <div class="course-cover-badge"><span class="badge badge-green">Published</span></div>
+          <div class="course-cover-cert">🎓 Certificate</div>
+        </div>
+        <div class="course-body">
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px">HIIT Certification Course</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px">16 lessons · 6h 15m · Certificate</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+            <span style="color:var(--muted)">312 students</span>
+            <span style="color:#4ade80;font-weight:600">$4,680</span>
+          </div>
+          <div class="progress-bar" style="margin-top:10px">
+            <div class="progress-fill" style="width:78%"></div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px">78% avg completion</div>
+        </div>
+      </div>
+
+      <!-- Course 4 — draft with cert -->
+      <div class="course-card" onclick="openCourse('yoga')">
+        <div class="course-cover">🧘
+          <div class="course-cover-badge"><span class="badge badge-gold">Draft</span></div>
+          <div class="course-cover-cert">🎓 Certificate</div>
+        </div>
+        <div class="course-body">
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px">Yoga Flow Mastery</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px">10 lessons · 3h 30m · Certificate</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+            <span style="color:var(--muted)">55 students</span>
+            <span style="color:var(--gold);font-weight:600">Draft</span>
+          </div>
+          <div class="progress-bar" style="margin-top:10px">
+            <div class="progress-fill" style="width:44%"></div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px">44% avg completion</div>
+        </div>
+      </div>
+
+      <!-- New course -->
+      <div class="new-course-card" onclick="openPanel()">
+        <div style="font-size:36px;color:var(--ocean)">+</div>
+        <div style="font-size:14px;font-weight:600;color:var(--muted)">New Course</div>
+        <div style="font-size:12px;color:var(--muted);text-align:center">Add lessons, set pricing,<br>and publish to your catalog</div>
+      </div>
+    </div>
+
+    <!-- Lesson Manager (shown when course selected) -->
+    <div id="lesson-manager" class="card" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+        <div>
+          <div class="label" style="margin-bottom:4px">Course Editor</div>
+          <div id="lm-title" style="font-weight:700;font-size:18px"></div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" onclick="closeCourse()">← Back</button>
+          <button class="btn btn-primary btn-sm">+ Add Lesson</button>
+        </div>
+      </div>
+      <div class="lesson-list" id="lesson-list"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- New Course Panel -->
+<div class="panel-overlay" id="newCoursePanel">
+  <div class="side-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
+      <h2 style="font-size:20px;font-weight:800">New Course</h2>
+      <button onclick="closePanel()" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer">×</button>
+    </div>
+
+    <div class="form-row">
+      <label>Course Title</label>
+      <input type="text" placeholder="e.g. Advanced Strength Training" />
+    </div>
+    <div class="form-row">
+      <label>Description</label>
+      <textarea placeholder="What will students learn?" style="height:100px;resize:vertical"></textarea>
+    </div>
+    <div class="form-row-2">
+      <div>
+        <label>Level</label>
+        <select>
+          <option>Beginner</option>
+          <option>Intermediate</option>
+          <option>Advanced</option>
+        </select>
+      </div>
+      <div>
+        <label>Category</label>
+        <select>
+          <option>Fitness</option>
+          <option>Nutrition</option>
+          <option>Wellness</option>
+          <option>Business</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Visibility</label>
+      <select>
+        <option>Private (draft)</option>
+        <option>Public</option>
+        <option>Unlisted</option>
+      </select>
+    </div>
+    <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px">
+      <label style="margin-bottom:10px;display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0">
+        <input type="checkbox" id="cert-toggle" style="width:auto" />
+        <span style="font-size:14px;font-weight:600;color:var(--text)">Enable Certificate on Completion</span>
+      </label>
+      <p style="font-size:12px;color:var(--muted);line-height:1.6">System will auto-detect when all required lessons are complete and mark the learner as eligible. Admin approves before certificate is issued.</p>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-primary" style="flex:1" onclick="createCourse()">Create Course</button>
+      <button class="btn btn-ghost" onclick="closePanel()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const courseData = {
+  strength: {
+    title: 'Advanced Strength Training',
+    lessons: [
+      { n: 1, title: 'Introduction & Safety Principles', dur: '18m', type: 'video', complete: true },
+      { n: 2, title: 'Warm-Up Protocol', dur: '12m', type: 'video', complete: true },
+      { n: 3, title: 'Compound Movement Fundamentals', dur: '32m', type: 'video', complete: true },
+      { n: 4, title: 'Progressive Overload Explained', dur: '24m', type: 'video', complete: true },
+      { n: 5, title: 'Squat Mechanics Deep Dive', dur: '28m', type: 'video', complete: false },
+      { n: 6, title: 'Deadlift Form & Variants', dur: '31m', type: 'video', complete: false },
+      { n: 7, title: 'Bench Press Technique', dur: '26m', type: 'video', complete: false },
+      { n: 8, title: 'Accessory Exercises', dur: '22m', type: 'video', complete: false },
+      { n: 9, title: 'Recovery & Nutrition Integration', dur: '19m', type: 'video', complete: false },
+      { n: 10, title: 'Programming Your Own Cycles', dur: '35m', type: 'video', complete: false },
+      { n: 11, title: 'Common Mistakes & How to Fix Them', dur: '21m', type: 'video', complete: false },
+      { n: 12, title: 'Final Assessment & Program', dur: '14m', type: 'text', complete: false },
+    ]
+  },
+  hiit: {
+    title: 'HIIT Certification Course',
+    lessons: [
+      { n: 1, title: 'What is HIIT?', dur: '15m', type: 'video', complete: true },
+      { n: 2, title: 'Physiological Foundations', dur: '28m', type: 'video', complete: true },
+      { n: 3, title: 'Equipment & Safety', dur: '18m', type: 'video', complete: false },
+      { n: 4, title: 'Protocol Design 101', dur: '35m', type: 'video', complete: false },
+      { n: 5, title: 'Tabata Training', dur: '22m', type: 'video', complete: false },
+      { n: 6, title: 'Cardio Intervals', dur: '26m', type: 'video', complete: false },
+    ]
+  }
+};
+
+function openCourse(id) {
+  const data = courseData[id];
+  if (!data) return;
+  document.getElementById('lm-title').textContent = data.title;
+  const list = document.getElementById('lesson-list');
+  list.innerHTML = data.lessons.map(l => `
+    <div class="lesson-item">
+      <span class="drag-handle">⋮⋮</span>
+      <div class="lesson-num ${l.complete ? 'complete' : ''}">${l.complete ? '✓' : l.n}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${l.title}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">${l.type} · ${l.dur}</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm">Edit</button>
+        <button class="btn btn-ghost btn-sm" style="color:var(--coral)">Remove</button>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('lesson-manager').style.display = 'block';
+  document.getElementById('lesson-manager').scrollIntoView({ behavior: 'smooth' });
+}
+
+function closeCourse() {
+  document.getElementById('lesson-manager').style.display = 'none';
+}
+
+function openPanel() {
+  document.getElementById('newCoursePanel').classList.add('open');
+}
+
+function closePanel() {
+  document.getElementById('newCoursePanel').classList.remove('open');
+}
+
+function createCourse() {
+  closePanel();
+  alert('Course created and saved to draft. Add lessons to publish.');
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+
+  <script src="https://naluask.com/widget.js" data-client-key="vibe_k_2026_vibe" data-color="#6366f1" data-icon="neural" defer></script>
+</body>
+</html>

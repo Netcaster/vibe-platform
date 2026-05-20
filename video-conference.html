@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VIBE — Video Conference</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --deep:   #050e1f;
+  --navy:   #071428;
+  --card:   #0a1c35;
+  --card2:  #0d2040;
+  --ocean:  #D35400;
+  --light:  #ff7043;
+  --glow:   #ff9500;
+  --text:   #d6eeff;
+  --muted:  #5a8aaa;
+  --border: rgba(211,84,0,0.22);
+  --radius: 12px;
+  --radius-lg: 20px;
+}
+body { font-family:'Outfit','Segoe UI',sans-serif; background:var(--deep); color:var(--text); min-height:100vh; overflow-x:hidden; }
+body::before { content:''; position:fixed; inset:0; background: radial-gradient(ellipse 60% 40% at 15% 5%,rgba(211,84,0,0.07) 0%,transparent 60%), radial-gradient(ellipse 50% 40% at 85% 95%,rgba(255,112,67,0.05) 0%,transparent 60%); pointer-events:none; z-index:0; }
+
+/* ── NAV ── */
+nav { position:sticky; top:0; z-index:100; background:rgba(5,14,31,0.9); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); padding:0 40px; height:64px; display:flex; align-items:center; justify-content:space-between; }
+.nav-brand { display:flex; align-items:center; gap:10px; font-size:22px; font-weight:800; color:#fff; letter-spacing:0.05em; text-decoration:none; }
+.nav-brand .dot { width:8px; height:8px; border-radius:50%; background:var(--glow); box-shadow:0 0 10px var(--glow); flex-shrink:0; }
+.nav-links { display:flex; align-items:center; gap:8px; }
+.nav-links a { color:var(--muted); text-decoration:none; font-size:14px; font-weight:500; padding:6px 14px; border-radius:8px; transition:all 0.2s; }
+.nav-links a:hover, .nav-links a.active { color:var(--text); background:var(--card); }
+.nav-links a.active { color:var(--light); }
+.nav-actions { display:flex; align-items:center; gap:10px; }
+.btn { display:inline-flex; align-items:center; gap:8px; padding:10px 22px; border-radius:var(--radius); font-size:14px; font-weight:600; cursor:pointer; border:none; text-decoration:none; transition:all 0.2s; font-family:inherit; }
+.btn-ghost { background:transparent; color:var(--text); border:1px solid var(--border); }
+.btn-ghost:hover { background:var(--card); }
+.btn-primary { background:linear-gradient(135deg,var(--ocean),var(--light)); color:#fff; }
+.btn-primary:hover { transform:translateY(-1px); box-shadow:0 8px 24px rgba(255,112,67,0.35); }
+.btn-lg { padding:16px 36px; font-size:16px; border-radius:14px; }
+
+/* ── SECTIONS ── */
+.section { padding:96px 40px; position:relative; z-index:1; }
+.container { max-width:1200px; margin:0 auto; }
+.label { font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--ocean); }
+
+/* ── HERO ── */
+.hero { padding:80px 40px 64px; position:relative; z-index:1; }
+.hero-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; }
+.hero-label { margin-bottom:20px; }
+.hero-title { font-size:clamp(40px,5vw,68px); font-weight:900; line-height:1.08; letter-spacing:-0.02em; margin-bottom:24px; }
+.hero-title .accent { color:var(--light); }
+.hero-sub { font-size:17px; color:var(--muted); line-height:1.7; margin-bottom:36px; max-width:480px; }
+.hero-ctas { display:flex; gap:14px; flex-wrap:wrap; }
+.hero-stats { display:flex; gap:28px; margin-top:36px; padding-top:28px; border-top:1px solid var(--border); flex-wrap:wrap; }
+.hero-stat-val { font-size:28px; font-weight:800; color:var(--light); line-height:1; }
+.hero-stat-lbl { font-size:12px; color:var(--muted); margin-top:4px; }
+
+/* ── BROWSER MOCK ── */
+.browser-mock { background:var(--card); border:1px solid rgba(211,84,0,0.2); border-radius:16px; overflow:hidden; box-shadow:0 32px 80px rgba(0,0,0,0.5); }
+.browser-bar { background:var(--navy); padding:12px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border); }
+.browser-dots { display:flex; gap:6px; }
+.browser-dot { width:10px; height:10px; border-radius:50%; }
+.browser-url { flex:1; background:var(--card2); border-radius:6px; padding:5px 12px; font-size:12px; color:var(--muted); font-family:monospace; }
+.browser-content { padding:0; }
+
+/* ── LIVE ROOM MOCK ── */
+.room-mock { background:#010810; }
+.rm-topbar { background:rgba(5,14,31,0.98); border-bottom:1px solid rgba(211,84,0,0.15); padding:10px 16px; display:flex; align-items:center; justify-content:space-between; }
+.rm-logo { font-size:14px; font-weight:800; color:#fff; }
+@keyframes livepulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+.rm-live { display:flex; align-items:center; gap:6px; background:rgba(220,38,38,0.2); border:1px solid rgba(220,38,38,0.4); border-radius:100px; padding:3px 10px; font-size:10px; font-weight:700; color:#f87171; }
+.rm-live-dot { width:6px; height:6px; border-radius:50%; background:#ef4444; animation:livepulse 1.8s infinite; }
+.rm-end { background:rgba(220,38,38,0.15); border:1px solid rgba(220,38,38,0.3); border-radius:6px; padding:4px 10px; font-size:10px; font-weight:700; color:#f87171; }
+.rm-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:10px; }
+.rm-tile { aspect-ratio:16/9; border-radius:8px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+.rm-tile-1 { background:linear-gradient(135deg,#1a0a05,#0d2040); border:1px solid rgba(211,84,0,0.25); }
+.rm-tile-2 { background:linear-gradient(135deg,#05101a,#071428); border:1px solid rgba(8,131,149,0.25); }
+.rm-tile-3 { background:linear-gradient(135deg,#0a1a05,#071428); border:1px solid rgba(22,163,74,0.2); }
+.rm-tile-4 { background:linear-gradient(135deg,#1a0a1a,#0d071a); border:1px solid rgba(124,58,237,0.25); }
+.rm-avatar { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; color:#fff; }
+.rm-name { position:absolute; bottom:5px; left:6px; font-size:9px; font-weight:600; background:rgba(5,14,31,0.85); padding:2px 6px; border-radius:4px; }
+.rm-host { position:absolute; top:5px; right:5px; font-size:8px; background:rgba(211,84,0,0.3); color:var(--light); padding:1px 5px; border-radius:3px; font-weight:700; }
+.rm-controls { background:rgba(5,14,31,0.98); border-top:1px solid rgba(211,84,0,0.12); padding:8px; display:flex; justify-content:center; gap:8px; }
+.rm-ctrl { background:rgba(13,32,64,0.8); border:1px solid rgba(211,84,0,0.2); border-radius:8px; padding:6px 10px; font-size:11px; color:var(--muted); display:flex; align-items:center; gap:4px; }
+.rm-ctrl-end { background:rgba(220,38,38,0.15); border-color:rgba(220,38,38,0.35); color:#f87171; }
+.rm-chat { border-top:1px solid rgba(211,84,0,0.12); padding:8px 10px; display:flex; flex-direction:column; gap:5px; }
+.rm-msg { font-size:9px; line-height:1.4; }
+.rm-msg-name { color:var(--light); font-weight:700; margin-right:4px; }
+.rm-msg-body { color:var(--muted); }
+
+/* ── HOW IT WORKS ── */
+.hiw-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
+.step { display:flex; flex-direction:column; gap:32px; }
+.step-item { display:flex; gap:24px; align-items:flex-start; padding-bottom:32px; border-bottom:1px solid rgba(211,84,0,0.12); }
+.step-item:last-child { border-bottom:none; padding-bottom:0; }
+.step-num { font-size:52px; font-weight:900; color:var(--ocean); line-height:1; flex-shrink:0; min-width:64px; opacity:0.85; font-variant-numeric:tabular-nums; }
+.step-body { padding-top:8px; }
+.step-title { font-size:22px; font-weight:800; margin-bottom:10px; line-height:1.2; }
+.step-desc { font-size:15px; color:var(--muted); line-height:1.7; }
+.step-tip { display:inline-flex; align-items:center; gap:6px; margin-top:12px; background:rgba(211,84,0,0.1); border:1px solid rgba(211,84,0,0.2); border-radius:8px; padding:6px 12px; font-size:12px; color:var(--light); font-weight:600; }
+
+/* ── CAPACITY TABLE ── */
+.cap-section { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
+.cap-header { padding:24px 28px; border-bottom:1px solid var(--border); }
+.cap-header h3 { font-size:20px; font-weight:800; }
+.cap-header p { font-size:13px; color:var(--muted); margin-top:6px; }
+.cap-table { width:100%; border-collapse:collapse; }
+.cap-table th { font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); padding:14px 20px; text-align:left; border-bottom:1px solid rgba(211,84,0,0.1); }
+.cap-table td { padding:16px 20px; font-size:14px; border-bottom:1px solid rgba(211,84,0,0.06); }
+.cap-table tr:last-child td { border-bottom:none; }
+.cap-table tr:hover td { background:rgba(211,84,0,0.04); }
+.tier-badge { display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:100px; font-size:12px; font-weight:700; }
+.tier-starter { background:rgba(90,138,170,0.12); color:var(--muted); border:1px solid rgba(90,138,170,0.25); }
+.tier-basic { background:rgba(211,84,0,0.12); color:var(--light); border:1px solid rgba(211,84,0,0.3); }
+.tier-pro { background:rgba(245,200,66,0.12); color:#f5c842; border:1px solid rgba(245,200,66,0.3); }
+.tier-ent { background:rgba(124,58,237,0.12); color:#a78bfa; border:1px solid rgba(124,58,237,0.3); }
+.cap-note { padding:16px 20px; font-size:12px; color:var(--muted); border-top:1px solid var(--border); background:rgba(211,84,0,0.04); }
+
+/* ── PRICING ── */
+.pricing-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+.price-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px; display:flex; flex-direction:column; gap:20px; transition:all 0.3s; }
+.price-card:hover { transform:translateY(-4px); box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+.price-card.featured { border-color:rgba(211,84,0,0.45); background:linear-gradient(135deg,rgba(211,84,0,0.07),var(--card)); }
+.price-name { font-size:13px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; }
+.price-val { font-size:40px; font-weight:900; line-height:1; }
+.price-val sup { font-size:20px; font-weight:700; margin-right:2px; vertical-align:top; margin-top:6px; display:inline-block; }
+.price-val span { font-size:14px; font-weight:500; color:var(--muted); }
+.price-sub { font-size:12px; color:var(--muted); margin-top:-12px; }
+.price-cap { font-size:15px; font-weight:700; padding:10px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+.price-features { display:flex; flex-direction:column; gap:10px; flex:1; }
+.price-feat { display:flex; align-items:flex-start; gap:8px; font-size:13px; color:var(--muted); }
+.price-feat .check { color:#4ade80; font-size:14px; flex-shrink:0; margin-top:1px; }
+.price-cta { margin-top:auto; text-align:center; padding:12px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; text-decoration:none; display:block; transition:all 0.2s; }
+.cta-ghost { background:transparent; border:1px solid var(--border); color:var(--text); }
+.cta-ghost:hover { background:var(--card2); }
+.cta-primary { background:linear-gradient(135deg,var(--ocean),var(--light)); color:#fff; }
+.cta-primary:hover { box-shadow:0 8px 24px rgba(255,112,67,0.35); }
+
+/* ── FEATURES STRIP ── */
+.feat-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.feat-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px; }
+.feat-icon { font-size:36px; margin-bottom:16px; }
+.feat-title { font-size:18px; font-weight:800; margin-bottom:8px; }
+.feat-desc { font-size:14px; color:var(--muted); line-height:1.6; }
+
+/* ── CTA BANNER ── */
+.cta-banner { background:linear-gradient(135deg,rgba(211,84,0,0.12),rgba(255,112,67,0.06)); border:1px solid rgba(211,84,0,0.25); border-radius:var(--radius-lg); padding:56px; text-align:center; }
+.cta-title { font-size:40px; font-weight:900; letter-spacing:-0.02em; margin-bottom:12px; }
+.cta-sub { font-size:16px; color:var(--muted); margin-bottom:32px; }
+.cta-btns { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+
+/* ── DIVIDER ── */
+hr { border:none; border-top:1px solid var(--border); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:1000px) { .hero-inner,.hiw-grid{grid-template-columns:1fr} .pricing-grid{grid-template-columns:1fr 1fr} .feat-strip{grid-template-columns:1fr 1fr} }
+@media(max-width:640px) { .section{padding:60px 20px} .hero{padding:60px 20px} nav{padding:0 20px} .pricing-grid,.feat-strip{grid-template-columns:1fr} .hero-title{font-size:36px} }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="index.html" class="nav-brand">
+    <div class="dot"></div>
+    VIBE
+  </a>
+  <div class="nav-links">
+    <a href="index.html#features">Features</a>
+    <a href="index.html#how-it-works">How It Works</a>
+    <a href="demos.html">Live Demo</a>
+    <a href="video-conference.html" class="active">Video Conference</a>
+    <a href="index.html#pricing">Pricing</a>
+  </div>
+  <div class="nav-actions">
+    <a href="platform/dashboard.html" class="btn btn-ghost">Sign In</a>
+    <a href="platform/dashboard.html" class="btn btn-primary">Start Free Trial</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="label hero-label">Video Conference</div>
+      <h1 class="hero-title">
+        Live classes,<br>
+        <span class="accent">no software</span><br>
+        required.
+      </h1>
+      <p class="hero-sub">
+        Host real-time video sessions directly inside your VIBE platform.
+        No Zoom link, no OBS, no streaming key — just click Go Live
+        and your subscribers join from their browser.
+      </p>
+      <div class="hero-ctas">
+        <a href="platform/live-sessions.html" class="btn btn-primary btn-lg">⊙ Start a Session</a>
+        <a href="platform/live-room.html" class="btn btn-ghost btn-lg">▶ See it Live</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-val">Sub-1s</div>
+          <div class="hero-stat-lbl">Latency (WebRTC)</div>
+        </div>
+        <div>
+          <div class="hero-stat-val">50+</div>
+          <div class="hero-stat-lbl">Max participants</div>
+        </div>
+        <div>
+          <div class="hero-stat-val">$0</div>
+          <div class="hero-stat-lbl">Platform fee per session</div>
+        </div>
+        <div>
+          <div class="hero-stat-val">720p</div>
+          <div class="hero-stat-lbl">HD video quality</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Room Mock -->
+    <div class="browser-mock">
+      <div class="browser-bar">
+        <div class="browser-dots">
+          <div class="browser-dot" style="background:#ff5f57"></div>
+          <div class="browser-dot" style="background:#febc2e"></div>
+          <div class="browser-dot" style="background:#28c840"></div>
+        </div>
+        <div class="browser-url">app.vibe.io/fitpro/live</div>
+      </div>
+      <div class="browser-content room-mock">
+        <div class="rm-topbar">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="rm-logo">⬡ VIBE</div>
+            <div class="rm-live"><div class="rm-live-dot"></div>LIVE</div>
+            <div style="font-size:11px;color:var(--muted)">HIIT Morning Burnout</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="font-size:11px;color:var(--muted)">👥 24 viewers</div>
+            <div style="font-size:11px;font-variant-numeric:tabular-nums;color:var(--text)">00:18:42</div>
+            <div class="rm-end">■ End</div>
+          </div>
+        </div>
+        <div class="rm-grid">
+          <div class="rm-tile rm-tile-1">
+            <div class="rm-avatar" style="background:linear-gradient(135deg,#D35400,#ff7043)">FP</div>
+            <div class="rm-name">FitPro Academy</div>
+            <div class="rm-host">HOST</div>
+          </div>
+          <div class="rm-tile rm-tile-2">
+            <div class="rm-avatar" style="background:linear-gradient(135deg,#0891b2,#06b6d4)">AK</div>
+            <div class="rm-name">Alex K.</div>
+          </div>
+          <div class="rm-tile rm-tile-3">
+            <div class="rm-avatar" style="background:linear-gradient(135deg,#16a34a,#22c55e)">MT</div>
+            <div class="rm-name">Maria T.</div>
+          </div>
+          <div class="rm-tile rm-tile-4">
+            <div class="rm-avatar" style="background:linear-gradient(135deg,#7c3aed,#a78bfa)">SR</div>
+            <div class="rm-name">Sam R. ✋</div>
+          </div>
+        </div>
+        <div class="rm-controls">
+          <div class="rm-ctrl">🎤 Mute</div>
+          <div class="rm-ctrl">📹 Video</div>
+          <div class="rm-ctrl">🖥 Share</div>
+          <div class="rm-ctrl">💬 Chat</div>
+          <div class="rm-ctrl rm-ctrl-end">■ End</div>
+        </div>
+        <div class="rm-chat">
+          <div class="rm-msg"><span class="rm-msg-name">Alex K.</span><span class="rm-msg-body">This is incredible! 🔥</span></div>
+          <div class="rm-msg"><span class="rm-msg-name">Maria T.</span><span class="rm-msg-body">Love the Q&A format</span></div>
+          <div class="rm-msg"><span class="rm-msg-name">Sam R.</span><span class="rm-msg-body">Question about sets ✋</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="max-width:1200px;margin:0 auto;padding:0 40px"><hr></div>
+
+<!-- ══════════════════════════════════════════
+     HOW IT WORKS
+══════════════════════════════════════════ -->
+<section class="section" id="how-it-works">
+  <div class="container">
+    <div class="hiw-grid">
+
+      <!-- Steps -->
+      <div>
+        <div class="label" style="margin-bottom:16px">How It Works</div>
+        <h2 style="font-size:clamp(34px,4vw,52px);font-weight:900;letter-spacing:-0.02em;line-height:1.1;margin-bottom:48px">
+          Live to your audience<br><span style="color:var(--light)">in three clicks.</span>
+        </h2>
+
+        <div class="step">
+
+          <div class="step-item">
+            <div class="step-num">01</div>
+            <div class="step-body">
+              <div class="step-title">Schedule or Go Live Instantly</div>
+              <div class="step-desc">From your creator dashboard, hit <strong>Go Live Now</strong> to start immediately — or schedule a future session with a title, date, time, and subscriber access level.</div>
+              <div class="step-tip">⊙ No streaming software, no RTMP keys, no OBS</div>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-num">02</div>
+            <div class="step-body">
+              <div class="step-title">Subscribers Get Notified</div>
+              <div class="step-desc">A <strong>Live Now</strong> banner appears at the top of your subscriber portal the moment you go live. Scheduled sessions are listed so students know what's coming.</div>
+              <div class="step-tip">🔒 Only your paid subscribers can join</div>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-num">03</div>
+            <div class="step-body">
+              <div class="step-title">Engage in Real Time</div>
+              <div class="step-desc">HD video grid, live chat, raise-hand Q&amp;A, screen sharing, and camera controls — all built in. Participants join from any browser, no downloads required.</div>
+              <div class="step-tip">💬 Chat + ✋ Raise Hand + 🖥 Screen Share included</div>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-num">04</div>
+            <div class="step-body">
+              <div class="step-title">End &amp; Review</div>
+              <div class="step-desc">Click <strong>End Session</strong> and the room closes instantly. Session history, peak viewer counts, and duration are logged to your dashboard. Recordings coming soon.</div>
+              <div class="step-tip">📼 Auto-recording → lesson upload (Phase 2)</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right: feature list + quick start -->
+      <div style="position:sticky;top:80px">
+        <div class="browser-mock" style="margin-bottom:20px">
+          <div class="browser-bar">
+            <div class="browser-dots">
+              <div class="browser-dot" style="background:#ff5f57"></div>
+              <div class="browser-dot" style="background:#febc2e"></div>
+              <div class="browser-dot" style="background:#28c840"></div>
+            </div>
+            <div class="browser-url">app.vibe.io/fitpro/sessions</div>
+          </div>
+          <div style="padding:20px;background:var(--card)">
+            <!-- Sessions list mock -->
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Live Sessions</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="background:linear-gradient(135deg,rgba(220,38,38,0.1),rgba(211,84,0,0.06));border:1px solid rgba(220,38,38,0.3);border-radius:10px;padding:14px;display:flex;align-items:center;justify-content:space-between">
+                <div>
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                    <div style="width:7px;height:7px;border-radius:50%;background:#ef4444"></div>
+                    <span style="font-size:12px;font-weight:700;color:#f87171">LIVE NOW</span>
+                  </div>
+                  <div style="font-size:13px;font-weight:700">HIIT Morning Burnout</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px">24 viewers · 18 min in</div>
+                </div>
+                <div style="background:linear-gradient(135deg,var(--ocean),var(--light));border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#fff">Join →</div>
+              </div>
+              <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;align-items:center;justify-content:space-between">
+                <div>
+                  <div style="font-size:12px;color:var(--muted);margin-bottom:4px">📅 May 21 · 7:00 AM</div>
+                  <div style="font-size:13px;font-weight:700">Advanced HIIT Circuits</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px">60 min · All Subscribers</div>
+                </div>
+                <div style="background:rgba(211,84,0,0.15);border:1px solid rgba(211,84,0,0.3);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--light)">▶ Start</div>
+              </div>
+              <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;align-items:center;justify-content:space-between">
+                <div>
+                  <div style="font-size:12px;color:var(--muted);margin-bottom:4px">📅 May 23 · 12:00 PM</div>
+                  <div style="font-size:13px;font-weight:700">Nutrition Q&amp;A Live</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px">45 min · Pro Plan only</div>
+                </div>
+                <div style="background:rgba(211,84,0,0.15);border:1px solid rgba(211,84,0,0.3);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--light)">▶ Start</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick reassurance note -->
+        <div style="background:rgba(211,84,0,0.06);border:1px solid rgba(211,84,0,0.15);border-radius:12px;padding:16px 20px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ocean);margin-bottom:8px">Enterprise-Grade Infrastructure</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6">Sub-second latency. No streaming delay. Works in every modern browser — Chrome, Safari, Firefox, Edge. Zero plugins or downloads required for your subscribers.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:1200px;margin:0 auto;padding:0 40px"><hr></div>
+
+<!-- ══════════════════════════════════════════
+     CAPACITY & COST
+══════════════════════════════════════════ -->
+<section class="section" id="capacity">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px">
+      <div class="label" style="margin-bottom:12px">Capacity &amp; Infrastructure</div>
+      <h2 style="font-size:clamp(30px,4vw,48px);font-weight:900;letter-spacing:-0.02em;margin-bottom:14px">How many viewers can join?</h2>
+      <p style="font-size:16px;color:var(--muted);max-width:580px;margin:0 auto;line-height:1.7">Enterprise-grade real-time infrastructure with sub-second latency, adaptive video quality, and support for hundreds of simultaneous viewers.</p>
+    </div>
+
+    <div class="cap-section" style="margin-bottom:20px">
+      <div class="cap-header">
+        <h3>Session Capacity by Plan</h3>
+        <p>Participant count = people with their camera ON. View-only (camera off) participants use far less bandwidth and can join by the hundreds.</p>
+      </div>
+      <table class="cap-table">
+        <thead>
+          <tr>
+            <th>Plan</th>
+            <th>Live Camera Participants</th>
+            <th>View-Only Attendees</th>
+            <th>Best For</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tier-badge tier-starter">Starter</span></td>
+            <td><strong>Up to 5</strong> live cameras</td>
+            <td style="color:#4ade80;font-weight:600">Unlimited</td>
+            <td style="color:var(--muted)">Small group sessions &amp; coaching calls</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge tier-basic">Basic Live</span></td>
+            <td><strong>Up to 15</strong> live cameras</td>
+            <td style="color:#4ade80;font-weight:600">Unlimited</td>
+            <td style="color:var(--muted)">Workshops, classes &amp; team training</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge tier-pro">Pro Live</span></td>
+            <td><strong>Up to 50</strong> live cameras</td>
+            <td style="color:#4ade80;font-weight:600">Unlimited</td>
+            <td style="color:var(--muted)">Large classes, panels &amp; live events</td>
+          </tr>
+          <tr>
+            <td><span class="tier-badge tier-ent">Enterprise</span></td>
+            <td><strong>Unlimited</strong></td>
+            <td style="color:#4ade80;font-weight:600">Unlimited</td>
+            <td style="color:var(--muted)">Webinars, conferences &amp; broadcasts</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="cap-note">
+        💡 <strong>Live cameras vs. view-only:</strong> Camera limits apply only to participants with their camera turned on. Hundreds of subscribers can watch your session in view-only mode on any plan.
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        🎥 <strong>Large broadcasts:</strong> Host a fitness class, Q&amp;A, or keynote to your entire subscriber base — they watch live, chat, and raise hands without needing a camera.
+      </div>
+    </div>
+
+    <!-- Comparison vs. alternatives -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden">
+      <div class="cap-header">
+        <h3>vs. Third-Party Alternatives</h3>
+        <p>What you'd pay elsewhere for the same session capacity.</p>
+      </div>
+      <table class="cap-table">
+        <thead>
+          <tr>
+            <th>Platform</th>
+            <th>50 Participant Limit</th>
+            <th>Full White Label</th>
+            <th>Your Branding &amp; Domain</th>
+            <th>Built-in Monetization</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-weight:700;color:var(--light)">⬡ VIBE</td>
+            <td style="color:#4ade80;font-weight:700">✅ Included</td>
+            <td>✅ Full</td>
+            <td>✅ Your domain</td>
+            <td>✅ Stripe built-in</td>
+          </tr>
+          <tr>
+            <td style="color:var(--muted)">Zoom Webinars</td>
+            <td style="color:var(--muted)">$79+/mo extra</td>
+            <td>❌</td>
+            <td>❌ Zoom branding</td>
+            <td>❌ Manual</td>
+          </tr>
+          <tr>
+            <td style="color:var(--muted)">Crowdcast</td>
+            <td style="color:var(--muted)">$89/mo</td>
+            <td>Limited</td>
+            <td>Limited</td>
+            <td>❌ Manual</td>
+          </tr>
+          <tr>
+            <td style="color:var(--muted)">Kajabi / Teachable</td>
+            <td style="color:var(--muted)">Zoom integration req.</td>
+            <td>Partial</td>
+            <td>Partial</td>
+            <td>✅ Limited</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:1200px;margin:0 auto;padding:0 40px"><hr></div>
+
+<!-- ══════════════════════════════════════════
+     PRICING TIERS
+══════════════════════════════════════════ -->
+<section class="section" id="pricing">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px">
+      <div class="label" style="margin-bottom:12px">Pricing</div>
+      <h2 style="font-size:clamp(30px,4vw,48px);font-weight:900;letter-spacing:-0.02em;margin-bottom:14px">Add Live Sessions to your plan</h2>
+      <p style="font-size:16px;color:var(--muted);max-width:520px;margin:0 auto">Add-on pricing on top of your base VIBE subscription. No per-session fees. No participant limits beyond your tier.</p>
+    </div>
+
+    <div class="pricing-grid">
+
+      <div class="price-card">
+        <div>
+          <div class="price-name" style="color:var(--muted)">Starter</div>
+          <div class="price-val" style="color:var(--text)">Free<span style="font-size:14px;color:var(--muted)"> included</span></div>
+        </div>
+        <div class="price-sub">With any VIBE plan</div>
+        <div class="price-cap">Up to <strong>5 cameras</strong> per session</div>
+        <div class="price-features">
+          <div class="price-feat"><span class="check">✓</span> Unlimited sessions</div>
+          <div class="price-feat"><span class="check">✓</span> Unlimited view-only attendees</div>
+          <div class="price-feat"><span class="check">✓</span> Live chat + raise hand</div>
+          <div class="price-feat"><span class="check">✓</span> Screen sharing</div>
+          <div class="price-feat"><span class="check">✓</span> Session history</div>
+          <div class="price-feat" style="opacity:0.4"><span>–</span> No recording</div>
+        </div>
+        <a href="platform/dashboard.html" class="price-cta cta-ghost">Get Started Free</a>
+      </div>
+
+      <div class="price-card">
+        <div>
+          <div class="price-name" style="color:var(--light)">Basic Live</div>
+          <div class="price-val"><sup>$</sup>19<span>/mo</span></div>
+        </div>
+        <div class="price-sub">Add-on to any plan</div>
+        <div class="price-cap">Up to <strong>15 cameras</strong> per session</div>
+        <div class="price-features">
+          <div class="price-feat"><span class="check">✓</span> Everything in Starter</div>
+          <div class="price-feat"><span class="check">✓</span> 15 live cameras simultaneously</div>
+          <div class="price-feat"><span class="check">✓</span> Session scheduling tools</div>
+          <div class="price-feat"><span class="check">✓</span> Subscriber email notifications</div>
+          <div class="price-feat"><span class="check">✓</span> Participant management</div>
+          <div class="price-feat" style="opacity:0.4"><span>–</span> Recording add-on</div>
+        </div>
+        <a href="platform/dashboard.html" class="price-cta cta-ghost">Add to Plan</a>
+      </div>
+
+      <div class="price-card featured">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <div class="price-name" style="color:var(--light)">Pro Live</div>
+            <span style="background:rgba(211,84,0,0.2);border:1px solid rgba(211,84,0,0.4);border-radius:100px;padding:2px 10px;font-size:10px;font-weight:700;color:var(--light)">Most Popular</span>
+          </div>
+          <div class="price-val"><sup>$</sup>39<span>/mo</span></div>
+        </div>
+        <div class="price-sub">Add-on to any plan</div>
+        <div class="price-cap" style="color:var(--light)">Up to <strong>50 cameras</strong> per session</div>
+        <div class="price-features">
+          <div class="price-feat"><span class="check">✓</span> Everything in Basic</div>
+          <div class="price-feat"><span class="check">✓</span> 50 live cameras simultaneously</div>
+          <div class="price-feat"><span class="check">✓</span> Breakout rooms (coming soon)</div>
+          <div class="price-feat"><span class="check">✓</span> Priority stream quality</div>
+          <div class="price-feat"><span class="check">✓</span> Session recordings (coming soon)</div>
+          <div class="price-feat"><span class="check">✓</span> Auto-publish recording as lesson</div>
+        </div>
+        <a href="platform/dashboard.html" class="price-cta cta-primary">Add to Plan</a>
+      </div>
+
+      <div class="price-card">
+        <div>
+          <div class="price-name" style="color:#a78bfa">Enterprise</div>
+          <div class="price-val" style="color:var(--text)">Custom</div>
+        </div>
+        <div class="price-sub">Dedicated infrastructure</div>
+        <div class="price-cap">Unlimited cameras &amp; rooms</div>
+        <div class="price-features">
+          <div class="price-feat"><span class="check">✓</span> Everything in Pro</div>
+          <div class="price-feat"><span class="check">✓</span> Dedicated LiveKit server</div>
+          <div class="price-feat"><span class="check">✓</span> 500+ participant webinars</div>
+          <div class="price-feat"><span class="check">✓</span> Multi-room concurrent sessions</div>
+          <div class="price-feat"><span class="check">✓</span> SLA &amp; uptime guarantee</div>
+          <div class="price-feat"><span class="check">✓</span> White-glove onboarding</div>
+        </div>
+        <a href="mailto:enterprise@vibe.io" class="price-cta cta-ghost">Contact Sales</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div style="max-width:1200px;margin:0 auto;padding:0 40px"><hr></div>
+
+<!-- ══════════════════════════════════════════
+     FEATURE HIGHLIGHTS
+══════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="label" style="margin-bottom:12px;text-align:center">Built For Creators</div>
+    <h2 style="font-size:clamp(28px,3.5vw,44px);font-weight:900;letter-spacing:-0.02em;text-align:center;margin-bottom:48px">Everything your live session needs</h2>
+
+    <div class="feat-strip">
+      <div class="feat-card">
+        <div class="feat-icon">⊙</div>
+        <div class="feat-title">One-Click Live</div>
+        <div class="feat-desc">Go live directly from your creator dashboard. Allow camera access, click Go Live — you're broadcasting in under 10 seconds.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔒</div>
+        <div class="feat-title">Subscriber-Gated</div>
+        <div class="feat-desc">Sessions are automatically restricted to your paid subscribers. Set access by plan tier — Pro subscribers only, or all subscribers.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">💬</div>
+        <div class="feat-title">Live Chat &amp; Q&amp;A</div>
+        <div class="feat-desc">Built-in real-time chat with raise-hand feature for structured Q&amp;A. You see who has a question and can address them directly.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🖥</div>
+        <div class="feat-title">Screen Sharing</div>
+        <div class="feat-desc">Share your screen for workout plan slides, code walkthroughs, recipe steps, or anything else — switches instantly to full-screen view for all participants.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">⚡</div>
+        <div class="feat-title">Sub-Second Latency</div>
+        <div class="feat-desc">WebRTC means real conversation — not a 30-second streaming delay. Participants can actually interact with you in real time.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📅</div>
+        <div class="feat-title">Scheduling Tools</div>
+        <div class="feat-desc">Schedule sessions in advance. Subscribers see upcoming sessions in their portal and a Live Now banner the moment you go live.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     CTA BANNER
+══════════════════════════════════════════ -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="cta-banner">
+      <div class="cta-title">Ready to go live?</div>
+      <div class="cta-sub">Your first session is free. No setup, no software, no streaming key.</div>
+      <div class="cta-btns">
+        <a href="platform/live-sessions.html" class="btn btn-primary btn-lg">⊙ Start a Session Now</a>
+        <a href="platform/live-room.html" class="btn btn-ghost btn-lg">▶ Preview Live Room</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="text-align:center;padding:24px;font-size:12px;color:rgba(90,138,170,0.5)">
+  © 2026 VIBE Platform &nbsp;·&nbsp; Powered by LiveKit WebRTC &nbsp;·&nbsp; naluask.com infrastructure
+</div>
+
+</body>
+</html>

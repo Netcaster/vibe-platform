@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIBE Platform — Full Ecosystem Map</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #050e1f;
+    color: #d6eeff;
+    font-family: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+    padding: 36px 24px;
+    min-height: 100vh;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #ff7043, #D35400);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #5a8aaa;
+    font-size: 0.82rem;
+    margin-bottom: 8px;
+    letter-spacing: 0.06em;
+  }
+
+  .tagline {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #5a8aaa;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .tagline span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(211,84,0,0.1);
+    border: 1px solid rgba(211,84,0,0.25);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #ff7043;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── 3-col main layout ── */
+  .ecosystem {
+    display: grid;
+    grid-template-columns: 1fr 280px 1fr;
+    gap: 20px;
+    max-width: 1340px;
+    margin: 0 auto 32px;
+  }
+
+  .col { display: flex; flex-direction: column; gap: 14px; }
+
+  .shared-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* ── Headers ── */
+  .project-header {
+    text-align: center;
+    padding: 14px 10px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .frontend-header {
+    background: linear-gradient(135deg, #071428 0%, #050e1f 100%);
+    border: 1px solid #D35400;
+    color: #ff7043;
+  }
+
+  .backend-header {
+    background: linear-gradient(135deg, #0d2040 0%, #071428 100%);
+    border: 1px solid #ff7043;
+    color: #ff9500;
+  }
+
+  .shared-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+    border: 1px solid #9b59b6;
+    color: #c39bd3;
+    font-size: 0.82rem;
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: #0a1c35;
+    border: 1px solid rgba(211,84,0,0.25);
+    border-radius: 10px;
+    padding: 14px 16px;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover { border-color: rgba(255,112,67,0.4); }
+
+  .card h3 {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #5a8aaa;
+    margin-bottom: 9px;
+  }
+
+  .card .items { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .card .note {
+    font-size: 0.68rem;
+    color: #5a8aaa;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  /* ── Tags ── */
+  .tag {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 0.71rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .tag-ocean  { background: rgba(211,84,0,0.15);  border: 1px solid #D35400;  color: #ff7043; }
+  .tag-glow   { background: rgba(0,212,255,0.1);   border: 1px solid #ff9500;  color: #ff9500; }
+  .tag-green  { background: rgba(22,163,74,0.12);  border: 1px solid #16a34a;  color: #4ade80; }
+  .tag-gold   { background: rgba(245,200,66,0.1);  border: 1px solid #f5c842;  color: #f5c842; }
+  .tag-coral  { background: rgba(255,107,107,0.1); border: 1px solid #ff6b6b;  color: #ff9898; }
+  .tag-purple { background: rgba(155,89,182,0.12); border: 1px solid #9b59b6;  color: #c39bd3; }
+  .tag-gray   { background: rgba(90,138,170,0.08); border: 1px solid #2c3e50;  color: #7f8c8d; }
+  .tag-do     { background: rgba(0,102,255,0.1);   border: 1px solid #0066ff;  color: #5599ff; }
+  .tag-cf     { background: rgba(245,130,32,0.1);  border: 1px solid #f58320;  color: #f5a050; }
+
+  /* ── Shared nodes (center column) ── */
+  .shared-node {
+    background: #0d0f1e;
+    border: 1px solid #9b59b6;
+    border-radius: 10px;
+    padding: 12px 14px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .shared-node .label { font-size: 0.66rem; text-transform: uppercase; color: #9b59b6; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .shared-node .value { font-size: 0.84rem; color: #c39bd3; font-weight: 700; }
+  .shared-node .sub   { font-size: 0.67rem; color: #6a5080; margin-top: 3px; }
+
+  /* ── Phase badges ── */
+  .phase { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 0.62rem; letter-spacing: 0.08em; font-weight: 700; text-transform: uppercase; margin-left: 5px; }
+  .p1 { background: rgba(211,84,0,0.2);  color: #ff7043; }
+  .p2 { background: rgba(22,163,74,0.15); color: #4ade80; }
+  .p3 { background: rgba(245,200,66,0.12);color: #f5c842; }
+
+  /* ── Security callout ── */
+  .security-wrap {
+    max-width: 1340px;
+    margin: 0 auto 28px;
+    background: rgba(211,84,0,0.07);
+    border: 1px solid rgba(211,84,0,0.3);
+    border-radius: 14px;
+    padding: 20px 24px;
+  }
+
+  .security-wrap h2 {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #ff7043;
+    margin-bottom: 14px;
+  }
+
+  .security-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+
+  .sec-layer {
+    background: #0a1c35;
+    border: 1px solid rgba(211,84,0,0.25);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .sec-layer .icon { font-size: 20px; margin-bottom: 6px; }
+  .sec-layer .sec-title { font-size: 0.72rem; font-weight: 700; color: #d6eeff; margin-bottom: 4px; }
+  .sec-layer .sec-tool  { font-size: 0.65rem; color: #ff7043; margin-bottom: 2px; }
+  .sec-layer .sec-desc  { font-size: 0.62rem; color: #5a8aaa; line-height: 1.4; }
+
+  /* ── Data flow ── */
+  .flow-wrap {
+    max-width: 1340px;
+    margin: 0 auto 28px;
+    background: rgba(13,32,64,0.5);
+    border: 1px solid rgba(211,84,0,0.2);
+    border-radius: 14px;
+    padding: 20px 24px;
+  }
+
+  .flow-wrap h2 {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #5a8aaa;
+    margin-bottom: 16px;
+  }
+
+  .flow-steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+
+  .flow-step {
+    background: #0a1c35;
+    border: 1px solid rgba(211,84,0,0.25);
+    border-radius: 10px;
+    padding: 12px 14px;
+    text-align: center;
+    min-width: 120px;
+    flex: 1;
+  }
+
+  .flow-step .f-icon { font-size: 18px; margin-bottom: 5px; }
+  .flow-step .f-title { font-size: 0.72rem; font-weight: 700; color: #d6eeff; }
+  .flow-step .f-sub { font-size: 0.62rem; color: #5a8aaa; margin-top: 2px; }
+
+  .flow-arrow {
+    color: #D35400;
+    font-size: 18px;
+    padding: 0 6px;
+    flex-shrink: 0;
+  }
+
+  /* ── Infra table ── */
+  .infra-table { width: 100%; font-size: 0.72rem; border-collapse: collapse; margin-top: 6px; }
+  .infra-table td { padding: 4px 6px; border-bottom: 1px solid rgba(211,84,0,0.1); vertical-align: top; }
+  .infra-table td:first-child { color: #5a8aaa; width: 38%; }
+  .infra-table td:last-child  { color: #d6eeff; }
+  .infra-table tr:last-child td { border-bottom: none; }
+
+  /* ── DB schema summary ── */
+  .schema-wrap {
+    max-width: 1340px;
+    margin: 0 auto 28px;
+    background: rgba(7,20,40,0.6);
+    border: 1px solid rgba(211,84,0,0.2);
+    border-radius: 14px;
+    padding: 20px 24px;
+  }
+
+  .schema-wrap h2 {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #5a8aaa;
+    margin-bottom: 14px;
+  }
+
+  .schema-groups {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+
+  .schema-group {
+    background: #0a1c35;
+    border: 1px solid rgba(211,84,0,0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+
+  .schema-group .sg-title {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #D35400;
+    margin-bottom: 7px;
+  }
+
+  .schema-group .sg-table {
+    display: block;
+    font-size: 0.68rem;
+    color: #d6eeff;
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(211,84,0,0.08);
+  }
+
+  .schema-group .sg-table:last-child { border-bottom: none; }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin: 24px auto 0;
+    max-width: 900px;
+  }
+
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: #5a8aaa; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* ── Footer ── */
+  .footer { text-align: center; margin-top: 28px; font-size: 0.7rem; color: #1d2d42; }
+
+  @media (max-width: 1000px) {
+    .ecosystem { grid-template-columns: 1fr; }
+    .shared-col { flex-direction: row; flex-wrap: wrap; }
+    .shared-node { width: calc(50% - 6px); }
+    .security-grid { grid-template-columns: 1fr 1fr; }
+    .schema-groups { grid-template-columns: 1fr 1fr; }
+    .flow-steps { gap: 4px; }
+    .flow-step { min-width: 80px; }
+  }
+
+/* White logo overrides */
+.nav-brand, .sidebar-logo {
+  color: #ffffff !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+</style>
+</head>
+<body>
+
+<h1>⬡ VIBE Platform — Ecosystem Map</h1>
+<p class="subtitle">Multi-Tenant White-Label Video SaaS · Infrastructure Architecture · March 2026</p>
+<div class="tagline">
+  <span>✦ Leverages Your Existing DO + Cloudflare + Stripe Stack</span>
+  <span>✦ Same Pattern as EXIAL + NaluAsk</span>
+  <span>✦ Built by Claude Code</span>
+</div>
+
+<!-- ═══ MAIN 3-COLUMN ECOSYSTEM ═══ -->
+<div class="ecosystem">
+
+  <!-- ══ FRONTEND / CLIENT COLUMN ══ -->
+  <div class="col">
+    <div class="project-header frontend-header">VIBE — Viewer &amp; Creator Frontend</div>
+
+    <!-- Hosting -->
+    <div class="card">
+      <h3>Hosting &amp; Delivery</h3>
+      <div class="items">
+        <span class="tag tag-cf">Cloudflare Pages</span>
+        <span class="tag tag-cf">Edge CDN (vibe.io)</span>
+        <span class="tag tag-cf">Custom Domains per Tenant</span>
+        <span class="tag tag-cf">Cloudflare WAF + DDoS</span>
+      </div>
+      <div class="note">Same hosting pattern as EXIAL — static files served at edge globally.</div>
+    </div>
+
+    <!-- Pages -->
+    <div class="card">
+      <h3>Front-End Pages</h3>
+      <div class="items">
+        <span class="tag tag-ocean">index.html</span>
+        <span class="tag tag-ocean">viewer/browse.html</span>
+        <span class="tag tag-ocean">viewer/watch.html</span>
+        <span class="tag tag-ocean">platform/dashboard.html</span>
+        <span class="tag tag-ocean">platform/courses.html</span>
+        <span class="tag tag-ocean">platform/certificates.html</span>
+        <span class="tag tag-gold">checkout.html <span class="phase p1">Phase 1</span></span>
+        <span class="tag tag-gold">onboarding.html <span class="phase p1">Phase 1</span></span>
+      </div>
+    </div>
+
+    <!-- Tech stack -->
+    <div class="card">
+      <h3>Frontend Tech Stack</h3>
+      <div class="items">
+        <span class="tag tag-ocean">HTML5 / CSS3</span>
+        <span class="tag tag-ocean">Vanilla JS (now)</span>
+        <span class="tag tag-gray">Next.js <span class="phase p2">Phase 2</span></span>
+        <span class="tag tag-ocean">CEO Dashboard Colors</span>
+        <span class="tag tag-ocean">Outfit Font</span>
+        <span class="tag tag-gray">Dark Theme</span>
+      </div>
+    </div>
+
+    <!-- Video Player -->
+    <div class="card">
+      <h3>Video Playback Layer</h3>
+      <div class="items">
+        <span class="tag tag-glow">Mux Player SDK</span>
+        <span class="tag tag-glow">Vimeo Player API</span>
+        <span class="tag tag-glow">Brightcove Player</span>
+        <span class="tag tag-glow">JW Player</span>
+      </div>
+      <div class="note">Platform stores <strong>provider_video_id</strong> — not raw files. Video delivered by provider, access controlled by VIBE.</div>
+    </div>
+
+    <!-- Design tokens -->
+    <div class="card">
+      <h3>Design System (CEO Dashboard)</h3>
+      <div class="items">
+        <span class="tag tag-glow">--glow #ff9500</span>
+        <span class="tag tag-ocean">--light #ff7043</span>
+        <span class="tag tag-ocean">--ocean #D35400</span>
+        <span class="tag tag-gray">--deep #050e1f</span>
+        <span class="tag tag-gray">--navy #071428</span>
+        <span class="tag tag-gray">--card #0a1c35</span>
+        <span class="tag tag-gold">--gold #f5c842</span>
+        <span class="tag tag-green">--green #16a34a</span>
+        <span class="tag tag-coral">--coral #ff6b6b</span>
+      </div>
+    </div>
+
+    <!-- Auth -->
+    <div class="card">
+      <h3>Authentication</h3>
+      <div class="items">
+        <span class="tag tag-ocean">JWT Tokens</span>
+        <span class="tag tag-ocean">bcryptjs (like NaluAsk)</span>
+        <span class="tag tag-gold">Clerk <span class="phase p2">Phase 2</span></span>
+        <span class="tag tag-gold">Google OAuth <span class="phase p2">Phase 2</span></span>
+      </div>
+      <div class="note">Phase 1: Same JWT pattern as NaluAsk. Phase 2: upgrade to Clerk for social login.</div>
+    </div>
+
+    <!-- Business model -->
+    <div class="card">
+      <h3>Business Model</h3>
+      <div class="items">
+        <span class="tag tag-green">Monthly Subscriptions</span>
+        <span class="tag tag-green">One-Time Course Purchases</span>
+        <span class="tag tag-green">Rental / Event Access</span>
+        <span class="tag tag-green">Platform Fee (Stripe split)</span>
+        <span class="tag tag-gold">Coupons &amp; Promos <span class="phase p2">Phase 2</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SHARED INFRASTRUCTURE ══ -->
+  <div class="shared-col">
+    <div class="shared-header">Shared Infrastructure</div>
+
+    <div class="shared-node">
+      <div class="label">DigitalOcean</div>
+      <div class="value">Your Existing Stack</div>
+      <div class="sub">Droplets + Managed Postgres</div>
+    </div>
+
+    <div class="shared-node">
+      <div class="label">Cloudflare</div>
+      <div class="value">DNS · CDN · WAF</div>
+      <div class="sub">Already securing EXIAL</div>
+    </div>
+
+    <div class="shared-node">
+      <div class="label">Stripe</div>
+      <div class="value">Live Account</div>
+      <div class="sub">Add Connect Express for VIBE</div>
+    </div>
+
+    <div class="shared-node">
+      <div class="label">NocoBase (Remote)</div>
+      <div class="value">134.199.137.102:8080</div>
+      <div class="sub">Or dedicated VIBE instance</div>
+    </div>
+
+    <div class="shared-node">
+      <div class="label">NocoBase (Local Dev)</div>
+      <div class="value">localhost:13000</div>
+      <div class="sub">Docker · Postgres v16 · v1.9.29</div>
+    </div>
+
+    <div class="shared-node">
+      <div class="label">SendGrid</div>
+      <div class="value">carl@iptriple.com</div>
+      <div class="sub">Certificate emails + billing</div>
+    </div>
+
+    <div class="shared-node">
+      <div class="label">Make.com</div>
+      <div class="value">Automation Layer</div>
+      <div class="sub">Webhooks · Email flows</div>
+    </div>
+
+    <div class="shared-node" style="border-color:rgba(255,112,67,0.4)">
+      <div class="label">Video Provider (New)</div>
+      <div class="value">Mux or Vimeo API</div>
+      <div class="sub">Add to existing stack</div>
+    </div>
+  </div>
+
+  <!-- ══ BACKEND / API COLUMN ══ -->
+  <div class="col">
+    <div class="project-header backend-header">VIBE — Backend API &amp; Admin Engine</div>
+
+    <!-- Infrastructure -->
+    <div class="card">
+      <h3>Infrastructure (DigitalOcean)</h3>
+      <div class="items">
+        <span class="tag tag-do">DO Droplet (Node/Express)</span>
+        <span class="tag tag-do">Docker Container</span>
+        <span class="tag tag-do">Node 18 (same as NaluAsk)</span>
+        <span class="tag tag-do">Managed PostgreSQL</span>
+        <span class="tag tag-do">Redis (session cache)</span>
+      </div>
+      <div class="note">Exact same pattern as NaluAsk droplet. Spin up a new droplet or share one.</div>
+    </div>
+
+    <!-- NocoBase Admin -->
+    <div class="card">
+      <h3>NocoBase Admin Engine</h3>
+      <div class="items">
+        <span class="tag tag-purple">Tenant Management</span>
+        <span class="tag tag-purple">Course + Lesson Records</span>
+        <span class="tag tag-purple">Certificate Workflows</span>
+        <span class="tag tag-purple">Subscriber Views</span>
+        <span class="tag tag-purple">Revenue Dashboards</span>
+        <span class="tag tag-purple">Entitlement Admin</span>
+      </div>
+      <div class="note">NocoBase handles the admin/back-office layer. Custom frontend handles viewer experience.</div>
+    </div>
+
+    <!-- API Endpoints -->
+    <div class="card">
+      <h3>VIBE API Endpoints</h3>
+      <div class="items">
+        <span class="tag tag-ocean">POST /auth/signup</span>
+        <span class="tag tag-ocean">POST /auth/login</span>
+        <span class="tag tag-ocean">GET /tenants/:slug</span>
+        <span class="tag tag-ocean">GET /courses/:id</span>
+        <span class="tag tag-ocean">GET /lessons/:id/playback</span>
+        <span class="tag tag-glow">POST /entitlements/check</span>
+        <span class="tag tag-glow">POST /completions</span>
+        <span class="tag tag-glow">GET /certificates/:userId</span>
+        <span class="tag tag-green">POST /stripe/checkout</span>
+        <span class="tag tag-green">POST /stripe/webhook</span>
+        <span class="tag tag-green">POST /stripe/connect</span>
+        <span class="tag tag-gold">GET /admin/certs/pending</span>
+        <span class="tag tag-gold">POST /admin/certs/approve</span>
+        <span class="tag tag-gray">GET /health</span>
+      </div>
+    </div>
+
+    <!-- NPM Libraries -->
+    <div class="card">
+      <h3>NPM Libraries</h3>
+      <div class="items">
+        <span class="tag tag-green">stripe 17.x</span>
+        <span class="tag tag-orange">@sendgrid/mail 8.x</span>
+        <span class="tag tag-ocean">express 4.x</span>
+        <span class="tag tag-gray">bcryptjs 2.x</span>
+        <span class="tag tag-gray">jsonwebtoken 9.x</span>
+        <span class="tag tag-gray">cors 2.x</span>
+        <span class="tag tag-gray">pg (postgres driver)</span>
+        <span class="tag tag-gray">axios 1.x</span>
+        <span class="tag tag-gold">mux-node <span class="phase p1">Phase 1</span></span>
+        <span class="tag tag-gold">@vimeo/vimeo <span class="phase p1">Phase 1</span></span>
+        <span class="tag tag-gold">pdf-lib (certificates) <span class="phase p2">Phase 2</span></span>
+      </div>
+    </div>
+
+    <!-- DB Tables -->
+    <div class="card">
+      <h3>PostgreSQL Tables (16)</h3>
+      <div class="items">
+        <span class="tag tag-ocean">tenants</span>
+        <span class="tag tag-ocean">users</span>
+        <span class="tag tag-ocean">tenant_users</span>
+        <span class="tag tag-ocean">courses</span>
+        <span class="tag tag-ocean">lessons</span>
+        <span class="tag tag-glow">plans</span>
+        <span class="tag tag-glow">plan_courses</span>
+        <span class="tag tag-glow">subscriptions</span>
+        <span class="tag tag-glow">transactions</span>
+        <span class="tag tag-glow">entitlements</span>
+        <span class="tag tag-gold">lesson_completions</span>
+        <span class="tag tag-gold">certificates</span>
+        <span class="tag tag-gray">playback_tokens</span>
+        <span class="tag tag-gray">watch_history</span>
+        <span class="tag tag-gray">analytics_events</span>
+        <span class="tag tag-gray">coupons</span>
+      </div>
+    </div>
+
+    <!-- Roadmap -->
+    <div class="card">
+      <h3>Roadmap Features</h3>
+      <div class="items">
+        <span class="tag tag-gold">Social Sharing <span class="phase p2">Phase 2</span></span>
+        <span class="tag tag-gold">Email Campaigns <span class="phase p2">Phase 2</span></span>
+        <span class="tag tag-gold">PDF Certificate Gen <span class="phase p2">Phase 2</span></span>
+        <span class="tag tag-coral">AI Recommendations <span class="phase p3">Phase 3</span></span>
+        <span class="tag tag-coral">Native Mobile Apps <span class="phase p3">Phase 3</span></span>
+        <span class="tag tag-coral">Multi-currency <span class="phase p3">Phase 3</span></span>
+        <span class="tag tag-coral">DRM / Geo-lock <span class="phase p3">Phase 3</span></span>
+        <span class="tag tag-coral">Live Streaming <span class="phase p3">Phase 3</span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECURITY LAYERS ═══ -->
+<div class="security-wrap">
+  <h2>🔒 Security Architecture — How VIBE Is Locked Down</h2>
+  <div class="security-grid">
+    <div class="sec-layer">
+      <div class="icon">🌐</div>
+      <div class="sec-title">Layer 1: Edge</div>
+      <div class="sec-tool">Cloudflare WAF</div>
+      <div class="sec-desc">DDoS protection, rate limiting, bot filtering before any request reaches your server. Same Cloudflare you use for EXIAL.</div>
+    </div>
+    <div class="sec-layer">
+      <div class="icon">🔐</div>
+      <div class="sec-title">Layer 2: Auth</div>
+      <div class="sec-tool">JWT + bcrypt</div>
+      <div class="sec-desc">Same JWT pattern as NaluAsk. Every API request requires a valid token. Signed with a server-side secret, expires on schedule.</div>
+    </div>
+    <div class="sec-layer">
+      <div class="icon">🎫</div>
+      <div class="sec-title">Layer 3: Entitlements</div>
+      <div class="sec-tool">Entitlement Table</div>
+      <div class="sec-desc">Every playback request checks the entitlements table. Subscription status alone does NOT grant access. Entitlement must be active.</div>
+    </div>
+    <div class="sec-layer">
+      <div class="icon">🔑</div>
+      <div class="sec-title">Layer 4: Playback</div>
+      <div class="sec-tool">Signed Tokens (TTL 4h)</div>
+      <div class="sec-desc">Backend generates a short-lived signed URL from the provider API (Mux/Vimeo). Raw video URLs are never exposed. Tokens expire and can't be reused.</div>
+    </div>
+    <div class="sec-layer">
+      <div class="icon">🏦</div>
+      <div class="sec-title">Layer 5: Payments</div>
+      <div class="sec-tool">Stripe Webhooks + HTTPS</div>
+      <div class="sec-desc">Stripe webhook signature verified server-side before any entitlement is created. HTTPS enforced via Cloudflare SSL. No card data ever touches your server.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PLAYBACK FLOW ═══ -->
+<div class="flow-wrap">
+  <h2>▶ Secure Playback Request Flow — What Happens When a Learner Clicks Play</h2>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="f-icon">👤</div>
+      <div class="f-title">User Clicks Play</div>
+      <div class="f-sub">Cloudflare edge receives request</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="f-icon">🔐</div>
+      <div class="f-title">JWT Checked</div>
+      <div class="f-sub">Valid session required</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="f-icon">🎫</div>
+      <div class="f-title">Entitlement Check</div>
+      <div class="f-sub">Active + not expired</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="f-icon">🗺</div>
+      <div class="f-title">Plan→Course Map</div>
+      <div class="f-sub">Lesson belongs to plan?</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="f-icon">🔑</div>
+      <div class="f-title">Signed Token</div>
+      <div class="f-sub">Provider API called (4h TTL)</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="f-icon">📹</div>
+      <div class="f-title">Video Plays</div>
+      <div class="f-sub">Provider streams directly</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="f-icon">📊</div>
+      <div class="f-title">Event Logged</div>
+      <div class="f-sub">analytics_events table</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DATABASE SCHEMA SUMMARY ═══ -->
+<div class="schema-wrap">
+  <h2>🗄 PostgreSQL Schema — 16 Tables (schema.sql complete)</h2>
+  <div class="schema-groups">
+    <div class="schema-group">
+      <div class="sg-title">Identity</div>
+      <span class="sg-table">tenants</span>
+      <span class="sg-table">users</span>
+      <span class="sg-table">tenant_users</span>
+    </div>
+    <div class="schema-group">
+      <div class="sg-title">Content</div>
+      <span class="sg-table">courses</span>
+      <span class="sg-table">lessons</span>
+    </div>
+    <div class="schema-group">
+      <div class="sg-title">Monetization</div>
+      <span class="sg-table">plans</span>
+      <span class="sg-table">plan_courses</span>
+      <span class="sg-table">subscriptions</span>
+      <span class="sg-table">transactions</span>
+    </div>
+    <div class="schema-group">
+      <div class="sg-title">Access Control</div>
+      <span class="sg-table">entitlements</span>
+      <span class="sg-table">playback_tokens</span>
+    </div>
+    <div class="schema-group">
+      <div class="sg-title">Learning</div>
+      <span class="sg-table">lesson_completions</span>
+      <span class="sg-table">certificates</span>
+      <span class="sg-table">watch_history</span>
+      <span class="sg-table">analytics_events</span>
+      <span class="sg-table">coupons</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LEGEND ═══ -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#ff7043"></div> Frontend / Viewer</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff9500"></div> Secure Playback Layer</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#9b59b6"></div> Shared Infrastructure</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div> Payments / Revenue</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f5c842"></div> Phase 2 Feature</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff6b6b"></div> Phase 3 Feature</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#0066ff"></div> DigitalOcean</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f58320"></div> Cloudflare</div>
+</div>
+
+<div class="footer">VIBE Platform Ecosystem &nbsp;·&nbsp; vibe.io &nbsp;·&nbsp; Multi-Tenant White-Label Video SaaS &nbsp;·&nbsp; Generated with Claude Code — March 2026</div>
+
+<!-- ── DOWNLOAD BUTTON ── -->
+<div id="dl-bar" style="
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 999;
+">
+  <button id="dl-btn" onclick="captureAndDownload()" style="
+    background: linear-gradient(135deg, #D35400, #ff7043);
+    color: #050e1f;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 24px rgba(255,112,67,0.45);
+    letter-spacing: 0.04em;
+    transition: all 0.2s;
+    white-space: nowrap;
+  ">⬇ Download PNG</button>
+
+  <button onclick="window.print()" style="
+    background: rgba(10,28,53,0.95);
+    color: #d6eeff;
+    border: 1px solid rgba(211,84,0,0.35);
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+  ">🖨 Print / Save PDF</button>
+</div>
+
+<div id="dl-status" style="
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0a1c35;
+  border: 1px solid rgba(255,112,67,0.35);
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 13px;
+  color: #ff7043;
+  font-weight: 600;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0 4px 24px rgba(211,84,0,0.3);
+"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  @media print {
+    #dl-bar { display: none !important; }
+    body { background: #050e1f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+<script>
+async function captureAndDownload() {
+  const btn = document.getElementById('dl-btn');
+  const status = document.getElementById('dl-status');
+  const bar = document.getElementById('dl-bar');
+
+  btn.textContent = '⏳ Rendering...';
+  btn.style.opacity = '0.7';
+  btn.disabled = true;
+
+  status.textContent = 'Capturing full page — this takes a few seconds...';
+  status.style.display = 'block';
+
+  // Hide the button bar during capture
+  bar.style.display = 'none';
+
+  try {
+    const canvas = await html2canvas(document.body, {
+      backgroundColor: '#050e1f',
+      scale: 2,                  // 2x = retina quality
+      useCORS: true,
+      logging: false,
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: document.body.scrollWidth,
+      windowHeight: document.body.scrollHeight,
+      width: document.body.scrollWidth,
+      height: document.body.scrollHeight,
+    });
+
+    const link = document.createElement('a');
+    link.download = 'VIBE_Ecosystem_Diagram.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    status.textContent = '✓ Downloaded as VIBE_Ecosystem_Diagram.png';
+    setTimeout(() => { status.style.display = 'none'; }, 3000);
+  } catch (e) {
+    status.textContent = '⚠ Capture failed — use Print / Save PDF instead.';
+    setTimeout(() => { status.style.display = 'none'; }, 4000);
+  }
+
+  bar.style.display = 'flex';
+  btn.textContent = '⬇ Download PNG';
+  btn.style.opacity = '1';
+  btn.disabled = false;
+}
+</script>
+
+  <script src="https://naluask.com/widget.js" data-client-key="vibe_k_2026_vibe" data-color="#6366f1" data-icon="neural" defer></script>
+</body>
+</html>

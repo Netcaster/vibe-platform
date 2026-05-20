@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodeMaster Pro — Browse</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ── CODEMASTER PRO THEME (purple override) ── */
+:root {
+  --deep:    #0a0514;
+  --navy:    #0f0720;
+  --card:    #160b2e;
+  --card2:   #1c1040;
+  --ocean:   #7c3aed;
+  --light:   #a78bfa;
+  --glow:    #c4b5fd;
+  --coral:   #ff6b6b;
+  --gold:    #f5c842;
+  --green:   #16a34a;
+  --text:    #e8d8ff;
+  --muted:   #7c5fa0;
+  --border:  rgba(124,58,237,0.22);
+  --border2: rgba(167,139,250,0.15);
+  --radius:  12px;
+  --radius-lg: 20px;
+  --shadow:  0 0 40px rgba(124,58,237,0.15);
+  --shadow-lg: 0 0 60px rgba(167,139,250,0.18);
+}
+
+body {
+  font-family: 'Outfit', 'Segoe UI', sans-serif;
+  background: var(--deep);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(124,58,237,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 90%, rgba(167,139,250,0.05) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,5,20,0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--light);
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.nav-links { display:flex;align-items:center;gap:8px; }
+.nav-links a { color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;padding:6px 14px;border-radius:8px;transition:all 0.2s; }
+.nav-links a:hover,.nav-links a[aria-current] { color:var(--text);background:var(--card); }
+
+.btn { display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;border:none;text-decoration:none;transition:all 0.2s;white-space:nowrap; }
+.btn-primary { background:linear-gradient(135deg,var(--ocean),var(--light));color:#fff; }
+.btn-primary:hover { transform:translateY(-1px);box-shadow:0 8px 24px rgba(124,58,237,0.4); }
+.btn-ghost { background:transparent;color:var(--text);border:1px solid var(--border); }
+.btn-ghost:hover { background:var(--card);border-color:var(--border2); }
+.btn-sm { padding:6px 14px;font-size:12px;border-radius:8px; }
+
+.badge { display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600; }
+.badge-green { background:rgba(22,163,74,0.15);color:#4ade80;border:1px solid rgba(22,163,74,0.3); }
+.badge-purple { background:rgba(124,58,237,0.15);color:var(--light);border:1px solid var(--border); }
+.badge-gold { background:rgba(245,200,66,0.12);color:var(--gold);border:1px solid rgba(245,200,66,0.25); }
+
+.progress-bar { height:6px;background:var(--navy);border-radius:100px;overflow:hidden; }
+.progress-fill { height:100%;background:linear-gradient(90deg,var(--ocean),var(--light));border-radius:100px;transition:width 0.6s ease; }
+
+.tab-btn { padding:8px 20px;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all 0.2s; }
+.tab-btn.active { background:rgba(124,58,237,0.15);border-color:var(--ocean);color:var(--light); }
+
+/* ── HERO ── */
+.hero-strip {
+  background: linear-gradient(135deg, var(--card2) 0%, var(--navy) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 60px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-strip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 60% at 80% 50%, rgba(124,58,237,0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.text-gradient { background:linear-gradient(135deg,var(--light),var(--ocean));-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+
+.catalog-section { padding: 48px 40px; }
+.section-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:24px; }
+.section-title { font-size:20px;font-weight:700; }
+
+.course-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.viewer-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.viewer-card:hover {
+  border-color: var(--border2);
+  box-shadow: var(--shadow);
+  transform: translateY(-3px);
+}
+
+.viewer-cover {
+  aspect-ratio: 16/9;
+  background: var(--card2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  position: relative;
+}
+
+.lock-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10,5,20,0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  backdrop-filter: blur(2px);
+}
+
+.viewer-card-body { padding: 16px; }
+.viewer-card-title { font-size:14px;font-weight:700;margin-bottom:4px; }
+.viewer-card-meta { font-size:11px;color:var(--muted);margin-bottom:10px; }
+
+.continue-bar {
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 8px;
+}
+.continue-bar:hover { border-color:var(--ocean);background:rgba(124,58,237,0.08); }
+
+.continue-icon {
+  width: 52px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.play-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ocean), var(--light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.cert-earned-card {
+  background: linear-gradient(135deg, rgba(22,163,74,0.1), rgba(124,58,237,0.1));
+  border: 1px solid rgba(22,163,74,0.25);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cert-earned-card:hover { border-color:rgba(22,163,74,0.5);transform:translateY(-1px); }
+
+@media (max-width: 1000px) {
+  .course-row { grid-template-columns: 1fr 1fr; }
+  .catalog-section { padding: 32px 20px; }
+  .hero-strip { padding: 40px 20px; }
+}
+@media (max-width: 640px) {
+  .course-row { grid-template-columns: 1fr; }
+  nav { padding: 0 20px; }
+}
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#" class="nav-brand">
+    ⬡ CodeMaster Pro
+  </a>
+  <div class="nav-links">
+    <a href="browse-codemaster.html" aria-current="page">Browse</a>
+    <a href="#">My Learning</a>
+    <a href="#">Certificates</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <a href="../demos.html" class="btn btn-ghost btn-sm">← All Platforms</a>
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)">
+      <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--ocean),var(--navy));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--light)">AC</div>
+      <span style="font-size:13px;font-weight:600">Alex</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO STRIP ── -->
+<div class="hero-strip">
+  <div style="max-width:1200px;margin:0 auto;position:relative;z-index:1">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px">
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--light);margin-bottom:12px">Welcome back, Alex</div>
+        <h1 style="font-size:36px;font-weight:900;letter-spacing:-0.02em;margin-bottom:12px">
+          Ship better code.<br><span class="text-gradient">Every week.</span>
+        </h1>
+        <p style="color:var(--muted);font-size:15px;max-width:440px;line-height:1.7">
+          Continue your journey with CodeMaster Pro — full-stack development, system design, and DevOps mastery.
+        </p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;min-width:260px">
+        <div style="background:rgba(22,11,46,0.85);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center">
+          <div style="font-size:28px;font-weight:900;color:var(--light)">4</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Active Courses</div>
+        </div>
+        <div style="background:rgba(22,11,46,0.85);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center">
+          <div style="font-size:28px;font-weight:900;color:#4ade80">1</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Certificate Earned</div>
+        </div>
+        <div style="background:rgba(22,11,46,0.85);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center">
+          <div style="font-size:28px;font-weight:900;color:var(--gold)">54%</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Avg Progress</div>
+        </div>
+        <div style="background:rgba(22,11,46,0.85);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center">
+          <div style="font-size:28px;font-weight:900;color:var(--light)">22h</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Watch Time</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CONTINUE WATCHING ── -->
+<div class="catalog-section">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="section-header">
+      <div class="section-title">Continue Watching</div>
+      <a href="#" style="font-size:13px;color:var(--light);text-decoration:none">See all →</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0">
+      <div class="continue-bar">
+        <div class="continue-icon">🐍</div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:700;margin-bottom:2px">Python Mastery</div>
+          <div style="font-size:12px;color:var(--muted)">Lesson 9 of 18 · Decorators & Context Managers</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+            <div class="progress-bar" style="flex:1"><div class="progress-fill" style="width:47%"></div></div>
+            <span style="font-size:11px;color:var(--muted)">47%</span>
+          </div>
+        </div>
+        <div class="play-circle">▶</div>
+      </div>
+      <div class="continue-bar">
+        <div class="continue-icon">⚛️</div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:700;margin-bottom:2px">React from Zero</div>
+          <div style="font-size:12px;color:var(--muted)">Lesson 6 of 20 · State Management with Zustand</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+            <div class="progress-bar" style="flex:1"><div class="progress-fill" style="width:28%"></div></div>
+            <span style="font-size:11px;color:var(--muted)">28%</span>
+          </div>
+        </div>
+        <div class="play-circle">▶</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CERTIFICATES ── -->
+<div class="catalog-section" style="padding-top:0">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="section-header">
+      <div class="section-title">🎓 Certificates Earned</div>
+    </div>
+    <div class="cert-earned-card" onclick="alert('Opening certificate CM-2026-00287...')">
+      <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--green),rgba(124,58,237,0.5));display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🏆</div>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:15px;margin-bottom:4px">DevOps Fundamentals</div>
+        <div style="font-size:12px;color:var(--muted)">CodeMaster Pro · Issued April 2, 2026</div>
+        <div style="font-size:11px;color:var(--light);font-family:monospace;margin-top:4px">CM-2026-00287</div>
+      </div>
+      <div>
+        <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation()">Download PDF</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ALL COURSES ── -->
+<div class="catalog-section" style="padding-top:0">
+  <div style="max-width:1200px;margin:0 auto">
+    <div class="section-header">
+      <div class="section-title">All Courses</div>
+      <div style="display:flex;gap:6px">
+        <button class="tab-btn active" style="font-size:11px;padding:5px 12px">All</button>
+        <button class="tab-btn" style="font-size:11px;padding:5px 12px">Enrolled</button>
+        <button class="tab-btn" style="font-size:11px;padding:5px 12px">Certified</button>
+      </div>
+    </div>
+    <div class="course-row">
+
+      <!-- Python Mastery - enrolled -->
+      <div class="viewer-card">
+        <div class="viewer-cover" style="background:linear-gradient(135deg,#1a0a2e,#0f0720)">🐍</div>
+        <div class="viewer-card-body">
+          <div class="viewer-card-title">Python Mastery</div>
+          <div class="viewer-card-meta">18 lessons · 6h 40m</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+            <div class="progress-bar" style="flex:1"><div class="progress-fill" style="width:47%"></div></div>
+            <span style="font-size:11px;color:var(--muted)">47%</span>
+          </div>
+          <button class="btn btn-primary" style="width:100%;font-size:12px">Continue →</button>
+        </div>
+      </div>
+
+      <!-- React - enrolled with cert -->
+      <div class="viewer-card">
+        <div class="viewer-cover" style="background:linear-gradient(135deg,#1a0a2e,#0f0720)">⚛️
+          <div style="position:absolute;top:8px;left:8px;background:rgba(10,5,20,0.85);border:1px solid rgba(245,200,66,0.4);border-radius:6px;padding:3px 8px;font-size:10px;font-weight:700;color:var(--gold)">🎓 Certificate</div>
+        </div>
+        <div class="viewer-card-body">
+          <div class="viewer-card-title">React from Zero</div>
+          <div class="viewer-card-meta">20 lessons · 7h 15m · Certificate on completion</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+            <div class="progress-bar" style="flex:1"><div class="progress-fill" style="width:28%"></div></div>
+            <span style="font-size:11px;color:var(--muted)">28%</span>
+          </div>
+          <button class="btn btn-primary" style="width:100%;font-size:12px">Continue →</button>
+        </div>
+      </div>
+
+      <!-- DevOps - completed & certified -->
+      <div class="viewer-card">
+        <div class="viewer-cover" style="background:linear-gradient(135deg,#1a0a2e,#0f0720)">🐳
+          <div style="position:absolute;bottom:8px;right:8px"><span class="badge badge-green">✓ Completed</span></div>
+        </div>
+        <div class="viewer-card-body">
+          <div class="viewer-card-title">DevOps Fundamentals</div>
+          <div class="viewer-card-meta">14 lessons · 5h 10m · Certified</div>
+          <div class="progress-bar" style="margin-bottom:10px"><div class="progress-fill" style="width:100%"></div></div>
+          <button class="btn btn-ghost" style="width:100%;font-size:12px">Review Course</button>
+        </div>
+      </div>
+
+      <!-- System Design - locked -->
+      <div class="viewer-card">
+        <div class="viewer-cover" style="background:linear-gradient(135deg,#1a0a2e,#0f0720)">🏗️
+          <div class="lock-overlay">🔒</div>
+          <div style="position:absolute;top:8px;left:8px;background:rgba(10,5,20,0.85);border:1px solid rgba(245,200,66,0.4);border-radius:6px;padding:3px 8px;font-size:10px;font-weight:700;color:var(--gold)">🎓 Certificate</div>
+        </div>
+        <div class="viewer-card-body">
+          <div class="viewer-card-title">System Design Interview</div>
+          <div class="viewer-card-meta">22 lessons · 9h 30m · Certificate on completion</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Upgrade to unlock</div>
+          <button class="btn btn-primary" style="width:100%;font-size:12px">Unlock — $79</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── POWERED BY ── -->
+<div style="text-align:center;padding:32px 40px;position:relative;z-index:1;border-top:1px solid var(--border)">
+  <span style="font-size:12px;color:var(--muted)">Powered by <a href="../index.html" style="color:var(--light);text-decoration:none;font-weight:600">VIBE Platform</a> — Multi-tenant White-Label Video SaaS</span>
+</div>
+
+<script>
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+
+  <script src="https://naluask.com/widget.js" data-client-key="vibe_k_2026_vibe" data-color="#6366f1" data-icon="neural" defer></script>
+</body>
+</html>

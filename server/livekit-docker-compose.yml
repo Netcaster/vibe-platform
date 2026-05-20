@@ -1,0 +1,38 @@
+# LiveKit Server — add to your DigitalOcean droplet (134.199.137.102)
+#
+# STEP 1: Create /opt/livekit/livekit.yaml with your keys (see below)
+# STEP 2: Run:  docker compose -f livekit-docker-compose.yml up -d
+# STEP 3: Open UDP port range 50000-60000 in your DO firewall
+# STEP 4: Open TCP port 7880 in your DO firewall
+#
+# livekit.yaml content:
+# ─────────────────────────────────────────────
+# port: 7880
+# rtc:
+#   tcp_port: 7881
+#   port_range_start: 50000
+#   port_range_end: 60000
+#   use_external_ip: true
+# keys:
+#   your_api_key: your_api_secret_here
+# logging:
+#   level: info
+# ─────────────────────────────────────────────
+
+version: '3.8'
+
+services:
+  livekit:
+    image: livekit/livekit-server:latest
+    container_name: livekit-server
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /opt/livekit/livekit.yaml:/livekit.yaml:ro
+    command: --config /livekit.yaml
+    # Network host mode gives LiveKit direct access to all ports.
+    # If you prefer bridge mode, expose these:
+    # ports:
+    #   - "7880:7880"
+    #   - "7881:7881/tcp"
+    #   - "50000-60000:50000-60000/udp"
