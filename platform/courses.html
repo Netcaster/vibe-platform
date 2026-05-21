@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VIBE — Course Manager</title>
+  <title>VIBE — Certification Manager</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
 /* ═══════════════════════════════════════════════════════════
@@ -839,8 +839,8 @@ tr:hover td { background: rgba(211,84,0,0.05); }
     <div class="sidebar-logo">⬡ VIBE</div>
     <div class="sidebar-section">Workspace</div>
     <a class="sidebar-item" href="dashboard.html"><span class="icon">⊞</span> Dashboard</a>
-    <a class="sidebar-item active" href="courses.html"><span class="icon">▶</span> Courses</a>
-    <a class="sidebar-item" href="#"><span class="icon">☰</span> Lessons</a>
+    <a class="sidebar-item active" href="courses.html"><span class="icon">▶</span> Certifications</a>
+    <a class="sidebar-item" href="#"><span class="icon">☰</span> Sessions</a>
     <a class="sidebar-item" href="#"><span class="icon">◈</span> Plans & Pricing</a>
     <div class="sidebar-section">Audience</div>
     <a class="sidebar-item" href="#"><span class="icon">◎</span> Subscribers</a>
@@ -868,10 +868,10 @@ tr:hover td { background: rgba(211,84,0,0.05); }
   <main class="main-content">
     <div class="page-header">
       <div>
-        <div class="page-title">Courses</div>
-        <div class="page-sub">4 courses · 46 total lessons</div>
+        <div class="page-title">Certifications</div>
+        <div class="page-sub">4 certifications · 46 total sessions</div>
       </div>
-      <button class="btn btn-primary" onclick="openPanel()">+ New Course</button>
+      <button class="btn btn-primary" onclick="openPanel()">+ New Certification</button>
     </div>
 
     <!-- Filter bar -->
@@ -881,7 +881,7 @@ tr:hover td { background: rgba(211,84,0,0.05); }
       <button class="tab-btn" style="font-size:12px">Draft (1)</button>
       <button class="tab-btn" style="font-size:12px">Certificate Enabled (2)</button>
       <div style="margin-left:auto">
-        <input type="text" placeholder="Search courses..." style="width:220px;padding:8px 14px;font-size:13px" />
+        <input type="text" placeholder="Search certifications..." style="width:220px;padding:8px 14px;font-size:13px" />
       </div>
     </div>
 
@@ -896,7 +896,7 @@ tr:hover td { background: rgba(211,84,0,0.05); }
         </div>
         <div class="course-body">
           <div style="font-weight:700;font-size:15px;margin-bottom:6px">Advanced Strength Training</div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:14px">12 lessons · 4h 22m</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px">12 sessions · 4h 22m</div>
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
             <span style="color:var(--muted)">284 students</span>
             <span style="color:#4ade80;font-weight:600">$4,260</span>
@@ -915,7 +915,7 @@ tr:hover td { background: rgba(211,84,0,0.05); }
         </div>
         <div class="course-body">
           <div style="font-weight:700;font-size:15px;margin-bottom:6px">Nutrition Fundamentals</div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:14px">8 lessons · 2h 48m</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px">8 sessions · 2h 48m</div>
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
             <span style="color:var(--muted)">196 students</span>
             <span style="color:#4ade80;font-weight:600">$2,940</span>
@@ -934,8 +934,8 @@ tr:hover td { background: rgba(211,84,0,0.05); }
           <div class="course-cover-cert">🎓 Certificate</div>
         </div>
         <div class="course-body">
-          <div style="font-weight:700;font-size:15px;margin-bottom:6px">HIIT Certification Course</div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:14px">16 lessons · 6h 15m · Certificate</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px">HIIT Certification</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px">16 sessions · 6h 15m · Certificate</div>
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
             <span style="color:var(--muted)">312 students</span>
             <span style="color:#4ade80;font-weight:600">$4,680</span>
@@ -955,7 +955,7 @@ tr:hover td { background: rgba(211,84,0,0.05); }
         </div>
         <div class="course-body">
           <div style="font-weight:700;font-size:15px;margin-bottom:6px">Yoga Flow Mastery</div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:14px">10 lessons · 3h 30m · Certificate</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:14px">10 sessions · 3h 30m · Certificate</div>
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
             <span style="color:var(--muted)">55 students</span>
             <span style="color:var(--gold);font-weight:600">Draft</span>
@@ -970,8 +970,8 @@ tr:hover td { background: rgba(211,84,0,0.05); }
       <!-- New course -->
       <div class="new-course-card" onclick="openPanel()">
         <div style="font-size:36px;color:var(--ocean)">+</div>
-        <div style="font-size:14px;font-weight:600;color:var(--muted)">New Course</div>
-        <div style="font-size:12px;color:var(--muted);text-align:center">Add lessons, set pricing,<br>and publish to your catalog</div>
+        <div style="font-size:14px;font-weight:600;color:var(--muted)">New Certification</div>
+        <div style="font-size:12px;color:var(--muted);text-align:center">Add sessions, set pricing,<br>and publish to your catalog</div>
       </div>
     </div>
 
@@ -979,12 +979,12 @@ tr:hover td { background: rgba(211,84,0,0.05); }
     <div id="lesson-manager" class="card" style="display:none">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
         <div>
-          <div class="label" style="margin-bottom:4px">Course Editor</div>
+          <div class="label" style="margin-bottom:4px">Certification Editor</div>
           <div id="lm-title" style="font-weight:700;font-size:18px"></div>
         </div>
         <div style="display:flex;gap:8px">
           <button class="btn btn-ghost btn-sm" onclick="closeCourse()">← Back</button>
-          <button class="btn btn-primary btn-sm">+ Add Lesson</button>
+          <button class="btn btn-primary btn-sm">+ Add Session</button>
         </div>
       </div>
       <div class="lesson-list" id="lesson-list"></div>
@@ -997,12 +997,12 @@ tr:hover td { background: rgba(211,84,0,0.05); }
 <div class="panel-overlay" id="newCoursePanel">
   <div class="side-panel">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
-      <h2 style="font-size:20px;font-weight:800">New Course</h2>
+      <h2 style="font-size:20px;font-weight:800">New Certification</h2>
       <button onclick="closePanel()" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer">×</button>
     </div>
 
     <div class="form-row">
-      <label>Course Title</label>
+      <label>Certification Title</label>
       <input type="text" placeholder="e.g. Advanced Strength Training" />
     </div>
     <div class="form-row">
@@ -1041,10 +1041,10 @@ tr:hover td { background: rgba(211,84,0,0.05); }
         <input type="checkbox" id="cert-toggle" style="width:auto" />
         <span style="font-size:14px;font-weight:600;color:var(--text)">Enable Certificate on Completion</span>
       </label>
-      <p style="font-size:12px;color:var(--muted);line-height:1.6">System will auto-detect when all required lessons are complete and mark the learner as eligible. Admin approves before certificate is issued.</p>
+      <p style="font-size:12px;color:var(--muted);line-height:1.6">System will auto-detect when all required sessions are complete and mark the subscriber as eligible. Admin approves before certificate is issued.</p>
     </div>
     <div style="display:flex;gap:10px">
-      <button class="btn btn-primary" style="flex:1" onclick="createCourse()">Create Course</button>
+      <button class="btn btn-primary" style="flex:1" onclick="createCourse()">Create Certification</button>
       <button class="btn btn-ghost" onclick="closePanel()">Cancel</button>
     </div>
   </div>
