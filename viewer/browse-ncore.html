@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NCORE 2027 — Attendee Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --deep:    #0b1e28;
+  --navy:    #112533;
+  --card:    #17303e;
+  --card2:   #1c3a4a;
+  --ocean:   #17a186;
+  --light:   #1ec9a8;
+  --glow:    #f39e14;
+  --coral:   #c13a2c;
+  --gold:    #f39e14;
+  --green:   #92d050;
+  --text:    #cdf0ea;
+  --muted:   #4d8a80;
+  --border:  rgba(23,161,134,0.22);
+  --border2: rgba(30,201,168,0.15);
+  --radius:  12px;
+  --radius-lg: 20px;
+  --shadow:  0 0 40px rgba(23,161,134,0.15);
+}
+
+body { font-family:'Outfit','Segoe UI',sans-serif;background:var(--deep);color:var(--text);min-height:100vh;overflow-x:hidden; }
+body::before { content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 10%,rgba(23,161,134,0.07) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 80% 90%,rgba(243,158,20,0.04) 0%,transparent 60%);pointer-events:none;z-index:0; }
+
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(11,30,40,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-brand { display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800;color:var(--light);letter-spacing:0.04em;text-decoration:none; }
+.nav-dot { width:8px;height:8px;border-radius:50%;background:var(--glow);box-shadow:0 0 10px var(--glow);flex-shrink:0;animation:pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+.btn { display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;border:none;text-decoration:none;transition:all 0.2s;white-space:nowrap; }
+.btn-primary { background:linear-gradient(135deg,var(--ocean),var(--light));color:#fff; }
+.btn-primary:hover { transform:translateY(-1px);box-shadow:0 8px 24px rgba(23,161,134,0.4); }
+.btn-ghost { background:transparent;color:var(--text);border:1px solid var(--border); }
+.btn-ghost:hover { background:var(--card); }
+.badge { display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600; }
+.badge-green { background:rgba(146,208,80,0.15);color:var(--green);border:1px solid rgba(146,208,80,0.3); }
+.badge-teal  { background:rgba(23,161,134,0.15);color:var(--light);border:1px solid var(--border); }
+.badge-gold  { background:rgba(243,158,20,0.12);color:var(--gold);border:1px solid rgba(243,158,20,0.25); }
+.badge-live  { background:rgba(193,58,44,0.18);color:#fca5a5;border:1px solid rgba(193,58,44,0.35);animation:livePulse 2s ease-in-out infinite; }
+@keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+
+.label { font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--ocean); }
+.progress-bar { height:5px;background:var(--navy);border-radius:100px;overflow:hidden; }
+.progress-fill { height:100%;background:linear-gradient(90deg,var(--ocean),var(--light));border-radius:100px; }
+
+/* ── HERO BANNER ── */
+.portal-hero {
+  position: relative;
+  padding: 60px 40px 50px;
+  overflow: hidden;
+  z-index: 1;
+  border-bottom: 1px solid var(--border);
+}
+.portal-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 100% at 60% 0%, rgba(23,161,134,0.12) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(11,30,40,0) 0%, rgba(11,30,40,0.8) 100%);
+  pointer-events: none;
+}
+.portal-hero-inner { max-width:1100px;margin:0 auto;position:relative;z-index:1; }
+.portal-hero-label { font-size:12px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--ocean);margin-bottom:14px; }
+.portal-hero-title { font-size:clamp(32px,4vw,52px);font-weight:900;line-height:1.05;letter-spacing:-0.02em;margin-bottom:16px; }
+.portal-hero-sub { font-size:16px;color:var(--muted);max-width:560px;line-height:1.65;margin-bottom:28px; }
+.portal-hero-badges { display:flex;gap:10px;flex-wrap:wrap; }
+
+/* ── LIVE BANNER ── */
+.live-banner {
+  background: linear-gradient(135deg, rgba(193,58,44,0.15), rgba(243,158,20,0.08));
+  border: 1px solid rgba(193,58,44,0.35);
+  border-radius: 16px;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 1100px;
+  margin: 0 auto 40px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── CONTENT ── */
+.content-wrap { max-width:1100px;margin:0 auto;padding:40px 40px 80px; }
+
+.section-header { display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px; }
+
+.card-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:48px; }
+@media (max-width:900px) { .card-grid{grid-template-columns:1fr 1fr} }
+@media (max-width:600px) { .card-grid{grid-template-columns:1fr} .content-wrap{padding:24px 20px 60px} nav{padding:0 20px} .portal-hero{padding:40px 20px 36px} }
+
+.session-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.session-card:hover { transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.35);border-color:rgba(23,161,134,0.4); }
+
+.session-thumb {
+  height: 130px;
+  background: linear-gradient(135deg, var(--card2), var(--navy));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+}
+.session-thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(11,30,40,0.6) 100%);
+}
+.session-body { padding: 18px; }
+.session-title { font-size:15px;font-weight:700;margin-bottom:6px;line-height:1.35; }
+.session-meta  { font-size:12px;color:var(--muted);margin-bottom:14px; }
+
+.session-card.locked .session-thumb::after {
+  content: '🔒';
+  position: absolute;
+  top: 10px; right: 12px;
+  font-size: 16px;
+}
+
+/* ── PROFILE BAR ── */
+.profile-bar {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.profile-avatar { width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--ocean),var(--navy));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:var(--light);flex-shrink:0; }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="../demos.html" class="nav-brand">
+    <span class="nav-dot"></span>
+    NCORE 2027
+  </a>
+  <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+    <a href="#" style="color:var(--muted);text-decoration:none;padding:6px 14px;border-radius:8px;transition:all 0.2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Sessions</a>
+    <a href="#" style="color:var(--muted);text-decoration:none;padding:6px 14px;border-radius:8px;transition:all 0.2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Certificates</a>
+    <a href="#" style="color:var(--muted);text-decoration:none;padding:6px 14px;border-radius:8px;transition:all 0.2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Live</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <a href="../platform/dashboard-ncore.html" class="btn btn-ghost" style="padding:7px 16px;font-size:13px">Dashboard</a>
+    <div class="profile-avatar" style="width:36px;height:36px;font-size:13px;cursor:pointer">NC</div>
+  </div>
+</nav>
+
+<!-- ── PORTAL HERO ── -->
+<section class="portal-hero">
+  <div class="portal-hero-inner">
+    <div class="portal-hero-label">NCORE 2027 Attendee Portal · ARIA Las Vegas</div>
+    <h1 class="portal-hero-title">Welcome to<br><span style="background:linear-gradient(135deg,var(--light),var(--glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent">NCORE 2027</span></h1>
+    <p class="portal-hero-sub">Access conference sessions, DEI certification tracks, keynote archives, and professional development content — all in one place.</p>
+    <div class="portal-hero-badges">
+      <span class="badge badge-green">● Active Member</span>
+      <span class="badge badge-teal">ARIA Las Vegas · 2027</span>
+      <span class="badge badge-gold">TPG Worldwide Platform</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── LIVE BANNER ── -->
+<div style="padding:0 40px;position:relative;z-index:1;max-width:1180px;margin:32px auto 0">
+  <div class="live-banner">
+    <span class="badge badge-live">● LIVE NOW</span>
+    <div style="flex:1">
+      <div style="font-size:15px;font-weight:700">Opening Keynote: Race, Equity &amp; Institutional Transformation</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:3px">ARIA Grand Ballroom · 1,240 attending · Started 14 min ago</div>
+    </div>
+    <a href="../platform/live-sessions.html" class="btn btn-primary" style="padding:9px 20px;font-size:13px">Join Live →</a>
+  </div>
+</div>
+
+<!-- ── MAIN CONTENT ── -->
+<div class="content-wrap">
+
+  <!-- Profile bar -->
+  <div class="profile-bar">
+    <div class="profile-avatar">DR</div>
+    <div style="flex:1">
+      <div style="font-size:15px;font-weight:700">Dr. Renée Marshall</div>
+      <div style="font-size:12px;color:var(--muted)">Institutional Member · University of California</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:4px">DEI Leadership — 3 of 5 sessions complete</div>
+      <div class="progress-bar" style="width:200px;margin-left:auto"><div class="progress-fill" style="width:60%"></div></div>
+    </div>
+    <a href="#" class="badge badge-teal" style="text-decoration:none">Continue Learning →</a>
+  </div>
+
+  <!-- Continue watching -->
+  <div class="section-header">
+    <div>
+      <div class="label" style="margin-bottom:6px">In Progress</div>
+      <div style="font-size:20px;font-weight:800">Continue Watching</div>
+    </div>
+    <a href="#" style="font-size:13px;color:var(--light);text-decoration:none">View all →</a>
+  </div>
+  <div class="card-grid">
+    <div class="session-card">
+      <div class="session-thumb" style="background:linear-gradient(135deg,#0e4a3a,#112533)">🎓
+        <div class="session-thumb-overlay"></div>
+      </div>
+      <div class="session-body">
+        <div class="session-title">DEI Leadership Certification — Session 4</div>
+        <div class="session-meta">24 min · Module 4 of 8</div>
+        <div class="progress-bar" style="margin-bottom:12px"><div class="progress-fill" style="width:48%"></div></div>
+        <a href="../viewer/watch.html" class="btn btn-primary" style="width:100%;justify-content:center;padding:9px">▶ Resume</a>
+      </div>
+    </div>
+    <div class="session-card">
+      <div class="session-thumb" style="background:linear-gradient(135deg,#2a1a0a,#1c3a4a)">🌍
+        <div class="session-thumb-overlay"></div>
+      </div>
+      <div class="session-body">
+        <div class="session-title">Cross-Cultural Competency — Session 2</div>
+        <div class="session-meta">31 min · Module 2 of 6</div>
+        <div class="progress-bar" style="margin-bottom:12px"><div class="progress-fill" style="width:22%"></div></div>
+        <a href="../viewer/watch.html" class="btn btn-primary" style="width:100%;justify-content:center;padding:9px">▶ Resume</a>
+      </div>
+    </div>
+    <div class="session-card">
+      <div class="session-thumb" style="background:linear-gradient(135deg,#1a1040,#112533)">🎤
+        <div class="session-thumb-overlay"></div>
+      </div>
+      <div class="session-body">
+        <div class="session-title">NCORE Keynote — Dr. Shaun Harper</div>
+        <div class="session-meta">58 min · Keynote archive</div>
+        <div class="progress-bar" style="margin-bottom:12px"><div class="progress-fill" style="width:71%"></div></div>
+        <a href="../viewer/watch.html" class="btn btn-primary" style="width:100%;justify-content:center;padding:9px">▶ Resume</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- All sessions -->
+  <div class="section-header">
+    <div>
+      <div class="label" style="margin-bottom:6px">Full Library</div>
+      <div style="font-size:20px;font-weight:800">All Sessions &amp; Certifications</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost" style="padding:7px 14px;font-size:12px">All</button>
+      <button class="btn btn-ghost" style="padding:7px 14px;font-size:12px;background:var(--card)">Certifications</button>
+      <button class="btn btn-ghost" style="padding:7px 14px;font-size:12px">Keynotes</button>
+    </div>
+  </div>
+  <div class="card-grid">
+    <div class="session-card">
+      <div class="session-thumb" style="background:linear-gradient(135deg,#0e4a3a,#112533)">🎓
+        <div class="session-thumb-overlay"></div>
+        <div style="position:absolute;top:10px;left:12px"><span class="badge badge-teal" style="font-size:10px">Certificate</span></div>
+      </div>
+      <div class="session-body">
+        <div class="session-title">DEI Leadership Certification</div>
+        <div class="session-meta">24 sessions · 9h 30m · 628 members</div>
+        <a href="../viewer/watch.html" class="btn btn-primary" style="width:100%;justify-content:center;padding:9px">▶ Start Track</a>
+      </div>
+    </div>
+    <div class="session-card">
+      <div class="session-thumb" style="background:linear-gradient(135deg,#1a3a10,#112533)">🏛️
+        <div class="session-thumb-overlay"></div>
+        <div style="position:absolute;top:10px;left:12px"><span class="badge badge-teal" style="font-size:10px">Certificate</span></div>
+      </div>
+      <div class="session-body">
+        <div class="session-title">Institutional Equity Frameworks</div>
+        <div class="session-meta">18 sessions · 7h 15m · 492 members</div>
+        <a href="../viewer/watch.html" class="btn btn-primary" style="width:100%;justify-content:center;padding:9px">▶ Start Track</a>
+      </div>
+    </div>
+    <div class="session-card">
+      <div class="session-thumb" style="background:linear-gradient(135deg,#2a1a0a,#1c3a4a)">🌍
+        <div class="session-thumb-overlay"></div>
+        <div style="position:absolute;top:10px;left:12px"><span class="badge badge-teal" style="font-size:10px">Certificate</span></div>
+      </div>
+      <div class="session-body">
+        <div class="session-title">Cross-Cultural Competency</div>
+        <div class="session-meta">16 sessions · 6h 20m · 411 members</div>
+        <a href="../viewer/watch.html" class="btn btn-primary" style="width:100%;justify-content:center;padding:9px">▶ Start Track</a>
+      </div>
+    </div>
+    <div class="session-card">
+      <div class="session-thumb" style="background:linear-gradient(135deg,#1a1040,#112533)">🎤
+        <div class="session-thumb-overlay"></div>
+        <div style="position:absolute;top:10px;left:12px"><span class="badge badge-gold" style="font-size:10px">Free</span></div>
+      </div>
+      <div class="session-body">
+        <div class="session-title">NCORE Keynote Archive</div>
+        <div class="session-meta">12 sessions · 4h 40m · Free access</div>
+        <a href="../viewer/watch.html" class="btn btn-ghost" style="width:100%;justify-content:center;padding:9px">▶ Watch Free</a>
+      </div>
+    </div>
+    <div class="session-card locked">
+      <div class="session-thumb" style="background:linear-gradient(135deg,#1a0a1a,#112533)">✊
+        <div class="session-thumb-overlay"></div>
+      </div>
+      <div class="session-body">
+        <div class="session-title">Identity, Access &amp; Belonging</div>
+        <div class="session-meta">14 sessions · 5h 10m · Coming Q3 2026</div>
+        <button class="btn btn-ghost" style="width:100%;justify-content:center;padding:9px;opacity:0.5;cursor:not-allowed">🔒 Coming Soon</button>
+      </div>
+    </div>
+    <div class="session-card locked">
+      <div class="session-thumb" style="background:linear-gradient(135deg,#0a2a1a,#112533)">🏆
+        <div class="session-thumb-overlay"></div>
+      </div>
+      <div class="session-body">
+        <div class="session-title">NCORE 2027 Live Conference</div>
+        <div class="session-meta">ARIA Las Vegas · 2027 registration</div>
+        <button class="btn btn-ghost" style="width:100%;justify-content:center;padding:9px;opacity:0.5;cursor:not-allowed">🔒 Registration Opens 2026</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+  <script src="https://naluask.com/widget.js" data-client-key="vibe_k_2026_vibe" data-color="#6366f1" data-icon="neural" defer></script>
+</body>
+</html>

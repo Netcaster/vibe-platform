@@ -137,8 +137,9 @@ nav {
   box-shadow: 0 24px 60px rgba(0,0,0,0.4);
 }
 
-.tenant-card.fitpro:hover { border-color: rgba(255,112,67,0.5); box-shadow: 0 24px 60px rgba(211,84,0,0.25); }
+.tenant-card.fitpro:hover    { border-color: rgba(255,112,67,0.5); box-shadow: 0 24px 60px rgba(211,84,0,0.25); }
 .tenant-card.codemaster:hover { border-color: rgba(124,58,237,0.5); box-shadow: 0 24px 60px rgba(124,58,237,0.25); }
+.tenant-card.ncore:hover     { border-color: rgba(23,161,134,0.5); box-shadow: 0 24px 60px rgba(23,161,134,0.25); }
 .tenant-card.placeholder { border-style: dashed; opacity: 0.6; }
 
 .tenant-header {
@@ -157,8 +158,9 @@ nav {
   opacity: 0.08;
 }
 
-.fitpro .tenant-header::before { background: var(--light); }
+.fitpro .tenant-header::before    { background: var(--light); }
 .codemaster .tenant-header::before { background: #a78bfa; }
+.ncore .tenant-header::before      { background: #1ec9a8; }
 
 .tenant-logo {
   font-size: 13px;
@@ -167,8 +169,9 @@ nav {
   margin-bottom: 12px;
 }
 
-.fitpro .tenant-logo { color: var(--light); }
+.fitpro .tenant-logo    { color: var(--light); }
 .codemaster .tenant-logo { color: #a78bfa; }
+.ncore .tenant-logo     { color: #1ec9a8; }
 .placeholder .tenant-logo { color: var(--muted); }
 
 .tenant-tagline {
@@ -208,8 +211,9 @@ nav {
   margin-bottom: 4px;
 }
 
-.fitpro .t-stat-val { color: var(--light); }
+.fitpro .t-stat-val    { color: var(--light); }
 .codemaster .t-stat-val { color: #a78bfa; }
+.ncore .t-stat-val      { color: #1ec9a8; }
 
 .t-stat-label { font-size: 11px; color: var(--muted); }
 
@@ -296,6 +300,25 @@ nav {
 }
 .btn-dash-codemaster:hover { background: rgba(124,58,237,0.1); }
 
+.btn-ncore {
+  background: linear-gradient(135deg, #17a186, #1ec9a8);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px; border-radius: var(--radius);
+  font-size: 14px; font-weight: 700; text-decoration: none;
+  cursor: pointer; border: none; transition: all 0.2s;
+}
+.btn-ncore:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(23,161,134,0.45); }
+
+.btn-dash-ncore {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px; border-radius: var(--radius);
+  font-size: 13px; font-weight: 600; text-decoration: none;
+  background: transparent; border: 1px solid rgba(23,161,134,0.35);
+  color: #1ec9a8; transition: all 0.2s;
+}
+.btn-dash-ncore:hover { background: rgba(23,161,134,0.1); }
+
 /* Architecture callout */
 .arch-strip {
   background: var(--navy);
@@ -366,14 +389,14 @@ nav {
   <div style="position:relative;z-index:1">
     <div class="label" style="margin-bottom:16px">Platform Demonstration</div>
     <h1 style="font-size:clamp(36px,5vw,64px);font-weight:900;line-height:1.05;letter-spacing:-0.025em;margin-bottom:20px">
-      One platform.<br><span class="text-gradient">Two completely different brands.</span>
+      One platform.<br><span class="text-gradient">Three completely different brands.</span>
     </h1>
     <p style="color:var(--muted);font-size:17px;max-width:580px;margin:0 auto 40px;line-height:1.7">
       Both run on the same VIBE infrastructure — separate subscribers, separate Stripe accounts, separate certificates, zero overlap.
     </p>
     <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(10,28,53,0.7);border:1px solid var(--border);border-radius:100px;padding:10px 20px;font-size:13px;color:var(--muted)">
       <span style="width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80;display:inline-block"></span>
-      2 live demo tenants · Click any card to explore
+      3 live demo tenants · Click any card to explore
     </div>
   </div>
 </section>
@@ -495,22 +518,47 @@ nav {
     </div>
   </div>
 
-  <!-- SLOT 3: Your Brand -->
-  <div class="tenant-card placeholder">
-    <div class="tenant-header" style="min-height:160px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
-      <div style="width:56px;height:56px;border-radius:16px;border:2px dashed rgba(90,138,170,0.3);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px;color:var(--muted)">+</div>
-      <div style="font-size:16px;font-weight:700;color:var(--muted);margin-bottom:8px">Your Brand Here</div>
-      <div style="font-size:13px;color:var(--muted);opacity:0.7;max-width:200px;line-height:1.5">Launch your own channel on VIBE in under a day</div>
+  <!-- TENANT 3: NCORE 2027 -->
+  <div class="tenant-card ncore">
+    <div class="tenant-header">
+      <div class="tenant-logo">◈ NCORE 2027</div>
+      <div class="tenant-tagline">Higher education DEI conference platform — certifications, session archives, and live programming at ARIA Las Vegas.</div>
+      <div class="tenant-meta">
+        <span class="badge badge-green">● Live</span>
+        <span class="badge" style="background:rgba(23,161,134,0.15);color:#1ec9a8;border:1px solid rgba(23,161,134,0.3)">ncore.vibe.io</span>
+        <span class="badge" style="background:rgba(23,161,134,0.15);color:#1ec9a8;border:1px solid rgba(23,161,134,0.3)">Stripe Connected</span>
+      </div>
     </div>
     <div class="tenant-body">
-      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">
-        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)"><span>✓</span> Your logo & colors</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)"><span>✓</span> Your custom domain</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)"><span>✓</span> Your Stripe payouts</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)"><span>✓</span> Your certificate brand</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)"><span>✓</span> Full data isolation</div>
+      <div class="tenant-stats">
+        <div class="t-stat">
+          <div class="t-stat-val">3,840</div>
+          <div class="t-stat-label">Registered Members</div>
+        </div>
+        <div class="t-stat">
+          <div class="t-stat-val" style="color:#4ade80">$284k</div>
+          <div class="t-stat-label">Registration Revenue</div>
+        </div>
+        <div class="t-stat">
+          <div class="t-stat-val">4</div>
+          <div class="t-stat-label">Certification Tracks</div>
+        </div>
+        <div class="t-stat">
+          <div class="t-stat-val">412</div>
+          <div class="t-stat-label">Certs Issued</div>
+        </div>
       </div>
-      <a href="index.html#pricing" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:var(--radius);font-size:14px;font-weight:700;text-decoration:none;background:transparent;border:1px dashed rgba(90,138,170,0.3);color:var(--muted);transition:all 0.2s" onmouseover="this.style.background='rgba(90,138,170,0.08)';this.style.borderColor='rgba(90,138,170,0.5)'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(90,138,170,0.3)'">Get Started Free →</a>
+      <div class="tenant-courses">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Certification Tracks</div>
+        <div class="tenant-course-item" style="border-bottom-color:rgba(23,161,134,0.1)"><span>🎓</span> DEI Leadership Certification<span style="margin-left:auto;font-size:11px;color:#1ec9a8">🎓 Cert</span></div>
+        <div class="tenant-course-item" style="border-bottom-color:rgba(23,161,134,0.1)"><span>🏛️</span> Institutional Equity Frameworks<span style="margin-left:auto;font-size:11px;color:#1ec9a8">🎓 Cert</span></div>
+        <div class="tenant-course-item" style="border-bottom-color:rgba(23,161,134,0.1)"><span>🌍</span> Cross-Cultural Competency<span style="margin-left:auto;font-size:11px;color:#f39e14">In Progress</span></div>
+        <div class="tenant-course-item" style="border-bottom-color:rgba(23,161,134,0.1)"><span>🎤</span> NCORE Keynote Archive<span style="margin-left:auto;font-size:11px;color:#4ade80">Free Access</span></div>
+      </div>
+      <div class="tenant-actions">
+        <a href="viewer/browse-ncore.html" class="btn-ncore">▶ Enter Attendee Portal</a>
+        <a href="platform/dashboard-ncore.html" class="btn-dash-ncore">⊞ Creator Dashboard</a>
+      </div>
     </div>
   </div>
 
