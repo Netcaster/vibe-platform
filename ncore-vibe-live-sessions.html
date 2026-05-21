@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NCORE 2027 — Live Sessions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --deep: #0b1e28; --navy: #112533; --card: #17303e; --card2: #1c3a4a;
+  --ocean: #17a186; --light: #1ec9a8; --glow: #f39e14;
+  --coral: #ff6b6b; --gold: #f5c842; --green: #16a34a;
+  --red: #dc2626; --text: #cdf0ea; --muted: #4d8a80;
+  --border: rgba(23,161,134,0.22); --border2: rgba(30,201,168,0.15);
+  --radius: 12px; --radius-lg: 20px;
+  --shadow: 0 0 40px rgba(23,161,134,0.15);
+  --shadow-lg: 0 0 60px rgba(30,201,168,0.15);
+}
+body { font-family:'Outfit','Segoe UI',sans-serif; background:var(--deep); color:var(--text); min-height:100vh; overflow-x:hidden; }
+body::before { content:''; position:fixed; inset:0; background: radial-gradient(ellipse 60% 40% at 20% 10%,rgba(23,161,134,0.07) 0%,transparent 60%), radial-gradient(ellipse 50% 40% at 80% 90%,rgba(30,201,168,0.04) 0%,transparent 60%); pointer-events:none; z-index:0; }
+.app-layout { display:flex; min-height:100vh; }
+.main-content { flex:1; padding:32px; overflow-y:auto; position:relative; z-index:1; }
+
+/* ── SIDEBAR ── */
+.sidebar { width:240px; flex-shrink:0; background:var(--navy); border-right:1px solid var(--border); min-height:100vh; position:sticky; top:0; overflow-y:auto; display:flex; flex-direction:column; padding:24px 0; }
+.sidebar-logo { padding:0 20px 24px; font-size:20px; font-weight:800; color:#fff; letter-spacing:0.06em; border-bottom:1px solid var(--border); margin-bottom:12px; }
+.sidebar-section { padding:8px 12px; font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-top:8px; }
+.sidebar-item { display:flex; align-items:center; gap:10px; padding:10px 20px; color:var(--muted); font-size:14px; font-weight:500; text-decoration:none; border-radius:10px; margin:2px 8px; transition:all 0.2s; cursor:pointer; }
+.sidebar-item:hover { color:var(--text); background:var(--card); }
+.sidebar-item.active { color:var(--light); background:rgba(23,161,134,0.15); border:1px solid var(--border); }
+.sidebar-item .icon { font-size:16px; }
+.avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--ocean),var(--light)); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; flex-shrink:0; }
+
+/* ── CORE UI ── */
+.card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px; transition:all 0.3s; }
+.card:hover { border-color:var(--border2); box-shadow:var(--shadow); }
+.btn { display:inline-flex; align-items:center; gap:8px; padding:10px 22px; border-radius:var(--radius); font-size:14px; font-weight:600; cursor:pointer; border:none; text-decoration:none; transition:all 0.2s; white-space:nowrap; font-family:inherit; }
+.btn-primary { background:linear-gradient(135deg,var(--ocean),var(--light)); color:var(--deep); }
+.btn-primary:hover { transform:translateY(-1px); box-shadow:0 8px 24px rgba(23,161,134,0.4); }
+.btn-ghost { background:transparent; color:var(--text); border:1px solid var(--border); }
+.btn-ghost:hover { background:var(--card); }
+.btn-red { background:rgba(220,38,38,0.15); color:#f87171; border:1px solid rgba(220,38,38,0.3); }
+.btn-red:hover { background:rgba(220,38,38,0.25); }
+.btn-sm { padding:6px 14px; font-size:12px; border-radius:8px; }
+.btn-lg { padding:14px 32px; font-size:16px; border-radius:14px; }
+.badge { display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:100px; font-size:12px; font-weight:600; }
+.badge-green { background:rgba(22,163,74,0.15); color:#4ade80; border:1px solid rgba(22,163,74,0.3); }
+.badge-live { background:rgba(220,38,38,0.2); color:#f87171; border:1px solid rgba(220,38,38,0.4); }
+.badge-gold { background:rgba(245,200,66,0.12); color:var(--gold); border:1px solid rgba(245,200,66,0.25); }
+.badge-muted { background:rgba(90,138,170,0.12); color:var(--muted); border:1px solid rgba(90,138,170,0.2); }
+.label { font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--ocean); }
+.page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:32px; }
+.page-title { font-size:28px; font-weight:800; letter-spacing:-0.01em; }
+.page-sub { font-size:14px; color:var(--muted); margin-top:4px; }
+
+/* ── LIVE DOT ── */
+@keyframes livepulse { 0%,100% { box-shadow:0 0 0 0 rgba(239,68,68,0.6); } 50% { box-shadow:0 0 0 8px rgba(239,68,68,0); } }
+.live-dot { width:10px; height:10px; border-radius:50%; background:#ef4444; animation:livepulse 1.8s ease-in-out infinite; flex-shrink:0; }
+
+/* ── ACTIVE SESSION CARD ── */
+.live-hero { background:linear-gradient(135deg,rgba(220,38,38,0.12),rgba(23,161,134,0.08)); border:1px solid rgba(220,38,38,0.3); border-radius:var(--radius-lg); padding:32px; margin-bottom:28px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.live-hero-info { display:flex; align-items:center; gap:20px; }
+.live-icon-wrap { width:64px; height:64px; border-radius:18px; background:rgba(220,38,38,0.15); border:1px solid rgba(220,38,38,0.3); display:flex; align-items:center; justify-content:center; font-size:28px; flex-shrink:0; }
+.live-title { font-size:22px; font-weight:800; margin-bottom:6px; }
+.live-meta { display:flex; align-items:center; gap:16px; font-size:13px; color:var(--muted); }
+.live-timer { font-size:28px; font-weight:800; color:#f87171; font-variant-numeric:tabular-nums; }
+
+/* ── EMPTY STATE ── */
+.empty-state { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:64px 32px; text-align:center; margin-bottom:28px; }
+.empty-icon { font-size:56px; margin-bottom:20px; }
+.empty-title { font-size:22px; font-weight:700; margin-bottom:8px; }
+.empty-sub { color:var(--muted); font-size:15px; margin-bottom:28px; }
+
+/* ── SESSION LIST ── */
+.section-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.session-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; margin-bottom:32px; }
+.session-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:22px; display:flex; flex-direction:column; gap:14px; transition:all 0.25s; }
+.session-card:hover { border-color:var(--border2); box-shadow:var(--shadow); transform:translateY(-2px); }
+.session-card-header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.session-name { font-size:16px; font-weight:700; line-height:1.3; }
+.session-desc { font-size:13px; color:var(--muted); line-height:1.5; }
+.session-meta-row { display:flex; align-items:center; gap:12px; font-size:12px; color:var(--muted); flex-wrap:wrap; }
+.session-meta-row span { display:flex; align-items:center; gap:5px; }
+.session-actions { display:flex; gap:8px; padding-top:4px; border-top:1px solid var(--border); }
+
+/* ── PAST SESSIONS TABLE ── */
+table { width:100%; border-collapse:collapse; }
+th { font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); padding:12px 16px; text-align:left; border-bottom:1px solid var(--border); }
+td { padding:14px 16px; font-size:14px; border-bottom:1px solid rgba(23,161,134,0.08); }
+tr:hover td { background:rgba(23,161,134,0.04); }
+
+/* ── MODAL ── */
+.modal-overlay { position:fixed; inset:0; background:rgba(5,14,31,0.85); backdrop-filter:blur(10px); z-index:200; display:none; align-items:center; justify-content:center; padding:24px; }
+.modal-overlay.open { display:flex; }
+.modal { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:36px; width:100%; max-width:580px; box-shadow:var(--shadow-lg); }
+.modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; }
+.modal-title { font-size:20px; font-weight:800; }
+.modal-close { background:none; border:none; color:var(--muted); font-size:22px; cursor:pointer; padding:4px; line-height:1; }
+.modal-close:hover { color:var(--text); }
+.form-group { margin-bottom:20px; }
+.form-group label { display:block; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+.form-group input, .form-group select, .form-group textarea { background:var(--navy); border:1px solid var(--border); border-radius:var(--radius); color:var(--text); font-family:inherit; font-size:14px; padding:12px 16px; width:100%; outline:none; transition:border-color 0.2s; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--ocean); box-shadow:0 0 0 3px rgba(23,161,134,0.12); }
+.form-group textarea { resize:vertical; min-height:80px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.radio-group { display:flex; flex-direction:column; gap:10px; }
+.radio-opt { display:flex; align-items:center; gap:10px; cursor:pointer; padding:10px 14px; border-radius:10px; border:1px solid var(--border); transition:all 0.2s; }
+.radio-opt:hover { border-color:var(--border2); background:var(--card2); }
+.radio-opt input[type=radio] { accent-color:var(--ocean); width:16px; height:16px; }
+.radio-opt .opt-label { font-size:14px; font-weight:500; }
+.radio-opt .opt-sub { font-size:12px; color:var(--muted); }
+.modal-footer { display:flex; justify-content:flex-end; gap:10px; margin-top:28px; padding-top:20px; border-top:1px solid var(--border); }
+
+/* ── TOAST ── */
+.toast { position:fixed; bottom:24px; right:24px; background:var(--card); border:1px solid var(--border2); border-radius:var(--radius); padding:16px 20px; display:none; align-items:center; gap:12px; font-size:14px; z-index:999; box-shadow:var(--shadow); animation:slideUp 0.3s ease; }
+@keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+@media(max-width:900px) { .session-grid{grid-template-columns:1fr;} .form-row{grid-template-columns:1fr;} }
+@media(max-width:600px) { .app-layout{flex-direction:column;} .sidebar{width:100%;min-height:auto;position:static;} .main-content{padding:20px;} .live-hero{flex-direction:column;} }
+  </style>
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">◈ NCORE 2027</div>
+    <div class="sidebar-section">Workspace</div>
+    <a class="sidebar-item" href="ncore-vibe-platform.html"><span class="icon">⊞</span> Dashboard</a>
+    <a class="sidebar-item" href="platform/courses.html"><span class="icon">▶</span> Certifications</a>
+    <a class="sidebar-item active" href="ncore-vibe-live-sessions.html"><span class="icon">⊙</span> Live Sessions</a>
+    <a class="sidebar-item" href="#"><span class="icon">☰</span> Sessions</a>
+    <a class="sidebar-item" href="#"><span class="icon">◈</span> Plans &amp; Pricing</a>
+    <div class="sidebar-section">Audience</div>
+    <a class="sidebar-item" href="#"><span class="icon">◎</span> Attendees</a>
+    <a class="sidebar-item" href="platform/certificates.html"><span class="icon">◉</span> Certificates</a>
+    <a class="sidebar-item" href="#"><span class="icon">⬡</span> Transactions</a>
+    <div class="sidebar-section">Analytics</div>
+    <a class="sidebar-item" href="#"><span class="icon">⟁</span> Revenue</a>
+    <a class="sidebar-item" href="#"><span class="icon">◰</span> Content</a>
+    <div class="sidebar-section">Settings</div>
+    <a class="sidebar-item" href="#"><span class="icon">◇</span> Brand</a>
+    <a class="sidebar-item" href="#"><span class="icon">◈</span> Stripe Connect</a>
+    <a class="sidebar-item" href="#"><span class="icon">◑</span> Video Provider</a>
+    <div style="flex:1"></div>
+    <div style="padding:16px 20px;border-top:1px solid var(--border);margin-top:16px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="avatar">NC</div>
+        <div>
+          <div style="font-size:13px;font-weight:600">NCORE 2027</div>
+          <div style="font-size:11px;color:var(--muted)">Owner</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Live Sessions</div>
+        <div class="page-sub">Host live keynotes, panels, workshops, and Q&amp;As for conference attendees</div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-ghost" onclick="openModal()">📅 Schedule Session</button>
+        <a href="ncore-vibe-live-viewer.html" class="btn btn-primary">⊙ Go Live Now</a>
+      </div>
+    </div>
+
+    <!-- ── ACTIVE SESSION (shown when live) ── -->
+    <div class="live-hero" id="activeSession" style="display:none">
+      <div class="live-hero-info">
+        <div class="live-icon-wrap">📹</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <div class="live-dot"></div>
+            <span class="badge badge-live">LIVE</span>
+          </div>
+          <div class="live-title" id="activeTitle">DEI Leadership Live Keynote</div>
+          <div class="live-meta">
+            <span>👥 <strong id="viewerCount">24</strong> viewers</span>
+            <span>🎓 NCORE 2027</span>
+            <span>◉ All Attendees</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px">
+        <div class="live-timer" id="liveTimer">00:00:00</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-red btn-sm" onclick="endSession()">■ End Session</button>
+          <a href="ncore-vibe-live-viewer.html" class="btn btn-primary">Join Room →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── EMPTY STATE (no active session) ── -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">⊙</div>
+      <div class="empty-title">You're not live right now</div>
+      <div class="empty-sub">Start a session to stream live to your attendees — no streaming software needed.</div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a href="ncore-vibe-live-viewer.html" class="btn btn-primary btn-lg">⊙ Go Live Now</a>
+        <button class="btn btn-ghost btn-lg" onclick="openModal()">📅 Schedule a Session</button>
+      </div>
+    </div>
+
+    <!-- ── UPCOMING SESSIONS ── -->
+    <div class="section-head">
+      <div>
+        <div class="label" style="margin-bottom:4px">Upcoming</div>
+        <div style="font-size:18px;font-weight:700">Scheduled Sessions</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="openModal()">+ New Session</button>
+    </div>
+
+    <div class="session-grid" id="sessionGrid">
+
+      <div class="session-card">
+        <div class="session-card-header">
+          <div>
+            <div class="session-name">Opening Keynote: Race, Equity &amp; Institutional Transformation</div>
+            <div class="session-desc">Join TPG Worldwide and NCORE leadership for the 2027 conference opening keynote at ARIA Las Vegas.</div>
+          </div>
+          <span class="badge badge-gold">Scheduled</span>
+        </div>
+        <div class="session-meta-row">
+          <span>📅 Jun 8, 2027 · 9:00 AM</span>
+          <span>⏱ 60 min</span>
+          <span>◉ All Attendees</span>
+        </div>
+        <div class="session-meta-row">
+          <span>👥 Max 2,000 attendees</span>
+        </div>
+        <div class="session-actions">
+          <a href="ncore-vibe-live-viewer.html" class="btn btn-primary btn-sm">▶ Start</a>
+          <button class="btn btn-ghost btn-sm" onclick="editSession(this)">✎ Edit</button>
+          <button class="btn btn-red btn-sm" onclick="cancelSession(this)">✕ Cancel</button>
+        </div>
+      </div>
+
+      <div class="session-card">
+        <div class="session-card-header">
+          <div>
+            <div class="session-name">DEI Leadership Workshop — Live Q&amp;A</div>
+            <div class="session-desc">Live Q&amp;A with DEI certification instructors. Submit questions in chat throughout.</div>
+          </div>
+          <span class="badge badge-gold">Scheduled</span>
+        </div>
+        <div class="session-meta-row">
+          <span>📅 Jun 9, 2027 · 2:00 PM</span>
+          <span>⏱ 45 min</span>
+          <span>◉ Institutional Members</span>
+        </div>
+        <div class="session-meta-row">
+          <span>👥 Max 500 attendees</span>
+        </div>
+        <div class="session-actions">
+          <a href="ncore-vibe-live-viewer.html" class="btn btn-primary btn-sm">▶ Start</a>
+          <button class="btn btn-ghost btn-sm" onclick="editSession(this)">✎ Edit</button>
+          <button class="btn btn-red btn-sm" onclick="cancelSession(this)">✕ Cancel</button>
+        </div>
+      </div>
+
+      <div class="session-card">
+        <div class="session-card-header">
+          <div>
+            <div class="session-name">Cross-Cultural Competency — Panel Discussion</div>
+            <div class="session-desc">Expert panel on cross-cultural competency frameworks in higher education institutions.</div>
+          </div>
+          <span class="badge badge-gold">Scheduled</span>
+        </div>
+        <div class="session-meta-row">
+          <span>📅 Jun 10, 2027 · 10:00 AM</span>
+          <span>⏱ 30 min</span>
+          <span>◉ All Attendees</span>
+        </div>
+        <div class="session-meta-row">
+          <span>👥 Max 800 attendees</span>
+        </div>
+        <div class="session-actions">
+          <a href="ncore-vibe-live-viewer.html" class="btn btn-primary btn-sm">▶ Start</a>
+          <button class="btn btn-ghost btn-sm" onclick="editSession(this)">✎ Edit</button>
+          <button class="btn btn-red btn-sm" onclick="cancelSession(this)">✕ Cancel</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── PAST SESSIONS ── -->
+    <div class="section-head">
+      <div>
+        <div class="label" style="margin-bottom:4px">History</div>
+        <div style="font-size:18px;font-weight:700">Past Sessions</div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:32px">
+      <table>
+        <thead>
+          <tr>
+            <th>Session</th>
+            <th>Date</th>
+            <th>Duration</th>
+            <th>Peak Viewers</th>
+            <th>Access</th>
+            <th>Recording</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div style="font-weight:600">DEI Leadership Live Keynote</div>
+              <div style="font-size:12px;color:var(--muted)">NCORE 2027</div>
+            </td>
+            <td style="color:var(--muted)">Jun 8, 2027</td>
+            <td>58 min</td>
+            <td><span style="color:#4ade80;font-weight:700">74</span></td>
+            <td><span class="badge badge-muted" style="font-size:11px">All Attendees</span></td>
+            <td><span class="badge badge-muted" style="font-size:11px">Coming Soon</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div style="font-weight:600">Institutional Equity Q&amp;A</div>
+              <div style="font-size:12px;color:var(--muted)">NCORE 2027</div>
+            </td>
+            <td style="color:var(--muted)">Jun 9, 2027</td>
+            <td>45 min</td>
+            <td><span style="color:#4ade80;font-weight:700">51</span></td>
+            <td><span class="badge badge-muted" style="font-size:11px">All Attendees</span></td>
+            <td><span class="badge badge-muted" style="font-size:11px">Coming Soon</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div style="font-weight:600">Conference Opening Panel</div>
+              <div style="font-size:12px;color:var(--muted)">NCORE 2027</div>
+            </td>
+            <td style="color:var(--muted)">Jun 10, 2027</td>
+            <td>62 min</td>
+            <td><span style="color:#4ade80;font-weight:700">38</span></td>
+            <td><span class="badge badge-muted" style="font-size:11px">Pro Plan</span></td>
+            <td><span class="badge badge-muted" style="font-size:11px">Coming Soon</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── HOW IT WORKS ── -->
+    <div class="card" style="background:linear-gradient(135deg,rgba(23,161,134,0.06),rgba(30,201,168,0.03))">
+      <div class="label" style="margin-bottom:16px">How Live Sessions Work</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:28px">⊙</div>
+          <div style="font-weight:700;font-size:14px">Browser-Only</div>
+          <div style="font-size:13px;color:var(--muted)">No OBS or streaming software. Just click Go Live and your camera is live.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:28px">🔒</div>
+          <div style="font-weight:700;font-size:14px">Attendee-Gated</div>
+          <div style="font-size:13px;color:var(--muted)">Only paid attendees (or specific plan tiers) can join your session.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:28px">💬</div>
+          <div style="font-weight:700;font-size:14px">Live Chat &amp; Q&amp;A</div>
+          <div style="font-size:13px;color:var(--muted)">Built-in chat and raise-hand feature for interactive Q&amp;A sessions.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:28px">🖥</div>
+          <div style="font-weight:700;font-size:14px">Screen Share</div>
+          <div style="font-size:13px;color:var(--muted)">Share your screen for workouts, slides, tutorials, or anything else.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:28px">⚡</div>
+          <div style="font-weight:700;font-size:14px">Low Latency</div>
+          <div style="font-size:13px;color:var(--muted)">Powered by LiveKit WebRTC — sub-second delay, not 30-second stream lag.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:28px">📼</div>
+          <div style="font-weight:700;font-size:14px">Recording (Soon)</div>
+          <div style="font-size:13px;color:var(--muted)">Recordings will be automatically added as certification sessions after the session.</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ── CREATE SESSION MODAL ── -->
+<div class="modal-overlay" id="createModal" onclick="closeModalOnBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Schedule a Live Session</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="form-group">
+      <label>Session Title</label>
+      <input type="text" placeholder="e.g. DEI Leadership Live Keynote" id="newTitle" />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea placeholder="Describe this session or panel topic" id="newDesc"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Date &amp; Time</label>
+        <input type="datetime-local" id="newDate" />
+      </div>
+      <div class="form-group">
+        <label>Duration (minutes)</label>
+        <select id="newDuration">
+          <option value="30">30 minutes</option>
+          <option value="45">45 minutes</option>
+          <option value="60" selected>60 minutes</option>
+          <option value="90">90 minutes</option>
+          <option value="120">2 hours</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Who Can Join</label>
+      <div class="radio-group">
+        <label class="radio-opt">
+          <input type="radio" name="access" value="all" checked />
+          <div>
+            <div class="opt-label">All Attendees</div>
+            <div class="opt-sub">Anyone with an active subscription can join</div>
+          </div>
+        </label>
+        <label class="radio-opt">
+          <input type="radio" name="access" value="pro" />
+          <div>
+            <div class="opt-label">Institutional Members Only</div>
+            <div class="opt-sub">Restrict to attendees on your Pro tier</div>
+          </div>
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Max Participants</label>
+      <select id="newMax">
+        <option value="10">10 participants</option>
+        <option value="25">25 participants</option>
+        <option value="50" selected>50 participants</option>
+        <option value="0">Unlimited</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="createSession()">Schedule Session</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast">
+  <span id="toastIcon">✓</span>
+  <span id="toastMsg">Session scheduled</span>
+</div>
+
+<script>
+function openModal() {
+  document.getElementById('createModal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('createModal').classList.remove('open');
+}
+function closeModalOnBg(e) {
+  if (e.target === document.getElementById('createModal')) closeModal();
+}
+
+function showToast(msg, icon = '✓') {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  document.getElementById('toastIcon').textContent = icon;
+  t.style.display = 'flex';
+  setTimeout(() => { t.style.display = 'none'; }, 3500);
+}
+
+function createSession() {
+  const title = document.getElementById('newTitle').value.trim();
+  const desc = document.getElementById('newDesc').value.trim();
+  const date = document.getElementById('newDate').value;
+  if (!title || !date) { showToast('Please fill in title and date', '⚠'); return; }
+  const d = new Date(date);
+  const dateStr = d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' · ' + d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  const access = document.querySelector('input[name=access]:checked').value;
+  const duration = document.getElementById('newDuration').value;
+  const max = document.getElementById('newMax').value;
+  const card = document.createElement('div');
+  card.className = 'session-card';
+  card.innerHTML = `
+    <div class="session-card-header">
+      <div>
+        <div class="session-name">${title}</div>
+        <div class="session-desc">${desc || 'No description.'}</div>
+      </div>
+      <span class="badge badge-gold">Scheduled</span>
+    </div>
+    <div class="session-meta-row">
+      <span>📅 ${dateStr}</span>
+      <span>⏱ ${duration} min</span>
+      <span>◉ ${access === 'all' ? 'All Attendees' : 'Institutional Members'}</span>
+    </div>
+    <div class="session-meta-row">
+      <span>👥 Max ${max === '0' ? 'Unlimited' : max + ' participants'}</span>
+    </div>
+    <div class="session-actions">
+      <a href="ncore-vibe-live-viewer.html" class="btn btn-primary btn-sm">▶ Start</a>
+      <button class="btn btn-ghost btn-sm" onclick="editSession(this)">✎ Edit</button>
+      <button class="btn btn-red btn-sm" onclick="cancelSession(this)">✕ Cancel</button>
+    </div>`;
+  document.getElementById('sessionGrid').prepend(card);
+  closeModal();
+  showToast('Session scheduled — ' + title);
+  document.getElementById('newTitle').value = '';
+  document.getElementById('newDesc').value = '';
+  document.getElementById('newDate').value = '';
+}
+
+function cancelSession(btn) {
+  if (!confirm('Cancel this session?')) return;
+  btn.closest('.session-card').remove();
+  showToast('Session cancelled', '✕');
+}
+
+function editSession(btn) {
+  const card = btn.closest('.session-card');
+  const title = card.querySelector('.session-name').textContent;
+  document.getElementById('newTitle').value = title;
+  openModal();
+}
+
+function endSession() {
+  document.getElementById('activeSession').style.display = 'none';
+  document.getElementById('emptyState').style.display = 'block';
+  clearInterval(timerInterval);
+  showToast('Session ended — viewers have been notified', '⊙');
+}
+
+let timerInterval, timerSec = 0;
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timerSec++;
+    const h = String(Math.floor(timerSec / 3600)).padStart(2,'0');
+    const m = String(Math.floor((timerSec % 3600) / 60)).padStart(2,'0');
+    const s = String(timerSec % 60).padStart(2,'0');
+    document.getElementById('liveTimer').textContent = `${h}:${m}:${s}`;
+  }, 1000);
+}
+</script>
+
+  <script src="https://naluask.com/widget.js" data-client-key="ncore_k_2026_tpg" data-color="#17a186" data-icon="neural" defer></script>
+</body>
+</html>
