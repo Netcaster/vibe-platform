@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Randomchild — Join Session</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+*, *::before, *::after { margin:0;padding:0;box-sizing:border-box; }
+:root {
+  --bg:#07090f; --navy:#0d1117; --card:#111827;
+  --purple:#7c3aed; --pm:#6d28d9; --pl:#a78bfa;
+  --text:#f1f0fe; --muted:rgba(196,181,253,.5);
+  --border:rgba(124,58,237,.18); --border2:rgba(124,58,237,.38);
+  --radius:12px;
+}
+html, body { height:100%;margin:0; }
+body { font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;overflow:hidden; }
+body::before { content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(124,58,237,.1) 0%,transparent 60%);pointer-events:none; }
+
+/* ── JOIN SCREEN ── */
+.join-screen { position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;padding:20px; }
+.join-card { background:var(--card);border:1px solid var(--border);border-radius:24px;padding:40px;max-width:440px;width:100%;text-align:center; }
+.join-logo { font-size:17px;font-weight:800;color:#fff;margin-bottom:6px; }
+.join-logo span { color:var(--pl); }
+.join-hosted { font-size:12px;color:var(--muted);margin-bottom:24px; }
+.preview-box { aspect-ratio:16/9;background:#000;border-radius:14px;overflow:hidden;margin-bottom:20px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border); }
+.preview-box video { width:100%;height:100%;object-fit:cover; }
+.preview-av { width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pm));display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#fff; }
+.name-input { width:100%;background:var(--navy);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:inherit;font-size:15px;padding:13px 16px;outline:none;margin-bottom:14px;transition:border-color .2s;text-align:center; }
+.name-input:focus { border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,.12); }
+.name-input::placeholder { color:var(--muted); }
+.cam-row { display:flex;gap:10px;justify-content:center;margin-bottom:20px; }
+.cam-btn { display:flex;align-items:center;gap:6px;background:rgba(124,58,237,.1);border:1px solid var(--border);border-radius:10px;padding:9px 15px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:var(--text);transition:all .2s; }
+.cam-btn.off { background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.25);color:#f87171; }
+.join-btn { width:100%;padding:15px;border-radius:13px;font-size:15px;font-weight:700;cursor:pointer;border:none;font-family:inherit;background:linear-gradient(135deg,var(--purple),var(--pm));color:#fff;transition:all .2s; }
+.join-btn:hover { transform:translateY(-1px);box-shadow:0 8px 24px rgba(124,58,237,.45); }
+.join-btn:disabled { opacity:.5;cursor:not-allowed;transform:none;box-shadow:none; }
+.guest-note { font-size:11px;color:var(--muted);margin-top:12px;line-height:1.5; }
+
+/* ── ROOM (hidden until joined) ── */
+.room-wrap { display:none;flex:1;flex-direction:column; }
+.topbar { height:54px;background:rgba(3,5,7,.96);border-bottom:1px solid rgba(124,58,237,.15);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0; }
+.tl { display:flex;align-items:center;gap:12px; }
+.logo-sm { font-size:15px;font-weight:800;color:#fff; }
+.logo-sm span { color:var(--pl); }
+@keyframes lp { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.6)}50%{box-shadow:0 0 0 8px rgba(239,68,68,0)} }
+.live-badge { display:flex;align-items:center;gap:6px;background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.35);border-radius:100px;padding:3px 10px;font-size:11px;font-weight:700;color:#f87171; }
+.live-dot { width:6px;height:6px;border-radius:50%;background:#ef4444;animation:lp 1.8s infinite; }
+.sess-name { font-size:13px;font-weight:600; }
+.tr { display:flex;align-items:center;gap:10px; }
+.room-body { flex:1;display:flex;overflow:hidden; }
+.video-area { flex:1;padding:14px;display:flex;flex-direction:column;gap:10px; }
+.presenter-wrap { flex:1;background:#000;border-radius:14px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center; }
+.presenter-wrap video { width:100%;height:100%;object-fit:cover; }
+.wait-msg { display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--muted); }
+.wait-av { width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pm));display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;color:#fff; }
+.host-lbl { position:absolute;bottom:12px;left:12px;background:rgba(3,5,7,.85);backdrop-filter:blur(6px);border-radius:8px;padding:4px 12px;font-size:12px;font-weight:600;display:none; }
+.self-pip { position:absolute;bottom:12px;right:12px;width:130px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;border:2px solid rgba(124,58,237,.45);background:var(--card);display:flex;align-items:center;justify-content:center; }
+.self-pip video { width:100%;height:100%;object-fit:cover; }
+.pip-av { font-size:14px;font-weight:700;color:#fff; }
+
+/* SIDE PANEL */
+.side-panel { width:0;overflow:hidden;transition:width .25s;flex-shrink:0;background:rgba(3,5,7,.96);border-left:1px solid rgba(124,58,237,.12);display:flex;flex-direction:column; }
+.side-panel.open { width:270px; }
+.p-tabs { display:flex;border-bottom:1px solid rgba(124,58,237,.12);flex-shrink:0; }
+.p-tab { flex:1;padding:12px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted);border:none;background:none;font-family:inherit; }
+.p-tab.active { color:var(--pl);border-bottom:2px solid var(--pl); }
+.p-body { flex:1;overflow-y:auto;padding:12px; }
+.chat-msgs { display:flex;flex-direction:column;gap:9px; }
+.chat-msg .sndr { font-size:11px;font-weight:700;color:var(--pl);margin-bottom:2px; }
+.chat-msg.self .sndr { color:#34d399;text-align:right; }
+.chat-msg .body { font-size:13px;background:rgba(124,58,237,.08);border-radius:9px 9px 9px 2px;padding:7px 11px;line-height:1.4; }
+.chat-msg.self .body { background:rgba(16,185,129,.1);border-radius:9px 9px 2px 9px;text-align:right; }
+.chat-iw { display:flex;gap:7px;padding:9px 0 0;border-top:1px solid rgba(124,58,237,.1);margin-top:6px;flex-shrink:0; }
+.chat-input { flex:1;background:rgba(13,17,27,.9);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:inherit;font-size:13px;padding:8px 11px;outline:none; }
+.chat-input:focus { border-color:var(--purple); }
+.send-btn { background:linear-gradient(135deg,var(--purple),var(--pm));border:none;border-radius:9px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;flex-shrink:0; }
+
+/* CONTROLS */
+.controls { height:70px;background:rgba(3,5,7,.98);border-top:1px solid rgba(124,58,237,.12);display:flex;align-items:center;justify-content:center;gap:10px;flex-shrink:0;padding:0 20px; }
+.ctrl { display:flex;flex-direction:column;align-items:center;gap:3px;background:rgba(13,17,27,.9);border:1px solid rgba(124,58,237,.2);border-radius:11px;padding:8px 15px;cursor:pointer;transition:all .2s;font-family:inherit;color:var(--text);min-width:54px; }
+.ctrl:hover { background:rgba(124,58,237,.1);border-color:var(--border2); }
+.ctrl.off { background:rgba(30,10,10,.9);border-color:rgba(239,68,68,.3);color:#f87171; }
+.ctrl.raised { background:rgba(250,204,21,.1);border-color:rgba(250,204,21,.3);color:#facc15; }
+.ctrl .icon { font-size:18px;line-height:1; }
+.ctrl .lbl { font-size:10px;font-weight:600; }
+.ctrl-leave { background:rgba(220,38,38,.1);border-color:rgba(220,38,38,.28);color:#f87171;margin-left:14px; }
+.ctrl-leave:hover { background:rgba(220,38,38,.22); }
+.toast { position:fixed;bottom:80px;right:20px;background:var(--card);border:1px solid var(--border2);border-radius:var(--radius);padding:12px 16px;display:none;align-items:center;gap:9px;font-size:13px;z-index:999; }
+  </style>
+</head>
+<body>
+
+<!-- ── JOIN SCREEN ── -->
+<div class="join-screen" id="joinScreen">
+  <div class="join-card">
+    <div class="join-logo">Randomchild <span>VIBE</span></div>
+    <div class="join-hosted" id="hostedBy">You've been invited to a live session</div>
+
+    <div class="preview-box" id="previewBox">
+      <video id="previewVid" autoplay muted playsinline style="display:none"></video>
+      <div class="preview-av" id="previewAv">?</div>
+    </div>
+
+    <input class="name-input" id="guestName" placeholder="Your name…" oninput="updateInitials(this.value)" />
+
+    <div class="cam-row">
+      <button class="cam-btn" id="camBtn" onclick="toggleCam0()">📹 Camera On</button>
+      <button class="cam-btn" id="micBtn" onclick="toggleMic0()">🎤 Mic On</button>
+    </div>
+
+    <button class="join-btn" id="joinBtn" onclick="joinRoom()">Join Session →</button>
+    <div class="guest-note">You're joining as a guest. No account required.</div>
+  </div>
+</div>
+
+<!-- ── ROOM ── -->
+<div class="room-wrap" id="roomWrap">
+  <div class="topbar">
+    <div class="tl">
+      <div class="logo-sm">Randomchild <span>VIBE</span></div>
+      <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+      <div class="sess-name" id="sessNameDisplay">Live Session</div>
+    </div>
+    <div class="tr">
+      <span style="font-size:12px;color:var(--muted)" id="guestLabel"></span>
+    </div>
+  </div>
+
+  <div class="room-body">
+    <div class="video-area">
+      <div class="presenter-wrap">
+        <video id="presenterVid" autoplay playsinline style="display:none"></video>
+        <div class="wait-msg" id="waitMsg">
+          <div class="wait-av">RC</div>
+          <span>Waiting for host to join…</span>
+        </div>
+        <div class="host-lbl" id="hostLbl">Randomchild (Host)</div>
+        <div class="self-pip">
+          <video id="selfPipVid" autoplay muted playsinline style="display:none"></video>
+          <div class="pip-av" id="pipAv">?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-panel" id="sidePanel">
+      <div class="p-tabs">
+        <button class="p-tab active" id="tabC" onclick="switchTab('c')">💬 Chat</button>
+        <button class="p-tab" id="tabP" onclick="switchTab('p')">👥 Guests</button>
+      </div>
+      <div class="p-body" id="panelC" style="display:flex;flex-direction:column;height:100%;padding-bottom:0">
+        <div style="flex:1;overflow-y:auto"><div class="chat-msgs" id="chatMsgs"></div></div>
+        <div class="chat-iw">
+          <input class="chat-input" id="chatInput" placeholder="Message…" onkeydown="if(event.key==='Enter')sendChat()" />
+          <button class="send-btn" onclick="sendChat()">➤</button>
+        </div>
+      </div>
+      <div class="p-body" id="panelP" style="display:none">
+        <div id="guestList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl" id="rMicBtn" onclick="toggleMicRoom()">
+      <span class="icon" id="rMicIcon">🎤</span>
+      <span class="lbl" id="rMicLbl">Mute</span>
+    </button>
+    <button class="ctrl" id="rCamBtn" onclick="toggleCamRoom()">
+      <span class="icon" id="rCamIcon">📹</span>
+      <span class="lbl" id="rCamLbl">Stop Video</span>
+    </button>
+    <button class="ctrl" id="rHandBtn" onclick="raiseHand()">
+      <span class="icon">✋</span>
+      <span class="lbl" id="rHandLbl">Raise Hand</span>
+    </button>
+    <button class="ctrl" onclick="togglePanel('c')">
+      <span class="icon">💬</span><span class="lbl">Chat</span>
+    </button>
+    <button class="ctrl ctrl-leave" onclick="leaveSession()">
+      <span class="icon">🚪</span><span class="lbl">Leave</span>
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script>
+/* ─── READ URL PARAMS ─── */
+const params   = new URLSearchParams(window.location.search);
+const ROOM_ID  = params.get('room') || ('randomchild_guest_' + Date.now());
+const HOST     = params.get('host') || 'Randomchild';
+
+const TOKEN_ENDPOINT = 'https://naluask.com/api/livekit/viewer-token';
+const LIVEKIT_URL    = 'wss://naluask.com/livekit';
+
+document.getElementById('hostedBy').textContent = `You've been invited by ${HOST}`;
+
+/* ─── STATE ─── */
+let camOn = true, micOn = true, handRaised = false;
+let panelOpen = null, localStream = null, previewStream = null;
+let guestName = '';
+
+/* ─── PREVIEW ─── */
+async function startPreview() {
+  try {
+    previewStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    const vid = document.getElementById('previewVid');
+    vid.srcObject = previewStream; vid.style.display = 'block';
+    document.getElementById('previewAv').style.display = 'none';
+  } catch(e) {}
+}
+startPreview();
+
+function updateInitials(v) {
+  const i = v.trim().split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase() || '?';
+  document.getElementById('previewAv').textContent = i;
+  document.getElementById('pipAv').textContent = i;
+}
+
+function toggleCam0() {
+  camOn = !camOn;
+  const btn = document.getElementById('camBtn');
+  btn.textContent = camOn ? '📹 Camera On' : '🚫 Camera Off';
+  btn.className = 'cam-btn' + (camOn ? '' : ' off');
+  if (previewStream) previewStream.getVideoTracks().forEach(t => t.enabled = camOn);
+}
+function toggleMic0() {
+  micOn = !micOn;
+  const btn = document.getElementById('micBtn');
+  btn.textContent = micOn ? '🎤 Mic On' : '🔇 Mic Off';
+  btn.className = 'cam-btn' + (micOn ? '' : ' off');
+}
+
+/* ─── JOIN ─── */
+async function joinRoom() {
+  guestName = document.getElementById('guestName').value.trim();
+  if (!guestName) { showToast('Please enter your name ⚠'); return; }
+  const initials = guestName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('pipAv').textContent = initials;
+  document.getElementById('guestLabel').textContent = 'Guest: ' + guestName;
+
+  if (previewStream) previewStream.getTracks().forEach(t => t.stop());
+  document.getElementById('joinScreen').style.display = 'none';
+  document.getElementById('roomWrap').style.display = 'flex';
+  document.getElementById('roomWrap').style.flexDirection = 'column';
+
+  try {
+    localStream = await navigator.mediaDevices.getUserMedia({ video: camOn, audio: micOn });
+    const pip = document.getElementById('selfPipVid');
+    pip.srcObject = localStream; pip.style.display = 'block';
+    document.getElementById('pipAv').style.display = 'none';
+    if (!camOn) { localStream.getVideoTracks().forEach(t=>t.enabled=false); updateCamUI(); }
+    if (!micOn) { localStream.getAudioTracks().forEach(t=>t.enabled=false); updateMicUI(); }
+  } catch(e) {}
+
+  // Wait a moment then show host as "connected" (demo fallback)
+  setTimeout(() => {
+    document.getElementById('waitMsg').style.display = 'none';
+    document.getElementById('hostLbl').style.display = 'flex';
+    addChatMsg(HOST + ' (Host)', 'Hey! Glad you could join 👋');
+  }, 2500);
+
+  tryLiveKit(guestName);
+}
+
+async function tryLiveKit(name) {
+  if (typeof LivekitClient === 'undefined') return;
+  try {
+    const resp = await fetch(TOKEN_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ roomName: ROOM_ID, viewerName: name, tenantId: 'randomchild' })
+    });
+    const { token } = await resp.json();
+    const room = new LivekitClient.Room();
+    await room.connect(LIVEKIT_URL, token);
+    if (localStream) {
+      const [vt, at] = await Promise.all([LivekitClient.createLocalVideoTrack(), LivekitClient.createLocalAudioTrack()]);
+      if (camOn) await room.localParticipant.publishTrack(vt);
+      if (micOn) await room.localParticipant.publishTrack(at);
+    }
+    room.on(LivekitClient.RoomEvent.TrackSubscribed, (track) => {
+      if (track.kind === 'video') {
+        const vid = document.getElementById('presenterVid');
+        track.attach(vid); vid.style.display = 'block';
+        document.getElementById('waitMsg').style.display = 'none';
+        document.getElementById('hostLbl').style.display = 'flex';
+      }
+    });
+  } catch(e) { /* demo mode fallback already running */ }
+}
+
+/* ─── MIC / CAM ─── */
+function toggleMicRoom() {
+  micOn = !micOn;
+  if (localStream) localStream.getAudioTracks().forEach(t => t.enabled = micOn);
+  updateMicUI();
+}
+function updateMicUI() {
+  document.getElementById('rMicIcon').textContent = micOn ? '🎤' : '🔇';
+  document.getElementById('rMicLbl').textContent  = micOn ? 'Mute' : 'Unmute';
+  document.getElementById('rMicBtn').className = 'ctrl' + (micOn ? '' : ' off');
+}
+function toggleCamRoom() {
+  camOn = !camOn;
+  if (localStream) localStream.getVideoTracks().forEach(t => t.enabled = camOn);
+  document.getElementById('selfPipVid').style.display = camOn ? 'block' : 'none';
+  updateCamUI();
+}
+function updateCamUI() {
+  document.getElementById('rCamIcon').textContent = camOn ? '📹' : '🚫';
+  document.getElementById('rCamLbl').textContent  = camOn ? 'Stop Video' : 'Start Video';
+  document.getElementById('rCamBtn').className = 'ctrl' + (camOn ? '' : ' off');
+}
+
+/* ─── RAISE HAND ─── */
+function raiseHand() {
+  handRaised = !handRaised;
+  document.getElementById('rHandBtn').className = 'ctrl' + (handRaised ? ' raised' : '');
+  document.getElementById('rHandLbl').textContent = handRaised ? 'Lower Hand' : 'Raise Hand';
+  if (handRaised) showToast('✋ Hand raised — the host can see you');
+}
+
+/* ─── PANEL ─── */
+function togglePanel(tab) {
+  const p = document.getElementById('sidePanel');
+  if (panelOpen === tab) { p.classList.remove('open'); panelOpen = null; }
+  else { p.classList.add('open'); panelOpen = tab; switchTab(tab); }
+}
+function switchTab(tab) {
+  document.getElementById('panelC').style.display = tab === 'c' ? 'flex' : 'none';
+  document.getElementById('panelP').style.display = tab === 'p' ? 'block' : 'none';
+  document.getElementById('tabC').className = 'p-tab' + (tab === 'c' ? ' active' : '');
+  document.getElementById('tabP').className = 'p-tab' + (tab === 'p' ? ' active' : '');
+  if (!document.getElementById('sidePanel').classList.contains('open')) {
+    document.getElementById('sidePanel').classList.add('open'); panelOpen = tab;
+  }
+}
+
+/* ─── CHAT ─── */
+function addChatMsg(sender, body, isSelf = false) {
+  const list = document.getElementById('chatMsgs');
+  const div = document.createElement('div');
+  div.className = 'chat-msg' + (isSelf ? ' self' : '');
+  div.innerHTML = `<div class="sndr">${sender}</div><div class="body">${body}</div>`;
+  list.appendChild(div); list.scrollTop = list.scrollHeight;
+}
+function sendChat() {
+  const inp = document.getElementById('chatInput');
+  const msg = inp.value.trim(); if (!msg) return;
+  addChatMsg(guestName + ' (You)', msg, true); inp.value = '';
+}
+
+/* ─── LEAVE ─── */
+function leaveSession() {
+  if (!confirm('Leave this session?')) return;
+  if (localStream) localStream.getTracks().forEach(t => t.stop());
+  window.location.href = 'randomchild-vibe.html';
+}
+
+/* ─── TOAST ─── */
+function showToast(msg) {
+  document.getElementById('toastMsg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.style.display = 'flex';
+  setTimeout(() => { t.style.display = 'none'; }, 4000);
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/livekit-client@2/dist/livekit-client.umd.min.js"></script>
+</body>
+</html>
