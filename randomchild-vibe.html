@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Randomchild — VIBE Network</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg:     #07090f;
+  --navy:   #0d1117;
+  --card:   #111827;
+  --card2:  #161f2e;
+  --border: rgba(124,58,237,.18);
+  --border2:rgba(124,58,237,.35);
+  --purple: #7c3aed;
+  --pm:     #6d28d9;
+  --pl:     #a78bfa;
+  --plx:    #c4b5fd;
+  --gold:   #d4a843;
+  --green:  #10b981;
+  --text:   #f1f0fe;
+  --muted:  rgba(196,181,253,.5);
+  --radius: 12px;
+  --shadow: 0 0 40px rgba(124,58,237,.15);
+}
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+body::before { content:''; position:fixed; inset:0; background: radial-gradient(ellipse 60% 50% at 20% 10%,rgba(124,58,237,.1) 0%,transparent 60%), radial-gradient(ellipse 40% 40% at 80% 85%,rgba(109,40,217,.07) 0%,transparent 60%); pointer-events:none; z-index:0; }
+
+/* ── NAV ── */
+nav { position:sticky; top:0; z-index:100; background:rgba(7,9,15,.92); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); padding:0 40px; height:64px; display:flex; align-items:center; justify-content:space-between; }
+.nav-brand { display:flex; align-items:center; gap:10px; text-decoration:none; }
+.nav-name { font-size:16px; font-weight:700; color:#fff; letter-spacing:-.01em; }
+.nav-name span { color:var(--pl); }
+.nav-right { display:flex; align-items:center; gap:10px; }
+.btn { display:inline-flex; align-items:center; gap:8px; padding:10px 22px; border-radius:var(--radius); font-size:14px; font-weight:600; cursor:pointer; border:none; text-decoration:none; font-family:inherit; transition:all .2s; }
+.btn-primary { background:linear-gradient(135deg,var(--purple),var(--pm)); color:#fff; }
+.btn-primary:hover { transform:translateY(-1px); box-shadow:0 8px 24px rgba(124,58,237,.4); }
+.btn-ghost { background:rgba(255,255,255,.05); border:1px solid var(--border); color:rgba(255,255,255,.7); }
+.btn-ghost:hover { background:rgba(124,58,237,.12); border-color:rgba(124,58,237,.4); }
+.btn-sm { padding:7px 16px; font-size:13px; border-radius:8px; }
+
+/* ── HERO ── */
+.hero { padding:80px 40px 64px; position:relative; z-index:1; text-align:center; }
+.pill { display:inline-flex; align-items:center; gap:8px; background:rgba(124,58,237,.12); border:1px solid rgba(124,58,237,.28); border-radius:100px; padding:6px 16px; font-size:12px; font-weight:600; letter-spacing:.08em; color:var(--pl); text-transform:uppercase; margin-bottom:24px; }
+.pill-dot { width:6px; height:6px; background:var(--pl); border-radius:50%; }
+.hero h1 { font-size:clamp(40px,5vw,68px); font-weight:800; line-height:1.08; letter-spacing:-.03em; margin-bottom:20px; }
+.hero h1 em { font-style:normal; color:var(--pl); }
+.hero h1 .gold { color:var(--gold); }
+.hero p { font-size:17px; color:var(--muted); line-height:1.65; max-width:580px; margin:0 auto 36px; }
+.hero-ctas { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+.hero-stats { display:flex; gap:36px; justify-content:center; margin-top:48px; padding-top:36px; border-top:1px solid var(--border); flex-wrap:wrap; }
+.stat-val { font-size:32px; font-weight:800; color:var(--pl); line-height:1; }
+.stat-lbl { font-size:12px; color:var(--muted); margin-top:5px; font-weight:500; }
+
+/* ── PORTAL CARDS ── */
+.portals { max-width:900px; margin:0 auto; padding:0 40px 80px; position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+.portal-card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:36px; display:flex; flex-direction:column; gap:20px; transition:all .3s; cursor:pointer; text-decoration:none; color:inherit; }
+.portal-card:hover { border-color:var(--border2); box-shadow:var(--shadow); transform:translateY(-4px); }
+.portal-card.featured { background:linear-gradient(135deg,rgba(124,58,237,.1),var(--card)); border-color:rgba(124,58,237,.35); }
+.portal-icon { width:60px; height:60px; border-radius:16px; background:rgba(124,58,237,.15); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:26px; }
+.portal-title { font-size:22px; font-weight:800; margin-bottom:6px; }
+.portal-desc { font-size:14px; color:var(--muted); line-height:1.6; }
+.portal-cta { display:inline-flex; align-items:center; gap:8px; margin-top:auto; padding:11px 20px; border-radius:10px; font-size:14px; font-weight:700; transition:all .2s; }
+.portal-card.featured .portal-cta { background:linear-gradient(135deg,var(--purple),var(--pm)); color:#fff; }
+.portal-card.featured .portal-cta:hover { box-shadow:0 8px 24px rgba(124,58,237,.4); }
+.portal-card:not(.featured) .portal-cta { background:rgba(124,58,237,.12); color:var(--pl); border:1px solid var(--border); }
+.portal-card:not(.featured) .portal-cta:hover { background:rgba(124,58,237,.2); border-color:var(--border2); }
+
+/* ── WHAT'S INSIDE ── */
+.inside { max-width:900px; margin:0 auto; padding:0 40px 80px; position:relative; z-index:1; }
+.section-label { font-size:11px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--purple); margin-bottom:12px; }
+.section-title { font-size:clamp(26px,3vw,38px); font-weight:800; letter-spacing:-.02em; margin-bottom:36px; line-height:1.15; }
+.section-title em { font-style:normal; color:var(--pl); }
+.features { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.feat { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; }
+.feat-icon { font-size:28px; margin-bottom:12px; }
+.feat-title { font-size:15px; font-weight:700; margin-bottom:6px; }
+.feat-desc { font-size:13px; color:var(--muted); line-height:1.55; }
+
+/* ── FOOTER ── */
+footer { text-align:center; padding:24px; font-size:12px; color:rgba(196,181,253,.3); border-top:1px solid var(--border); position:relative; z-index:1; }
+
+@media(max-width:700px) { .portals,.features{grid-template-columns:1fr} nav,hero,.inside{padding-left:20px;padding-right:20px} }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="https://randomchild-site.pages.dev">
+    <svg width="32" height="32" viewBox="0 0 80 80" fill="none">
+      <circle cx="40" cy="40" r="36" stroke="#7c3aed" stroke-width="1.4" opacity=".4"/>
+      <circle cx="40" cy="40" r="25" stroke="#a78bfa" stroke-width="1" opacity=".2"/>
+      <circle cx="40" cy="40" r="5" fill="#7c3aed" opacity=".9"/>
+      <circle cx="40" cy="40" r="2.5" fill="#c4b5fd"/>
+      <circle cx="40" cy="20" r="4" fill="#a78bfa"/>
+      <circle cx="58" cy="50" r="4" fill="#7c3aed"/>
+      <circle cx="22" cy="50" r="4" fill="#a78bfa"/>
+      <line x1="40" y1="20" x2="58" y2="50" stroke="#a78bfa" stroke-width=".9" opacity=".4"/>
+      <line x1="40" y1="20" x2="22" y2="50" stroke="#a78bfa" stroke-width=".9" opacity=".4"/>
+      <line x1="58" y1="50" x2="22" y2="50" stroke="#7c3aed" stroke-width=".9" opacity=".3"/>
+      <line x1="40" y1="40" x2="40" y2="20" stroke="#a78bfa" stroke-width=".9" opacity=".35"/>
+      <line x1="40" y1="40" x2="58" y2="50" stroke="#a78bfa" stroke-width=".9" opacity=".35"/>
+      <line x1="40" y1="40" x2="22" y2="50" stroke="#a78bfa" stroke-width=".9" opacity=".35"/>
+    </svg>
+    <span class="nav-name">Randomchild <span>VIBE</span></span>
+  </a>
+  <div class="nav-right">
+    <a href="randomchild-vibe-viewer.html" class="btn btn-ghost btn-sm">Subscriber Portal</a>
+    <a href="randomchild-vibe-platform.html" class="btn btn-primary btn-sm">Creator Dashboard</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="pill"><div class="pill-dot"></div> Powered by VIBE Network</div>
+  <h1>Learn. Certify.<br><em>Level up</em> with <span class="gold">Randomchild.</span></h1>
+  <p>Exclusive certifications, live sessions, and premium content — built for the next generation of AI-forward professionals and creative enterprises.</p>
+  <div class="hero-ctas">
+    <a href="randomchild-vibe-viewer.html" class="btn btn-primary">▶ Enter Subscriber Portal</a>
+    <a href="randomchild-vibe-platform.html" class="btn btn-ghost">⊞ Creator Dashboard</a>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="stat-val">2,847</div>
+      <div class="stat-lbl">Active Subscribers</div>
+    </div>
+    <div>
+      <div class="stat-val">4</div>
+      <div class="stat-lbl">Live Certifications</div>
+    </div>
+    <div>
+      <div class="stat-val">$24.3k</div>
+      <div class="stat-lbl">Revenue This Month</div>
+    </div>
+    <div>
+      <div class="stat-val">96%</div>
+      <div class="stat-lbl">Completion Rate</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PORTAL CARDS ── -->
+<div class="portals">
+  <a class="portal-card featured" href="randomchild-vibe-viewer.html">
+    <div class="portal-icon">◎</div>
+    <div>
+      <div class="portal-title">Subscriber Portal</div>
+      <div class="portal-desc">Access your certifications, join live sessions, track your progress, and earn credentials — all in one place.</div>
+    </div>
+    <div class="portal-cta">Enter Portal →</div>
+  </a>
+  <a class="portal-card" href="randomchild-vibe-platform.html">
+    <div class="portal-icon">⊞</div>
+    <div>
+      <div class="portal-title">Creator Dashboard</div>
+      <div class="portal-desc">Manage certifications, sessions, subscribers, revenue, and certificates from your admin command center.</div>
+    </div>
+    <div class="portal-cta">Open Dashboard →</div>
+  </a>
+</div>
+
+<!-- ── WHAT'S INSIDE ── -->
+<div class="inside">
+  <div class="section-label">What's Included</div>
+  <div class="section-title">Everything your network <em>needs to grow.</em></div>
+  <div class="features">
+    <div class="feat">
+      <div class="feat-icon">🎓</div>
+      <div class="feat-title">Certifications</div>
+      <div class="feat-desc">Structured programs with completion tracking, certificate issuance, and credential sharing.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">⊙</div>
+      <div class="feat-title">Live Sessions</div>
+      <div class="feat-desc">Real-time video classes, Q&amp;As, and workshops — directly in the browser, no software needed.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">💳</div>
+      <div class="feat-title">Stripe Payments</div>
+      <div class="feat-desc">Subscriptions, one-time purchases, and plan tiers — Stripe Connect powers every transaction.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🔒</div>
+      <div class="feat-title">Gated Content</div>
+      <div class="feat-desc">Every session and certification is locked to verified subscribers. Entitlement-based access control.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">📊</div>
+      <div class="feat-title">Analytics</div>
+      <div class="feat-desc">Subscriber growth, revenue, session attendance, and certification pipeline — all in your dashboard.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">⬡</div>
+      <div class="feat-title">Your Brand</div>
+      <div class="feat-desc">Fully white-labeled with Randomchild colors, logo, and domain. Zero VIBE branding visible to subscribers.</div>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 Randomchild Enterprises &nbsp;·&nbsp; Powered by VIBE Network &nbsp;·&nbsp; <a href="https://randomchild-site.pages.dev" style="color:var(--pl);text-decoration:none">randomchild-site.pages.dev</a></footer>
+
+</body>
+</html>

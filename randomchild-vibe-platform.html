@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Randomchild — Creator Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg:#07090f; --navy:#0d1117; --card:#111827; --card2:#161f2e;
+  --border:rgba(124,58,237,.18); --border2:rgba(124,58,237,.35);
+  --purple:#7c3aed; --pm:#6d28d9; --pl:#a78bfa; --plx:#c4b5fd;
+  --gold:#d4a843; --green:#10b981; --red:#ef4444;
+  --text:#f1f0fe; --muted:rgba(196,181,253,.5); --radius:12px;
+  --shadow:0 0 40px rgba(124,58,237,.15);
+}
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+body::before { content:''; position:fixed; inset:0; background:radial-gradient(ellipse 55% 40% at 15% 8%,rgba(124,58,237,.09) 0%,transparent 60%); pointer-events:none; z-index:0; }
+
+/* ── LAYOUT ── */
+.app { display:flex; min-height:100vh; }
+.sidebar { width:240px; flex-shrink:0; background:var(--navy); border-right:1px solid var(--border); min-height:100vh; position:sticky; top:0; display:flex; flex-direction:column; padding:24px 0; }
+.sidebar-logo { padding:0 20px 24px; font-size:18px; font-weight:800; color:#fff; border-bottom:1px solid var(--border); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+.sidebar-logo span { color:var(--pl); }
+.sidebar-sect { padding:8px 12px; font-size:10px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); margin-top:8px; }
+.sidebar-item { display:flex; align-items:center; gap:10px; padding:10px 20px; color:var(--muted); font-size:14px; font-weight:500; text-decoration:none; border-radius:10px; margin:2px 8px; transition:all .2s; cursor:pointer; }
+.sidebar-item:hover { color:var(--text); background:rgba(124,58,237,.08); }
+.sidebar-item.active { color:var(--pl); background:rgba(124,58,237,.12); border:1px solid var(--border); }
+.main { flex:1; padding:32px; overflow-y:auto; position:relative; z-index:1; }
+
+/* ── PAGE HEADER ── */
+.page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; }
+.page-title { font-size:26px; font-weight:800; letter-spacing:-.01em; }
+.page-sub { font-size:13px; color:var(--muted); margin-top:4px; }
+.btn { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:var(--radius); font-size:13px; font-weight:600; cursor:pointer; border:none; text-decoration:none; font-family:inherit; transition:all .2s; }
+.btn-primary { background:linear-gradient(135deg,var(--purple),var(--pm)); color:#fff; }
+.btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(124,58,237,.4); }
+.btn-ghost { background:transparent; color:var(--text); border:1px solid var(--border); }
+.btn-ghost:hover { background:rgba(124,58,237,.08); }
+.btn-sm { padding:6px 12px; font-size:12px; border-radius:8px; }
+
+/* ── KPIs ── */
+.kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+.kpi { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px; position:relative; overflow:hidden; }
+.kpi::before { content:''; position:absolute; top:0; right:0; width:70px; height:70px; border-radius:50%; opacity:.06; }
+.kpi.purple::before { background:var(--pl); }
+.kpi.gold::before { background:var(--gold); }
+.kpi.green::before { background:var(--green); }
+.kpi.red::before { background:var(--red); }
+.kpi-icon { font-size:24px; margin-bottom:14px; }
+.kpi-val { font-size:32px; font-weight:900; line-height:1; margin-bottom:5px; }
+.kpi.purple .kpi-val { background:linear-gradient(135deg,var(--pl),var(--plx)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.kpi.gold .kpi-val { color:var(--gold); }
+.kpi.green .kpi-val { color:#34d399; }
+.kpi.red .kpi-val { color:#f87171; }
+.kpi-lbl { font-size:12px; color:var(--muted); }
+.kpi-change { font-size:11px; font-weight:600; margin-top:8px; }
+.kpi-change.up { color:#34d399; }
+.kpi-change.neutral { color:var(--muted); }
+
+/* ── CARDS ── */
+.card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px; }
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+.card-label { font-size:10px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--purple); margin-bottom:14px; }
+.card-title { font-size:16px; font-weight:700; }
+
+/* ── CHART ── */
+.chart { height:160px; display:flex; align-items:flex-end; gap:6px; padding:0 0 0; }
+.bar { flex:1; border-radius:4px 4px 0 0; background:linear-gradient(180deg,rgba(124,58,237,.5),rgba(124,58,237,.12)); border:1px solid var(--border); transition:all .3s; cursor:pointer; position:relative; }
+.bar:hover { background:linear-gradient(180deg,rgba(167,139,250,.7),rgba(124,58,237,.2)); }
+.bar-labels { display:flex; gap:6px; margin-top:6px; }
+.bar-label { flex:1; text-align:center; font-size:10px; color:var(--muted); }
+
+/* ── TABLE ── */
+table { width:100%; border-collapse:collapse; }
+th { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; text-align:left; border-bottom:1px solid var(--border); }
+td { padding:13px 14px; font-size:13px; border-bottom:1px solid rgba(124,58,237,.07); }
+tr:hover td { background:rgba(124,58,237,.04); }
+.badge { display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:100px; font-size:11px; font-weight:600; }
+.badge-green { background:rgba(16,185,129,.12); color:#34d399; border:1px solid rgba(16,185,129,.25); }
+.badge-purple { background:rgba(124,58,237,.12); color:var(--pl); border:1px solid var(--border); }
+.badge-gold { background:rgba(212,168,67,.12); color:var(--gold); border:1px solid rgba(212,168,67,.25); }
+.progress-bar { height:5px; background:rgba(124,58,237,.15); border-radius:100px; overflow:hidden; display:inline-block; width:70px; }
+.progress-fill { height:100%; background:linear-gradient(90deg,var(--purple),var(--pl)); border-radius:100px; }
+
+/* ── CERT PIPELINE ── */
+.cert-row { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid rgba(124,58,237,.07); }
+.cert-row:last-child { border-bottom:none; }
+.cert-av { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; flex-shrink:0; }
+.cert-name { font-size:13px; font-weight:600; }
+.cert-cert { font-size:11px; color:var(--muted); }
+.approve-btn { margin-left:auto; background:rgba(16,185,129,.15); border:1px solid rgba(16,185,129,.3); border-radius:7px; padding:5px 12px; font-size:11px; font-weight:700; color:#34d399; cursor:pointer; font-family:inherit; transition:.2s; }
+.approve-btn:hover { background:rgba(16,185,129,.25); }
+
+/* ── TOAST ── */
+.toast { position:fixed; bottom:24px; right:24px; background:var(--card); border:1px solid var(--border2); border-radius:var(--radius); padding:14px 18px; display:none; align-items:center; gap:10px; font-size:13px; z-index:999; animation:su .3s ease; }
+@keyframes su { from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1} }
+
+@media(max-width:900px) { .kpi-grid{grid-template-columns:1fr 1fr} .two-col{grid-template-columns:1fr} }
+@media(max-width:600px) { .app{flex-direction:column} .sidebar{width:100%;min-height:auto;position:static} .main{padding:20px} }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="22" height="22" viewBox="0 0 80 80" fill="none">
+        <circle cx="40" cy="40" r="36" stroke="#7c3aed" stroke-width="1.6" opacity=".4"/>
+        <circle cx="40" cy="40" r="5" fill="#7c3aed" opacity=".9"/>
+        <circle cx="40" cy="40" r="2.5" fill="#c4b5fd"/>
+        <circle cx="40" cy="20" r="4" fill="#a78bfa"/>
+        <circle cx="58" cy="50" r="4" fill="#7c3aed"/>
+        <circle cx="22" cy="50" r="4" fill="#a78bfa"/>
+        <line x1="40" y1="40" x2="40" y2="20" stroke="#a78bfa" stroke-width="1" opacity=".4"/>
+        <line x1="40" y1="40" x2="58" y2="50" stroke="#a78bfa" stroke-width="1" opacity=".4"/>
+        <line x1="40" y1="40" x2="22" y2="50" stroke="#a78bfa" stroke-width="1" opacity=".4"/>
+      </svg>
+      RC <span>VIBE</span>
+    </div>
+    <div class="sidebar-sect">Workspace</div>
+    <a class="sidebar-item active" href="randomchild-vibe-platform.html">⊞ Dashboard</a>
+    <a class="sidebar-item" href="#">🎓 Certifications</a>
+    <a class="sidebar-item" href="randomchild-vibe-live-sessions.html">⊙ Live Sessions</a>
+    <a class="sidebar-item" href="#">☰ Sessions</a>
+    <a class="sidebar-item" href="#">◈ Plans &amp; Pricing</a>
+    <div class="sidebar-sect">Audience</div>
+    <a class="sidebar-item" href="#">◎ Subscribers</a>
+    <a class="sidebar-item" href="#">◉ Certificates</a>
+    <a class="sidebar-item" href="#">⬡ Transactions</a>
+    <div class="sidebar-sect">Analytics</div>
+    <a class="sidebar-item" href="#">⟁ Revenue</a>
+    <a class="sidebar-item" href="#">◰ Content</a>
+    <div class="sidebar-sect">Settings</div>
+    <a class="sidebar-item" href="#">◇ Brand</a>
+    <a class="sidebar-item" href="#">◈ Stripe Connect</a>
+    <div style="flex:1"></div>
+    <div style="padding:14px 20px;border-top:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pm));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">RC</div>
+        <div>
+          <div style="font-size:13px;font-weight:600">Randomchild</div>
+          <div style="font-size:11px;color:var(--muted)">Owner</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Creator Dashboard</div>
+        <div class="page-sub">Randomchild Enterprises · May 2026</div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <a href="randomchild-vibe-viewer.html" class="btn btn-ghost btn-sm">View Subscriber Portal →</a>
+        <a href="platform/live-sessions.html" class="btn btn-primary btn-sm">⊙ Go Live</a>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi purple">
+        <div class="kpi-icon">💳</div>
+        <div class="kpi-val">$24,300</div>
+        <div class="kpi-lbl">Revenue This Month</div>
+        <div class="kpi-change up">↑ 22.4% vs last month</div>
+      </div>
+      <div class="kpi gold">
+        <div class="kpi-icon">◎</div>
+        <div class="kpi-val">2,847</div>
+        <div class="kpi-lbl">Active Subscribers</div>
+        <div class="kpi-change up">↑ 184 new this month</div>
+      </div>
+      <div class="kpi green">
+        <div class="kpi-icon">🎓</div>
+        <div class="kpi-val">96%</div>
+        <div class="kpi-lbl">Avg Completion Rate</div>
+        <div class="kpi-change up">↑ 4.2% improvement</div>
+      </div>
+      <div class="kpi red">
+        <div class="kpi-icon">◉</div>
+        <div class="kpi-val">8</div>
+        <div class="kpi-lbl">Certs Pending Approval</div>
+        <div class="kpi-change neutral">→ Needs your review</div>
+      </div>
+    </div>
+
+    <!-- Revenue Chart + Cert Pipeline -->
+    <div class="two-col">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+          <div>
+            <div class="card-label">Revenue</div>
+            <div class="card-title">Monthly Gross</div>
+          </div>
+          <span class="badge badge-green">Stripe Connected</span>
+        </div>
+        <div class="chart">
+          <div class="bar" style="height:45%"></div>
+          <div class="bar" style="height:52%"></div>
+          <div class="bar" style="height:48%"></div>
+          <div class="bar" style="height:65%"></div>
+          <div class="bar" style="height:78%"></div>
+          <div class="bar" style="height:100%;background:linear-gradient(180deg,rgba(167,139,250,.7),rgba(124,58,237,.2));border-color:var(--purple)"></div>
+        </div>
+        <div class="bar-labels">
+          <div class="bar-label">Dec</div>
+          <div class="bar-label">Jan</div>
+          <div class="bar-label">Feb</div>
+          <div class="bar-label">Mar</div>
+          <div class="bar-label">Apr</div>
+          <div class="bar-label">May</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label" style="margin-bottom:16px">Certificates</div>
+        <div class="card-title" style="margin-bottom:16px">Pending Approval</div>
+        <div>
+          <div class="cert-row">
+            <div class="cert-av" style="background:linear-gradient(135deg,#7c3aed,#a78bfa)">JL</div>
+            <div><div class="cert-name">Jordan L.</div><div class="cert-cert">Enterprise Prompt Engineering</div></div>
+            <button class="approve-btn" onclick="approveCert(this)">Approve ✓</button>
+          </div>
+          <div class="cert-row">
+            <div class="cert-av" style="background:linear-gradient(135deg,#0891b2,#06b6d4)">AK</div>
+            <div><div class="cert-name">Alex K.</div><div class="cert-cert">AI Business Integration</div></div>
+            <button class="approve-btn" onclick="approveCert(this)">Approve ✓</button>
+          </div>
+          <div class="cert-row">
+            <div class="cert-av" style="background:linear-gradient(135deg,#16a34a,#22c55e)">MT</div>
+            <div><div class="cert-name">Maria T.</div><div class="cert-cert">Creative AI Workflows</div></div>
+            <button class="approve-btn" onclick="approveCert(this)">Approve ✓</button>
+          </div>
+          <div class="cert-row">
+            <div class="cert-av" style="background:linear-gradient(135deg,#d97706,#f59e0b)">SR</div>
+            <div><div class="cert-name">Sam R.</div><div class="cert-cert">Enterprise Prompt Engineering</div></div>
+            <button class="approve-btn" onclick="approveCert(this)">Approve ✓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Certifications Table -->
+    <div class="card" style="margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+        <div>
+          <div class="card-label">Certifications</div>
+          <div class="card-title">Active Certifications</div>
+        </div>
+        <a href="#" class="btn btn-ghost btn-sm">+ Add Certification</a>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Certification</th>
+            <th>Subscribers</th>
+            <th>Progress</th>
+            <th>Revenue</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="font-size:20px">🤖</div>
+                <div>
+                  <div style="font-weight:600;font-size:13px">AI Business Integration</div>
+                  <div style="font-size:11px;color:var(--muted)">12 sessions · 5h 20m</div>
+                </div>
+              </div>
+            </td>
+            <td>1,243</td>
+            <td>
+              <div style="display:flex;align-items:center;gap:7px">
+                <div class="progress-bar"><div class="progress-fill" style="width:82%"></div></div>
+                <span style="font-size:11px">82%</span>
+              </div>
+            </td>
+            <td><span style="color:#34d399;font-weight:600">$9,944</span></td>
+            <td><span class="badge badge-green">Published</span></td>
+            <td><a href="#" class="btn btn-ghost btn-sm">Edit</a></td>
+          </tr>
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="font-size:20px">✍️</div>
+                <div>
+                  <div style="font-weight:600;font-size:13px">Enterprise Prompt Engineering</div>
+                  <div style="font-size:11px;color:var(--muted)">8 sessions · 3h 45m · Certificate</div>
+                </div>
+              </div>
+            </td>
+            <td>986</td>
+            <td>
+              <div style="display:flex;align-items:center;gap:7px">
+                <div class="progress-bar"><div class="progress-fill" style="width:74%"></div></div>
+                <span style="font-size:11px">74%</span>
+              </div>
+            </td>
+            <td><span style="color:#34d399;font-weight:600">$7,888</span></td>
+            <td><span class="badge badge-green">Published</span></td>
+            <td><a href="#" class="btn btn-ghost btn-sm">Edit</a></td>
+          </tr>
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="font-size:20px">🎨</div>
+                <div>
+                  <div style="font-weight:600;font-size:13px">Creative AI Workflows</div>
+                  <div style="font-size:11px;color:var(--muted)">10 sessions · 4h 10m · Certificate</div>
+                </div>
+              </div>
+            </td>
+            <td>618</td>
+            <td>
+              <div style="display:flex;align-items:center;gap:7px">
+                <div class="progress-bar"><div class="progress-fill" style="width:91%"></div></div>
+                <span style="font-size:11px">91%</span>
+              </div>
+            </td>
+            <td><span style="color:#34d399;font-weight:600">$4,944</span></td>
+            <td><span class="badge badge-green">Published</span></td>
+            <td><a href="#" class="btn btn-ghost btn-sm">Edit</a></td>
+          </tr>
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="font-size:20px">📊</div>
+                <div>
+                  <div style="font-weight:600;font-size:13px">Digital Brand Strategy</div>
+                  <div style="font-size:11px;color:var(--muted)">6 sessions · 2h 30m</div>
+                </div>
+              </div>
+            </td>
+            <td>—</td>
+            <td>—</td>
+            <td><span style="color:var(--gold);font-weight:600">Draft</span></td>
+            <td><span class="badge badge-gold">Draft</span></td>
+            <td><a href="#" class="btn btn-ghost btn-sm">Edit</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Stripe + Access -->
+    <div class="two-col">
+      <div class="card">
+        <div class="card-label" style="margin-bottom:14px">Payment Setup</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+          <div style="width:48px;height:48px;border-radius:12px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25);display:flex;align-items:center;justify-content:center;font-size:22px">💳</div>
+          <div>
+            <div style="font-weight:700;font-size:15px">Stripe Express Connected</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">acct_1Randomchild2026</div>
+          </div>
+          <span class="badge badge-green" style="margin-left:auto">Active</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Platform Fee</div>
+            <div style="font-size:22px;font-weight:800;color:var(--pl)">4%</div>
+          </div>
+          <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Next Payout</div>
+            <div style="font-size:22px;font-weight:800;color:#34d399">May 28</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label" style="margin-bottom:14px">Access Control</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:13px">Active Entitlements</div>
+            <strong style="color:var(--pl)">2,847</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:13px">Expiring This Week</div>
+            <strong style="color:var(--gold)">34</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:13px">Certificates Issued</div>
+            <strong style="color:#34d399">412</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:13px">Pending Approval</div>
+            <strong style="color:#f87171">8</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast">✓ &nbsp;<span id="toastMsg">Certificate approved</span></div>
+
+<script>
+function approveCert(btn) {
+  const row = btn.closest('.cert-row');
+  row.style.opacity = '.35';
+  row.style.pointerEvents = 'none';
+  const name = row.querySelector('.cert-name').textContent;
+  const toast = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = name + ' — certificate approved';
+  toast.style.display = 'flex';
+  setTimeout(() => { toast.style.display = 'none'; }, 3500);
+}
+</script>
+</body>
+</html>

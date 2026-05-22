@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Randomchild — Subscriber Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg:#07090f; --navy:#0d1117; --card:#111827; --card2:#161f2e;
+  --border:rgba(124,58,237,.18); --border2:rgba(124,58,237,.35);
+  --purple:#7c3aed; --pm:#6d28d9; --pl:#a78bfa; --plx:#c4b5fd;
+  --gold:#d4a843; --green:#10b981; --text:#f1f0fe;
+  --muted:rgba(196,181,253,.5); --radius:12px;
+  --shadow:0 0 40px rgba(124,58,237,.15);
+}
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+body::before { content:''; position:fixed; inset:0; background:radial-gradient(ellipse 55% 40% at 15% 8%,rgba(124,58,237,.09) 0%,transparent 60%),radial-gradient(ellipse 40% 35% at 85% 90%,rgba(109,40,217,.06) 0%,transparent 60%); pointer-events:none; z-index:0; }
+
+/* ── NAV ── */
+nav { position:sticky; top:0; z-index:100; background:rgba(7,9,15,.92); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); padding:0 40px; height:64px; display:flex; align-items:center; justify-content:space-between; }
+.nav-brand { display:flex; align-items:center; gap:10px; text-decoration:none; }
+.nav-name { font-size:16px; font-weight:700; color:#fff; }
+.nav-name span { color:var(--pl); }
+.nav-right { display:flex; align-items:center; gap:10px; }
+.btn { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:var(--radius); font-size:13px; font-weight:600; cursor:pointer; border:none; text-decoration:none; font-family:inherit; transition:all .2s; }
+.btn-primary { background:linear-gradient(135deg,var(--purple),var(--pm)); color:#fff; }
+.btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(124,58,237,.4); }
+.btn-ghost { background:rgba(255,255,255,.05); border:1px solid var(--border); color:rgba(255,255,255,.7); }
+.btn-ghost:hover { background:rgba(124,58,237,.12); border-color:rgba(124,58,237,.4); }
+
+/* ── LAYOUT ── */
+.main { max-width:1100px; margin:0 auto; padding:40px 40px 60px; position:relative; z-index:1; }
+
+/* ── LIVE BANNER ── */
+.live-banner { background:linear-gradient(90deg,rgba(220,38,38,.14),rgba(124,58,237,.08)); border:1px solid rgba(220,38,38,.3); border-radius:var(--radius); padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:28px; }
+@keyframes livepulse { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.6)}50%{box-shadow:0 0 0 8px rgba(239,68,68,0)} }
+.live-dot { width:9px; height:9px; border-radius:50%; background:#ef4444; animation:livepulse 1.8s infinite; flex-shrink:0; }
+.live-info { display:flex; align-items:center; gap:12px; }
+.live-badge { font-size:11px; font-weight:700; color:#f87171; letter-spacing:.1em; }
+.live-title { font-size:14px; font-weight:600; }
+.live-meta { font-size:12px; color:var(--muted); }
+.join-btn { background:rgba(220,38,38,.2); border:1px solid rgba(220,38,38,.4); border-radius:8px; padding:8px 18px; font-size:13px; font-weight:700; color:#f87171; text-decoration:none; transition:all .2s; white-space:nowrap; }
+.join-btn:hover { background:rgba(220,38,38,.32); }
+
+/* ── HERO STRIP ── */
+.hero-strip { background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(109,40,217,.04)); border:1px solid var(--border); border-radius:20px; padding:32px 36px; display:flex; align-items:center; justify-content:space-between; gap:24px; margin-bottom:32px; flex-wrap:wrap; }
+.hero-strip h1 { font-size:28px; font-weight:800; letter-spacing:-.02em; margin-bottom:6px; }
+.hero-strip p { font-size:14px; color:var(--muted); }
+.strip-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; min-width:280px; }
+.strip-stat { background:rgba(124,58,237,.08); border:1px solid var(--border); border-radius:12px; padding:14px; text-align:center; }
+.strip-val { font-size:24px; font-weight:800; color:var(--pl); line-height:1; }
+.strip-lbl { font-size:11px; color:var(--muted); margin-top:4px; }
+
+/* ── SECTION ── */
+.section-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.section-title { font-size:16px; font-weight:700; }
+.section-lbl { font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--purple); margin-bottom:5px; }
+
+/* ── CONTINUE ── */
+.continue-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:36px; }
+.continue-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:18px; display:flex; gap:16px; align-items:center; transition:all .25s; text-decoration:none; color:inherit; }
+.continue-card:hover { border-color:var(--border2); box-shadow:var(--shadow); transform:translateY(-2px); }
+.cont-thumb { width:56px; height:56px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; background:rgba(124,58,237,.12); border:1px solid var(--border); }
+.cont-title { font-size:14px; font-weight:700; margin-bottom:4px; }
+.cont-meta { font-size:12px; color:var(--muted); margin-bottom:8px; }
+.cont-bar-wrap { height:4px; background:rgba(124,58,237,.15); border-radius:100px; overflow:hidden; }
+.cont-bar { height:100%; background:linear-gradient(90deg,var(--purple),var(--pl)); border-radius:100px; }
+
+/* ── CERT GRID ── */
+.cert-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; margin-bottom:36px; }
+.cert-card { background:var(--card); border:1px solid var(--border); border-radius:16px; overflow:hidden; transition:all .25s; text-decoration:none; color:inherit; display:flex; flex-direction:column; }
+.cert-card:hover { border-color:var(--border2); box-shadow:var(--shadow); transform:translateY(-2px); }
+.cert-banner { height:90px; display:flex; align-items:center; justify-content:center; font-size:36px; }
+.cert-body { padding:18px; flex:1; display:flex; flex-direction:column; gap:10px; }
+.cert-title { font-size:15px; font-weight:700; }
+.cert-meta { font-size:12px; color:var(--muted); }
+.cert-progress { display:flex; align-items:center; gap:10px; font-size:12px; color:var(--muted); margin-top:auto; }
+.cert-bar { flex:1; height:4px; background:rgba(124,58,237,.15); border-radius:100px; overflow:hidden; }
+.cert-fill { height:100%; background:linear-gradient(90deg,var(--purple),var(--pl)); border-radius:100px; }
+.badge { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:100px; font-size:11px; font-weight:600; }
+.badge-green { background:rgba(16,185,129,.12); color:#34d399; border:1px solid rgba(16,185,129,.25); }
+.badge-purple { background:rgba(124,58,237,.12); color:var(--pl); border:1px solid var(--border); }
+.badge-gold { background:rgba(212,168,67,.12); color:var(--gold); border:1px solid rgba(212,168,67,.25); }
+
+/* ── UPCOMING SESSIONS ── */
+.session-list { display:flex; flex-direction:column; gap:12px; margin-bottom:36px; }
+.session-item { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px; transition:all .2s; }
+.session-item:hover { border-color:var(--border2); }
+.sess-info { display:flex; align-items:center; gap:14px; }
+.sess-icon { width:42px; height:42px; border-radius:10px; background:rgba(124,58,237,.12); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.sess-title { font-size:14px; font-weight:700; margin-bottom:3px; }
+.sess-meta { font-size:12px; color:var(--muted); }
+.sess-join { background:linear-gradient(135deg,var(--purple),var(--pm)); border:none; border-radius:8px; padding:7px 16px; font-size:12px; font-weight:700; color:#fff; cursor:pointer; font-family:inherit; text-decoration:none; white-space:nowrap; }
+
+footer { text-align:center; padding:20px; font-size:12px; color:rgba(196,181,253,.3); border-top:1px solid var(--border); position:relative; z-index:1; }
+@media(max-width:700px) { .continue-grid,.strip-stats{grid-template-columns:1fr} nav,.main{padding-left:20px;padding-right:20px} .hero-strip{flex-direction:column} }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="randomchild-vibe.html">
+    <svg width="30" height="30" viewBox="0 0 80 80" fill="none">
+      <circle cx="40" cy="40" r="36" stroke="#7c3aed" stroke-width="1.4" opacity=".4"/>
+      <circle cx="40" cy="40" r="5" fill="#7c3aed" opacity=".9"/>
+      <circle cx="40" cy="40" r="2.5" fill="#c4b5fd"/>
+      <circle cx="40" cy="20" r="4" fill="#a78bfa"/>
+      <circle cx="58" cy="50" r="4" fill="#7c3aed"/>
+      <circle cx="22" cy="50" r="4" fill="#a78bfa"/>
+      <line x1="40" y1="20" x2="58" y2="50" stroke="#a78bfa" stroke-width=".9" opacity=".4"/>
+      <line x1="40" y1="20" x2="22" y2="50" stroke="#a78bfa" stroke-width=".9" opacity=".4"/>
+      <line x1="40" y1="40" x2="40" y2="20" stroke="#a78bfa" stroke-width=".9" opacity=".35"/>
+    </svg>
+    <span class="nav-name">Randomchild <span>Network</span></span>
+  </a>
+  <div class="nav-right">
+    <a href="randomchild-vibe-platform.html" class="btn btn-ghost">⊞ Dashboard</a>
+    <a href="viewer/live-room.html" class="btn btn-primary">⊙ Join Live</a>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- Live Banner -->
+  <div class="live-banner">
+    <div class="live-info">
+      <div class="live-dot"></div>
+      <div>
+        <div class="live-badge">LIVE NOW</div>
+        <div class="live-title">AI Business Integration — Office Hours</div>
+        <div class="live-meta">Randomchild · 38 subscribers watching</div>
+      </div>
+    </div>
+    <a href="viewer/live-room.html" class="join-btn">Join Session →</a>
+  </div>
+
+  <!-- Hero Strip -->
+  <div class="hero-strip">
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:10px">Welcome back</div>
+      <h1>Your certification<br>pace.</h1>
+      <p>Continue where you left off or explore new certifications.</p>
+    </div>
+    <div class="strip-stats">
+      <div class="strip-stat">
+        <div class="strip-val">3</div>
+        <div class="strip-lbl">Active Certs</div>
+      </div>
+      <div class="strip-stat">
+        <div class="strip-val">1</div>
+        <div class="strip-lbl">Earned</div>
+      </div>
+      <div class="strip-stat">
+        <div class="strip-val">74%</div>
+        <div class="strip-lbl">Avg Progress</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Continue -->
+  <div class="section-head">
+    <div>
+      <div class="section-lbl">Continue</div>
+      <div class="section-title">Pick up where you left off</div>
+    </div>
+  </div>
+  <div class="continue-grid">
+    <a href="#" class="continue-card">
+      <div class="cont-thumb">🤖</div>
+      <div style="flex:1">
+        <div class="cont-title">AI Business Integration</div>
+        <div class="cont-meta">Session 7 of 12 · Workflow Automation Deep Dive</div>
+        <div class="cont-bar-wrap"><div class="cont-bar" style="width:58%"></div></div>
+      </div>
+    </a>
+    <a href="#" class="continue-card">
+      <div class="cont-thumb">✍️</div>
+      <div style="flex:1">
+        <div class="cont-title">Enterprise Prompt Engineering</div>
+        <div class="cont-meta">Session 4 of 8 · Chain-of-Thought Strategies</div>
+        <div class="cont-bar-wrap"><div class="cont-bar" style="width:45%"></div></div>
+      </div>
+    </a>
+  </div>
+
+  <!-- All Certifications -->
+  <div class="section-head">
+    <div>
+      <div class="section-lbl">Certifications</div>
+      <div class="section-title">All certifications</div>
+    </div>
+  </div>
+  <div class="cert-grid">
+
+    <div class="cert-card">
+      <div class="cert-banner" style="background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(109,40,217,.08))">🤖</div>
+      <div class="cert-body">
+        <div class="cert-title">AI Business Integration</div>
+        <div class="cert-meta">12 sessions · 5h 20m</div>
+        <span class="badge badge-purple">In Progress</span>
+        <div class="cert-progress">
+          <div class="cert-bar"><div class="cert-fill" style="width:58%"></div></div>
+          <span>58%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cert-card">
+      <div class="cert-banner" style="background:linear-gradient(135deg,rgba(212,168,67,.12),rgba(124,58,237,.06))">✍️</div>
+      <div class="cert-body">
+        <div class="cert-title">Enterprise Prompt Engineering</div>
+        <div class="cert-meta">8 sessions · 3h 45m · Certificate</div>
+        <span class="badge badge-purple">In Progress</span>
+        <div class="cert-progress">
+          <div class="cert-bar"><div class="cert-fill" style="width:45%"></div></div>
+          <span>45%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cert-card">
+      <div class="cert-banner" style="background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(124,58,237,.06))">🎨</div>
+      <div class="cert-body">
+        <div class="cert-title">Creative AI Workflows</div>
+        <div class="cert-meta">10 sessions · 4h 10m · Certificate</div>
+        <span class="badge badge-green">✓ Certified</span>
+        <div class="cert-progress">
+          <div class="cert-bar"><div class="cert-fill" style="width:100%"></div></div>
+          <span>100%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cert-card">
+      <div class="cert-banner" style="background:linear-gradient(135deg,rgba(212,168,67,.1),rgba(109,40,217,.06))">📊</div>
+      <div class="cert-body">
+        <div class="cert-title">Digital Brand Strategy</div>
+        <div class="cert-meta">6 sessions · 2h 30m</div>
+        <span class="badge badge-gold">Coming Soon</span>
+        <div class="cert-progress">
+          <div class="cert-bar"><div class="cert-fill" style="width:0%"></div></div>
+          <span>0%</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Upcoming Sessions -->
+  <div class="section-head">
+    <div>
+      <div class="section-lbl">Live</div>
+      <div class="section-title">Upcoming sessions</div>
+    </div>
+  </div>
+  <div class="session-list">
+    <div class="session-item">
+      <div class="sess-info">
+        <div class="sess-icon">🤖</div>
+        <div>
+          <div class="sess-title">AI Business Integration — Office Hours</div>
+          <div class="sess-meta">Today · Live Now · 38 watching</div>
+        </div>
+      </div>
+      <a href="viewer/live-room.html" class="sess-join">⊙ Join Now</a>
+    </div>
+    <div class="session-item">
+      <div class="sess-info">
+        <div class="sess-icon">✍️</div>
+        <div>
+          <div class="sess-title">Prompt Engineering Masterclass</div>
+          <div class="sess-meta">May 23 · 2:00 PM · All Subscribers</div>
+        </div>
+      </div>
+      <span style="font-size:12px;color:var(--muted)">Scheduled</span>
+    </div>
+    <div class="session-item">
+      <div class="sess-info">
+        <div class="sess-icon">🎨</div>
+        <div>
+          <div class="sess-title">Creative AI Workflows — Q&amp;A</div>
+          <div class="sess-meta">May 27 · 11:00 AM · Pro Plan</div>
+        </div>
+      </div>
+      <span style="font-size:12px;color:var(--muted)">Scheduled</span>
+    </div>
+  </div>
+
+</div>
+
+<footer>© 2026 Randomchild Enterprises &nbsp;·&nbsp; <a href="randomchild-vibe.html" style="color:var(--pl);text-decoration:none">VIBE Network</a></footer>
+
+</body>
+</html>
