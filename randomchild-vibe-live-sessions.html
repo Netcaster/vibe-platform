@@ -79,6 +79,47 @@ body::before { content:'';position:fixed;inset:0;background:radial-gradient(elli
   </style>
 </head>
 <body>
+<!-- ── CREATOR AUTH GATE ── -->
+<div id="rcAuthOverlay" style="position:fixed;inset:0;background:rgba(3,5,7,.97);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#111827;border:1px solid rgba(124,58,237,.35);border-radius:22px;padding:44px;max-width:400px;width:100%;text-align:center;">
+    <div style="font-size:44px;margin-bottom:18px">🔐</div>
+    <div style="font-size:22px;font-weight:800;color:#f1f0fe;margin-bottom:8px">Creator Access</div>
+    <div style="font-size:14px;color:rgba(196,181,253,.5);margin-bottom:28px;line-height:1.6">This area is restricted to Randomchild.<br>Enter your password to continue.</div>
+    <input id="rcAuthInput" type="password" placeholder="Password" autocomplete="current-password"
+      style="width:100%;background:#0d1117;border:1px solid rgba(124,58,237,.22);border-radius:12px;color:#f1f0fe;font-family:inherit;font-size:16px;padding:14px 16px;outline:none;margin-bottom:12px;text-align:center;letter-spacing:.1em;"
+      onkeydown="if(event.key==='Enter')rcCheckAuth()" />
+    <div id="rcAuthError" style="font-size:12px;color:#f87171;margin-bottom:12px;display:none;">Incorrect password. Try again.</div>
+    <button onclick="rcCheckAuth()"
+      style="width:100%;padding:14px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:none;font-family:inherit;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;transition:all .2s;"
+      onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+      Continue →
+    </button>
+    <div style="margin-top:14px;font-size:11px;color:rgba(196,181,253,.3)">Randomchild VIBE · Creator Portal</div>
+  </div>
+</div>
+<script>
+(function() {
+  var PASS = 'Amorli';
+  var KEY  = 'rc_creator_auth';
+  if (sessionStorage.getItem(KEY) === '1') {
+    document.getElementById('rcAuthOverlay').style.display = 'none';
+  } else {
+    setTimeout(function() { document.getElementById('rcAuthInput').focus(); }, 100);
+  }
+  window.rcCheckAuth = function() {
+    var val = document.getElementById('rcAuthInput').value;
+    if (val === PASS) {
+      sessionStorage.setItem(KEY, '1');
+      document.getElementById('rcAuthOverlay').style.display = 'none';
+    } else {
+      document.getElementById('rcAuthError').style.display = 'block';
+      document.getElementById('rcAuthInput').value = '';
+      setTimeout(function() { document.getElementById('rcAuthInput').focus(); }, 50);
+    }
+  };
+})();
+</script>
+
 <div class="app">
 
   <!-- SIDEBAR -->
