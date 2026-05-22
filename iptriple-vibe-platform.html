@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IPTriple — Creator Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+*, *::before, *::after { margin:0;padding:0;box-sizing:border-box; }
+:root {
+  --bg:#080f18; --navy:#0d1b2a; --card:#0f2035; --card2:#112236;
+  --purple:#1a7fa0; --pm:#0f6a88; --pl:#5cbcd4; --plx:#9de0ee;
+  --gold:#d4a843; --green:#10b981; --red:#ef4444;
+  --text:#eaf0f7; --muted:rgba(143,170,191,.5);
+  --border:rgba(26,127,160,.18); --border2:rgba(26,127,160,.38);
+  --radius:12px; --shadow:0 0 40px rgba(26,127,160,.15);
+}
+body { font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh; }
+body::before { content:'';position:fixed;inset:0;background:radial-gradient(ellipse 55% 40% at 15% 5%,rgba(26,127,160,.08) 0%,transparent 60%);pointer-events:none;z-index:0; }
+
+/* LAYOUT */
+.app { display:flex;min-height:100vh; }
+.sidebar { width:240px;flex-shrink:0;background:var(--navy);border-right:1px solid var(--border);min-height:100vh;position:sticky;top:0;display:flex;flex-direction:column;padding:24px 0; }
+.sb-logo { padding:0 20px 24px;border-bottom:1px solid var(--border);margin-bottom:12px;display:flex;align-items:center;gap:9px; }
+.sb-logo-name { font-size:17px;font-weight:800;color:#fff; }
+.sb-logo-name span { color:var(--pl); }
+.sb-sect { padding:8px 12px;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:8px; }
+.sb-item { display:flex;align-items:center;gap:10px;padding:10px 20px;color:var(--muted);font-size:14px;font-weight:500;text-decoration:none;border-radius:10px;margin:2px 8px;transition:all .2s;cursor:pointer; }
+.sb-item:hover { color:var(--text);background:rgba(26,127,160,.08); }
+.sb-item.active { color:var(--pl);background:rgba(26,127,160,.12);border:1px solid var(--border); }
+.sb-user { padding:14px 20px;border-top:1px solid var(--border);margin-top:auto;display:flex;align-items:center;gap:10px; }
+.sb-av { width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pm));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0; }
+.main { flex:1;padding:32px;overflow-y:auto;position:relative;z-index:1; }
+
+/* HEADER */
+.page-hdr { display:flex;align-items:center;justify-content:space-between;margin-bottom:32px; }
+.page-title { font-size:26px;font-weight:800;letter-spacing:-.02em; }
+.page-sub { font-size:13px;color:var(--muted);margin-top:4px; }
+.btn { display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none;font-family:inherit;transition:all .2s; }
+.btn-primary { background:linear-gradient(135deg,var(--purple),var(--pm));color:#fff; }
+.btn-primary:hover { transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,127,160,.4); }
+.btn-ghost { background:transparent;color:var(--text);border:1px solid var(--border); }
+.btn-ghost:hover { background:rgba(26,127,160,.08);border-color:var(--border2); }
+.btn-sm { padding:6px 14px;font-size:12px;border-radius:8px; }
+
+/* KPI GRID */
+.kpi-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px; }
+.kpi { background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;position:relative;overflow:hidden; }
+.kpi::before { content:'';position:absolute;top:-10px;right:-10px;width:80px;height:80px;border-radius:50%;opacity:.05; }
+.kpi.c1::before { background:var(--pl); }
+.kpi.c2::before { background:var(--gold); }
+.kpi.c3::before { background:var(--green); }
+.kpi.c4::before { background:var(--red); }
+.kpi-icon { font-size:26px;margin-bottom:16px; }
+.kpi-val { font-size:30px;font-weight:900;line-height:1;margin-bottom:5px; }
+.kpi.c1 .kpi-val { background:linear-gradient(135deg,var(--pl),var(--plx));-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+.kpi.c2 .kpi-val { color:var(--gold); }
+.kpi.c3 .kpi-val { color:#34d399; }
+.kpi.c4 .kpi-val { color:#f87171; }
+.kpi-lbl { font-size:12px;color:var(--muted); }
+.kpi-hint { font-size:11px;color:rgba(143,170,191,.3);margin-top:8px; }
+
+/* CARD */
+.card { background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px; }
+.card-lbl { font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:12px; }
+.card-title { font-size:16px;font-weight:700;margin-bottom:16px; }
+.two-col { display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px; }
+
+/* EMPTY STATE */
+.empty { text-align:center;padding:48px 24px;display:flex;flex-direction:column;align-items:center;gap:14px; }
+.empty-icon { font-size:44px;opacity:.5; }
+.empty-title { font-size:16px;font-weight:700;color:var(--text); }
+.empty-sub { font-size:13px;color:var(--muted);line-height:1.6;max-width:280px; }
+
+/* SETUP CHECKLIST */
+.checklist { display:flex;flex-direction:column;gap:12px; }
+.check-item { display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--card2);border:1px solid var(--border);border-radius:12px;transition:all .2s;cursor:pointer;text-decoration:none;color:inherit; }
+.check-item:hover { border-color:var(--border2);background:rgba(26,127,160,.06); }
+.check-num { width:28px;height:28px;border-radius:50%;background:rgba(26,127,160,.15);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--pl);flex-shrink:0; }
+.check-body { flex:1; }
+.check-label { font-size:14px;font-weight:600; }
+.check-desc { font-size:12px;color:var(--muted);margin-top:2px; }
+.check-arrow { color:var(--muted);font-size:16px; }
+
+/* QUICK STATS BAR */
+.stats-bar { display:flex;gap:0;background:var(--card2);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px; }
+.stat-seg { flex:1;padding:18px;text-align:center;border-right:1px solid var(--border); }
+.stat-seg:last-child { border-right:none; }
+.stat-val { font-size:22px;font-weight:800;color:var(--pl); }
+.stat-lbl { font-size:11px;color:var(--muted);margin-top:4px; }
+
+@media(max-width:1000px) { .kpi-grid{grid-template-columns:1fr 1fr} .two-col{grid-template-columns:1fr} }
+@media(max-width:600px) { .app{flex-direction:column} .sidebar{width:100%;min-height:auto;position:static} .main{padding:20px} }
+  </style>
+</head>
+<body>
+<!-- ── CREATOR AUTH GATE ── -->
+<div id="iptAuthOverlay" style="position:fixed;inset:0;background:rgba(3,5,7,.97);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#0f2035;border:1px solid rgba(26,127,160,.35);border-radius:22px;padding:44px;max-width:400px;width:100%;text-align:center;">
+    <div style="font-size:44px;margin-bottom:18px">🔐</div>
+    <div style="font-size:22px;font-weight:800;color:#eaf0f7;margin-bottom:8px">Creator Access</div>
+    <div style="font-size:14px;color:rgba(143,170,191,.5);margin-bottom:28px;line-height:1.6">This area is restricted to IPTriple.<br>Enter your password to continue.</div>
+    <input id="iptAuthInput" type="password" placeholder="Password" autocomplete="current-password"
+      style="width:100%;background:#0d1b2a;border:1px solid rgba(26,127,160,.22);border-radius:12px;color:#eaf0f7;font-family:inherit;font-size:16px;padding:14px 16px;outline:none;margin-bottom:12px;text-align:center;letter-spacing:.1em;"
+      onkeydown="if(event.key==='Enter')iptCheckAuth()" />
+    <div id="iptAuthError" style="font-size:12px;color:#f87171;margin-bottom:12px;display:none;">Incorrect password. Try again.</div>
+    <button onclick="iptCheckAuth()"
+      style="width:100%;padding:14px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:none;font-family:inherit;background:linear-gradient(135deg,#1a7fa0,#0f6a88);color:#fff;transition:all .2s;"
+      onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+      Continue →
+    </button>
+    <div style="margin-top:14px;font-size:11px;color:rgba(143,170,191,.3)">IPTriple VIBE · Creator Portal</div>
+  </div>
+</div>
+<script>
+(function() {
+  var PASS = 'BE(%^!rn$';
+  var KEY  = 'ipt_creator_auth';
+  if (sessionStorage.getItem(KEY) === '1') {
+    document.getElementById('iptAuthOverlay').style.display = 'none';
+  } else {
+    setTimeout(function() { document.getElementById('iptAuthInput').focus(); }, 100);
+  }
+  window.iptCheckAuth = function() {
+    var val = document.getElementById('iptAuthInput').value;
+    if (val === PASS) {
+      sessionStorage.setItem(KEY, '1');
+      document.getElementById('iptAuthOverlay').style.display = 'none';
+    } else {
+      document.getElementById('iptAuthError').style.display = 'block';
+      document.getElementById('iptAuthInput').value = '';
+      setTimeout(function() { document.getElementById('iptAuthInput').focus(); }, 50);
+    }
+  };
+})();
+</script>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <svg width="24" height="24" viewBox="0 0 80 80" fill="none">
+        <circle cx="40" cy="40" r="36" stroke="#1a7fa0" stroke-width="1.6" opacity=".4"/>
+        <circle cx="40" cy="40" r="5" fill="#1a7fa0" opacity=".9"/>
+        <circle cx="40" cy="40" r="2.5" fill="#9de0ee"/>
+        <circle cx="40" cy="18" r="4" fill="#5cbcd4"/>
+        <circle cx="58" cy="51" r="4" fill="#1a7fa0"/>
+        <circle cx="22" cy="51" r="4" fill="#5cbcd4"/>
+        <line x1="40" y1="40" x2="40" y2="18" stroke="#5cbcd4" stroke-width="1" opacity=".4"/>
+        <line x1="40" y1="40" x2="58" y2="51" stroke="#5cbcd4" stroke-width="1" opacity=".4"/>
+        <line x1="40" y1="40" x2="22" y2="51" stroke="#5cbcd4" stroke-width="1" opacity=".4"/>
+      </svg>
+      <div class="sb-logo-name">RC <span>VIBE</span></div>
+    </div>
+    <div class="sb-sect">Workspace</div>
+    <a class="sb-item active" href="iptriple-vibe-platform.html">⊞ Dashboard</a>
+    <a class="sb-item" href="#">🎓 Certifications</a>
+    <a class="sb-item" href="iptriple-vibe-live-sessions.html">⊙ Live Sessions</a>
+    <a class="sb-item" href="#">☰ Sessions</a>
+    <a class="sb-item" href="#">◈ Plans &amp; Pricing</a>
+    <div class="sb-sect">Audience</div>
+    <a class="sb-item" href="#">◎ Subscribers</a>
+    <a class="sb-item" href="#">◉ Certificates</a>
+    <a class="sb-item" href="#">⬡ Transactions</a>
+    <div class="sb-sect">Analytics</div>
+    <a class="sb-item" href="#">⟁ Revenue</a>
+    <a class="sb-item" href="#">◰ Content</a>
+    <div class="sb-sect">Settings</div>
+    <a class="sb-item" href="#">◇ Brand</a>
+    <a class="sb-item" href="#">◈ Stripe Connect</a>
+    <div class="sb-user">
+      <div class="sb-av">IPT</div>
+      <div>
+        <div style="font-size:13px;font-weight:600">IPTriple</div>
+        <div style="font-size:11px;color:var(--muted)">Owner</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="page-hdr">
+      <div>
+        <div class="page-title">Creator Dashboard</div>
+        <div class="page-sub">IPTriple Enterprises &nbsp;·&nbsp; Welcome — let's get you set up</div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <a href="iptriple-vibe-viewer.html" class="btn btn-ghost btn-sm">View Subscriber Portal →</a>
+        <a href="iptriple-vibe-live-sessions.html" class="btn btn-primary btn-sm">⊙ Go Live</a>
+      </div>
+    </div>
+
+    <!-- KPIs — all zeros, clean start -->
+    <div class="kpi-grid">
+      <div class="kpi c1">
+        <div class="kpi-icon">💳</div>
+        <div class="kpi-val">$0</div>
+        <div class="kpi-lbl">Revenue This Month</div>
+        <div class="kpi-hint">Connect Stripe to start earning</div>
+      </div>
+      <div class="kpi c2">
+        <div class="kpi-icon">◎</div>
+        <div class="kpi-val">0</div>
+        <div class="kpi-lbl">Active Subscribers</div>
+        <div class="kpi-hint">Publish a certification to grow</div>
+      </div>
+      <div class="kpi c3">
+        <div class="kpi-icon">🎓</div>
+        <div class="kpi-val">0</div>
+        <div class="kpi-lbl">Certifications</div>
+        <div class="kpi-hint">Create your first certification</div>
+      </div>
+      <div class="kpi c4">
+        <div class="kpi-icon">⊙</div>
+        <div class="kpi-val">0</div>
+        <div class="kpi-lbl">Live Sessions Held</div>
+        <div class="kpi-hint">Schedule your first session</div>
+      </div>
+    </div>
+
+    <!-- Quick Stats Bar -->
+    <div class="stats-bar" style="margin-bottom:24px">
+      <div class="stat-seg">
+        <div class="stat-val" style="color:var(--muted)">—</div>
+        <div class="stat-lbl">Certificates Issued</div>
+      </div>
+      <div class="stat-seg">
+        <div class="stat-val" style="color:var(--muted)">—</div>
+        <div class="stat-lbl">Avg Completion</div>
+      </div>
+      <div class="stat-seg">
+        <div class="stat-val" style="color:var(--muted)">—</div>
+        <div class="stat-lbl">Next Payout</div>
+      </div>
+      <div class="stat-seg">
+        <div class="stat-val" style="color:var(--muted)">—</div>
+        <div class="stat-lbl">Active Plans</div>
+      </div>
+    </div>
+
+    <!-- Setup Checklist + Certifications -->
+    <div class="two-col">
+
+      <div class="card">
+        <div class="card-lbl">Getting Started</div>
+        <div class="card-title">Complete your setup</div>
+        <div class="checklist">
+          <a href="#" class="check-item">
+            <div class="check-num">1</div>
+            <div class="check-body">
+              <div class="check-label">Connect Stripe Express</div>
+              <div class="check-desc">Set up payouts so subscribers can purchase your content</div>
+            </div>
+            <div class="check-arrow">→</div>
+          </a>
+          <a href="#" class="check-item">
+            <div class="check-num">2</div>
+            <div class="check-body">
+              <div class="check-label">Create your first Certification</div>
+              <div class="check-desc">Add sessions, set pricing, and publish to your network</div>
+            </div>
+            <div class="check-arrow">→</div>
+          </a>
+          <a href="#" class="check-item">
+            <div class="check-num">3</div>
+            <div class="check-body">
+              <div class="check-label">Set your Pricing Plans</div>
+              <div class="check-desc">Choose what subscribers pay — monthly, annual, or one-time</div>
+            </div>
+            <div class="check-arrow">→</div>
+          </a>
+          <a href="iptriple-vibe-live-sessions.html" class="check-item">
+            <div class="check-num">4</div>
+            <div class="check-body">
+              <div class="check-label">Schedule a Live Session</div>
+              <div class="check-desc">Host your first live class or Q&amp;A with subscribers</div>
+            </div>
+            <div class="check-arrow">→</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-lbl">Certifications</div>
+        <div class="card-title">Your Certifications</div>
+        <div class="empty">
+          <div class="empty-icon">🎓</div>
+          <div class="empty-title">No certifications yet</div>
+          <div class="empty-sub">Create your first certification to start earning from your knowledge.</div>
+          <a href="#" class="btn btn-primary btn-sm" style="margin-top:4px">+ Create Certification</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Recent Activity + Stripe -->
+    <div class="two-col">
+      <div class="card">
+        <div class="card-lbl">Activity</div>
+        <div class="card-title">Recent Transactions</div>
+        <div class="empty">
+          <div class="empty-icon">⬡</div>
+          <div class="empty-title">No transactions yet</div>
+          <div class="empty-sub">Transactions will appear here once subscribers start purchasing.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-lbl">Payment Setup</div>
+        <div class="card-title">Stripe Connect</div>
+        <div class="empty">
+          <div class="empty-icon">💳</div>
+          <div class="empty-title">Not connected yet</div>
+          <div class="empty-sub">Connect your Stripe Express account to accept payments from subscribers.</div>
+          <a href="#" class="btn btn-primary btn-sm" style="margin-top:4px">Connect Stripe →</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

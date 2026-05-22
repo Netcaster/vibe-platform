@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IPTriple — Subscriber Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+*, *::before, *::after { margin:0;padding:0;box-sizing:border-box; }
+:root {
+  --bg:#080f18; --navy:#0d1b2a; --card:#0f2035; --card2:#112236;
+  --purple:#1a7fa0; --pm:#0f6a88; --pl:#5cbcd4; --plx:#9de0ee;
+  --gold:#d4a843; --green:#10b981;
+  --text:#eaf0f7; --muted:rgba(143,170,191,.5);
+  --border:rgba(26,127,160,.18); --border2:rgba(26,127,160,.38);
+  --radius:12px; --shadow:0 0 40px rgba(26,127,160,.14);
+}
+body { font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh; }
+body::before { content:'';position:fixed;inset:0;background:radial-gradient(ellipse 55% 40% at 15% 8%,rgba(26,127,160,.08) 0%,transparent 60%);pointer-events:none;z-index:0; }
+
+nav { position:sticky;top:0;z-index:100;background:rgba(7,9,15,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 40px;height:62px;display:flex;align-items:center;justify-content:space-between; }
+.brand { display:flex;align-items:center;gap:10px;text-decoration:none; }
+.brand-name { font-size:16px;font-weight:800;color:#fff; }
+.brand-name span { color:var(--pl); }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+.dot { width:7px;height:7px;border-radius:50%;background:var(--pl);box-shadow:0 0 8px var(--pl);animation:pulse 2s ease-in-out infinite; }
+.nav-right { display:flex;align-items:center;gap:10px; }
+.btn { display:inline-flex;align-items:center;gap:7px;padding:8px 18px;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none;font-family:inherit;transition:all .2s; }
+.btn-primary { background:linear-gradient(135deg,var(--purple),var(--pm));color:#fff; }
+.btn-primary:hover { transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,127,160,.4); }
+.btn-ghost { background:rgba(255,255,255,.05);border:1px solid var(--border);color:rgba(255,255,255,.7); }
+.btn-ghost:hover { background:rgba(26,127,160,.1);border-color:var(--border2); }
+.btn-sm { padding:6px 14px;font-size:12px;border-radius:8px; }
+
+.main { max-width:1060px;margin:0 auto;padding:40px;position:relative;z-index:1; }
+
+/* WELCOME HERO */
+.welcome { background:linear-gradient(135deg,rgba(26,127,160,.1),rgba(15,106,136,.05));border:1px solid var(--border);border-radius:20px;padding:36px;margin-bottom:32px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap; }
+.welcome h1 { font-size:26px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px; }
+.welcome p { font-size:14px;color:var(--muted); }
+.welcome-badge { display:inline-flex;align-items:center;gap:6px;background:rgba(26,127,160,.12);border:1px solid var(--border);border-radius:100px;padding:4px 14px;font-size:11px;font-weight:700;color:var(--pl);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px; }
+
+/* SECTION */
+.section-hdr { margin-bottom:16px; }
+.section-lbl { font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:5px; }
+.section-title { font-size:17px;font-weight:700; }
+
+/* EMPTY STATE */
+.empty-box { background:var(--card);border:1px solid var(--border);border-radius:18px;padding:56px 32px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:24px; }
+.empty-icon { font-size:52px;opacity:.45; }
+.empty-title { font-size:18px;font-weight:700; }
+.empty-sub { font-size:14px;color:var(--muted);line-height:1.65;max-width:340px; }
+
+/* UPCOMING SESSIONS EMPTY */
+.sessions-empty { background:var(--card);border:1px solid var(--border);border-radius:18px;padding:40px 32px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:32px; }
+
+/* PLAN CARD */
+.plans { display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:32px; }
+.plan-card { background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px;transition:all .25s; }
+.plan-card.featured { background:linear-gradient(135deg,rgba(26,127,160,.12),rgba(15,106,136,.06));border-color:rgba(26,127,160,.38); }
+.plan-price { font-size:32px;font-weight:900;color:var(--pl); }
+.plan-price sup { font-size:16px;font-weight:700;vertical-align:top;margin-top:6px;display:inline-block; }
+.plan-price span { font-size:13px;font-weight:500;color:var(--muted); }
+.plan-name { font-size:14px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted); }
+.plan-perks { display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--muted); }
+.plan-perks span::before { content:'✓ ';color:var(--green); }
+.plan-btn { background:linear-gradient(135deg,var(--purple),var(--pm));border:none;border-radius:10px;padding:11px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit;transition:all .2s;text-align:center; }
+.plan-card:not(.featured) .plan-btn { background:rgba(26,127,160,.12);color:var(--pl);border:1px solid var(--border); }
+.plan-btn:hover { opacity:.88; }
+
+footer { text-align:center;padding:20px;font-size:11px;color:rgba(143,170,191,.25);border-top:1px solid var(--border);position:relative;z-index:1; }
+@media(max-width:600px) { nav,.main{padding-left:20px;padding-right:20px} .welcome{flex-direction:column} }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="iptriple-vibe.html">
+    <div class="dot"></div>
+    <span class="brand-name">IPTriple <span>Network</span></span>
+  </a>
+  <div class="nav-right">
+    <a href="iptriple-vibe-platform.html" class="btn btn-ghost btn-sm">⊞ Dashboard</a>
+    <a href="iptriple-vibe-live-viewer.html" class="btn btn-primary btn-sm">⊙ Join Live</a>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- Welcome -->
+  <div class="welcome">
+    <div>
+      <div class="welcome-badge">⬡ IPTriple VIBE Network</div>
+      <h1>Welcome to the Network.</h1>
+      <p>Certifications, live sessions, and exclusive content — all in one place.</p>
+    </div>
+    <a href="#plans" class="btn btn-primary">Get Started →</a>
+  </div>
+
+  <!-- Certifications empty state -->
+  <div class="section-hdr">
+    <div class="section-lbl">Certifications</div>
+    <div class="section-title">Available Certifications</div>
+  </div>
+  <div class="empty-box">
+    <div class="empty-icon">🎓</div>
+    <div class="empty-title">Certifications coming soon</div>
+    <div class="empty-sub">IPTriple is building out the first certifications. Subscribe to be notified when they launch.</div>
+    <a href="#plans" class="btn btn-primary btn-sm">Subscribe for Early Access</a>
+  </div>
+
+  <!-- Live Sessions empty state -->
+  <div class="section-hdr">
+    <div class="section-lbl">Live</div>
+    <div class="section-title">Upcoming Sessions</div>
+  </div>
+  <div class="sessions-empty">
+    <div style="font-size:40px;opacity:.4">⊙</div>
+    <div style="font-size:16px;font-weight:700">No sessions scheduled yet</div>
+    <div style="font-size:13px;color:var(--muted)">Live sessions will appear here. Subscribers get notified the moment one goes live.</div>
+  </div>
+
+  <!-- Pricing Plans -->
+  <div class="section-hdr" id="plans">
+    <div class="section-lbl">Pricing</div>
+    <div class="section-title">Choose your plan</div>
+  </div>
+  <div class="plans">
+    <div class="plan-card">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price"><sup>$</sup>0<span>/mo</span></div>
+      <div class="plan-perks">
+        <span>Access free content</span>
+        <span>Join public live sessions</span>
+        <span>Community access</span>
+      </div>
+      <div class="plan-btn">Get Started Free</div>
+    </div>
+    <div class="plan-card featured">
+      <div class="plan-name">Pro</div>
+      <div class="plan-price"><sup>$</sup>—<span>/mo</span></div>
+      <div class="plan-perks">
+        <span>All certifications</span>
+        <span>All live sessions</span>
+        <span>Certificate issuance</span>
+        <span>Priority support</span>
+      </div>
+      <div class="plan-btn">Coming Soon</div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">Enterprise</div>
+      <div class="plan-price" style="font-size:22px;padding-top:6px;color:var(--muted)">Custom</div>
+      <div class="plan-perks">
+        <span>Team accounts</span>
+        <span>Custom certifications</span>
+        <span>Dedicated sessions</span>
+        <span>White-label options</span>
+      </div>
+      <div class="plan-btn">Contact Us</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>© 2026 IPTriple Enterprises &nbsp;·&nbsp; <a href="iptriple-vibe.html" style="color:var(--pl);text-decoration:none">VIBE Network</a></footer>
+</body>
+</html>

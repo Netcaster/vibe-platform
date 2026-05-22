@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IPTriple — VIBE Network</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+*, *::before, *::after { margin:0;padding:0;box-sizing:border-box; }
+:root {
+  --bg:#080f18; --navy:#0d1b2a; --card:#0f2035; --card2:#112236;
+  --purple:#1a7fa0; --pm:#0f6a88; --pl:#5cbcd4; --plx:#9de0ee;
+  --gold:#d4a843; --green:#10b981;
+  --text:#eaf0f7; --muted:rgba(143,170,191,.5);
+  --border:rgba(26,127,160,.18); --border2:rgba(26,127,160,.38);
+  --radius:12px; --shadow:0 0 50px rgba(26,127,160,.18);
+}
+body { font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden; }
+body::before { content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(26,127,160,.12) 0%,transparent 60%),radial-gradient(ellipse 40% 35% at 85% 90%,rgba(15,106,136,.07) 0%,transparent 60%);pointer-events:none;z-index:0; }
+
+nav { display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:60px;background:rgba(7,9,15,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100; }
+.brand { font-size:18px;font-weight:800;color:#fff;letter-spacing:.02em;text-decoration:none;display:flex;align-items:center;gap:10px; }
+.brand span { color:var(--pl); }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+.dot { width:7px;height:7px;border-radius:50%;background:var(--pl);box-shadow:0 0 8px var(--pl);animation:pulse 2s ease-in-out infinite; }
+.nav-links { display:flex;gap:10px;align-items:center; }
+.btn { display:inline-flex;align-items:center;gap:7px;padding:9px 20px;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none;font-family:inherit;transition:all .2s; }
+.btn-primary { background:linear-gradient(135deg,var(--purple),var(--pm));color:#fff; }
+.btn-primary:hover { transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,127,160,.45); }
+.btn-ghost { background:rgba(255,255,255,.05);border:1px solid var(--border);color:rgba(255,255,255,.7); }
+.btn-ghost:hover { background:rgba(26,127,160,.1);border-color:var(--border2); }
+
+.main { flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;position:relative;z-index:1; }
+
+.logo-wrap { margin-bottom:28px; }
+.logo-wrap svg { filter:drop-shadow(0 0 24px rgba(26,127,160,.5)); }
+
+.eyebrow { display:inline-flex;align-items:center;gap:8px;background:rgba(26,127,160,.12);border:1px solid rgba(26,127,160,.3);border-radius:100px;padding:5px 16px;font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--pl);text-transform:uppercase;margin-bottom:22px; }
+.eyebrow-dot { width:5px;height:5px;border-radius:50%;background:var(--pl); }
+
+h1 { font-size:clamp(38px,5vw,62px);font-weight:900;line-height:1.08;letter-spacing:-.03em;margin-bottom:18px;text-align:center; }
+h1 em { font-style:normal;color:var(--pl); }
+.sub { font-size:16px;color:var(--muted);line-height:1.65;max-width:520px;text-align:center;margin:0 auto 40px; }
+
+.cards { display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:760px;width:100%; }
+.portal-card { background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:18px;transition:all .3s;text-decoration:none;color:inherit; }
+.portal-card:hover { border-color:var(--border2);box-shadow:var(--shadow);transform:translateY(-4px); }
+.portal-card.primary { background:linear-gradient(135deg,rgba(26,127,160,.14),rgba(15,106,136,.07));border-color:rgba(26,127,160,.35); }
+.card-icon { width:52px;height:52px;border-radius:14px;background:rgba(26,127,160,.15);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px; }
+.card-title { font-size:20px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px; }
+.card-desc { font-size:13px;color:var(--muted);line-height:1.6; }
+.card-cta { display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;margin-top:auto;transition:all .2s; }
+.portal-card.primary .card-cta { background:linear-gradient(135deg,var(--purple),var(--pm));color:#fff; }
+.portal-card.primary .card-cta:hover { box-shadow:0 6px 20px rgba(26,127,160,.45); }
+.portal-card:not(.primary) .card-cta { background:rgba(26,127,160,.1);color:var(--pl);border:1px solid var(--border); }
+.portal-card:not(.primary) .card-cta:hover { background:rgba(26,127,160,.2);border-color:var(--border2); }
+
+footer { text-align:center;padding:20px;font-size:11px;color:rgba(143,170,191,.25);border-top:1px solid var(--border);position:relative;z-index:1; }
+
+@media(max-width:600px) { .cards{grid-template-columns:1fr} nav{padding:0 20px} }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="https://iptriple.com">
+    <div class="dot"></div>
+    IPTriple <span>VIBE</span>
+  </a>
+  <div class="nav-links">
+    <a href="iptriple-vibe-viewer.html" class="btn btn-ghost">Subscriber Portal</a>
+    <a href="iptriple-vibe-platform.html" class="btn btn-primary">Creator Dashboard</a>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="logo-wrap">
+    <svg width="72" height="72" viewBox="0 0 80 80" fill="none">
+      <circle cx="40" cy="40" r="36" stroke="#1a7fa0" stroke-width="1.4" opacity=".35"/>
+      <circle cx="40" cy="40" r="25" stroke="#5cbcd4" stroke-width="1" opacity=".2"/>
+      <circle cx="40" cy="40" r="6" fill="#1a7fa0" opacity=".9"/>
+      <circle cx="40" cy="40" r="3" fill="#9de0ee"/>
+      <circle cx="40" cy="18" r="4.5" fill="#5cbcd4"/>
+      <circle cx="60" cy="51" r="4.5" fill="#1a7fa0"/>
+      <circle cx="20" cy="51" r="4.5" fill="#5cbcd4"/>
+      <circle cx="58" cy="24" r="3" fill="#1a7fa0" opacity=".6"/>
+      <circle cx="22" cy="24" r="3" fill="#1a7fa0" opacity=".6"/>
+      <line x1="40" y1="18" x2="60" y2="51" stroke="#5cbcd4" stroke-width="1" opacity=".4"/>
+      <line x1="40" y1="18" x2="20" y2="51" stroke="#5cbcd4" stroke-width="1" opacity=".4"/>
+      <line x1="60" y1="51" x2="20" y2="51" stroke="#1a7fa0" stroke-width="1" opacity=".3"/>
+      <line x1="40" y1="40" x2="40" y2="18" stroke="#5cbcd4" stroke-width="1" opacity=".35"/>
+      <line x1="40" y1="40" x2="60" y2="51" stroke="#5cbcd4" stroke-width="1" opacity=".35"/>
+      <line x1="40" y1="40" x2="20" y2="51" stroke="#5cbcd4" stroke-width="1" opacity=".35"/>
+    </svg>
+  </div>
+
+  <div class="eyebrow"><div class="eyebrow-dot"></div> VIBE Network</div>
+  <h1>Welcome to your<br><em>IPTriple</em> Network.</h1>
+  <p class="sub">Your fully branded platform for certifications, live sessions, and subscriber revenue — powered by VIBE.</p>
+
+  <div class="cards">
+    <a class="portal-card primary" href="iptriple-vibe-viewer.html">
+      <div class="card-icon">◎</div>
+      <div>
+        <div class="card-title">Subscriber Portal</div>
+        <div class="card-desc">Where your subscribers access certifications, join live sessions, and track their progress.</div>
+      </div>
+      <div class="card-cta">Enter Portal →</div>
+    </a>
+    <a class="portal-card" href="iptriple-vibe-platform.html">
+      <div class="card-icon">⊞</div>
+      <div>
+        <div class="card-title">Creator Dashboard</div>
+        <div class="card-desc">Manage your certifications, sessions, subscribers, and revenue from one place.</div>
+      </div>
+      <div class="card-cta">Open Dashboard →</div>
+    </a>
+  </div>
+</div>
+
+<footer>© 2026 IPTriple Enterprises &nbsp;·&nbsp; Powered by VIBE Network</footer>
+</body>
+</html>
